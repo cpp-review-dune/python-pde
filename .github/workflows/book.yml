@@ -32,13 +32,13 @@ jobs:
           options: -v ${{github.workspace}}:/work
           shell: bash
           run: |
-            yay -Syu python-poetry --noconfirm >/dev/null 2>&1
+            sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml --noconfirm >/dev/null 2>&1
             sudo chown -R builder:builder /work
             cd /work/pde-book
             poetry config virtualenvs.in-project true
             poetry config virtualenvs.options.system-site-packages true
             poetry install
-            poetry run jb build pde-book
+            poetry run jb build .
 
       - name: "Tar files"
         run: |
