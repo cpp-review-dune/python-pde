@@ -33,6 +33,7 @@ jobs:
           shell: bash
           run: |
             sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml --noconfirm >/dev/null 2>&1
+            ls -l /work
             # sudo chown -R builder:builder /work
             cd /work/pde-book
             poetry config virtualenvs.in-project true
