@@ -30,3 +30,7 @@ repository:
 html:
   use_issues_button: true
   use_repository_button: true
+
+# https://github.com/executablebooks/jupyter-book/issues/1918#issuecomment-1440833493
+exclude_patterns: [_build, "**.ipynb_checkpoints", ".venv/*"]
+only_build_toc_files: true
