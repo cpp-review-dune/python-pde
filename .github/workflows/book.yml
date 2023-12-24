@@ -33,9 +33,11 @@ jobs:
           shell: bash
           run: |
             sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml --noconfirm >/dev/null 2>&1
+            ls -l
+            whoami
             sudo chown -R builder:builder /work
             cd /work/pde-book
-            mkdir -p $HOME/.cache/pypoetry/virtualenvs/
+            mkdir -p /work/pde-book/.cache/pypoetry/virtualenvs/
             poetry config virtualenvs.in-project true
             # https://github.com/python-poetry/poetry/issues/1573#issuecomment-555480711
             poetry config virtualenvs.options.system-site-packages true
