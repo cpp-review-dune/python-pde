@@ -2,10 +2,10 @@
 
 For more about MyST, see [the MyST Markdown Overview](https://jupyterbook.org/content/myst.html).
 
-Here is a "note" directive:
+Here is a "not" directive:
 
 ```{note}
-note
+not
 ```
 
 Here is an inline directive to refer to a document: {doc}`markdown-notebooks`.
