@@ -1,12 +1,5 @@
 # Markdown Files
 
-## What is MyST?
-
-MyST stands for "Markedly Structured Text". It
-is a slight variation on a flavor of markdown called "CommonMark" markdown,
-with small syntax extensions to allow you to write **roles** and **directives**
-in the Sphinx ecosystem.
-
 For more about MyST, see [the MyST Markdown Overview](https://jupyterbook.org/content/myst.html).
 
 ## Sample Roles and Directives
