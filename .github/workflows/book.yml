@@ -32,8 +32,7 @@ jobs:
           options: -v ${{github.workspace}}:/work
           shell: bash
           run: |
-            sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended --noconfirm >/dev/null 2>&1
-            # python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml
+            sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml --noconfirm >/dev/null 2>&1
             sudo chown -R gitpod:gitpod /work
             cd /work/pde-book
             poetry config virtualenvs.in-project true
