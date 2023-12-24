@@ -1,7 +1,5 @@
 # Markdown Files
 
-For more about MyST, see [the MyST Markdown Overview](https://jupyterbook.org/content/myst.html).
-
 Here is a "not" directive:
 
 ```{note}
