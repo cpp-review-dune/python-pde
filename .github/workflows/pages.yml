@@ -22,7 +22,7 @@ jobs:
 
       - name: "Untar files"
         run: |
-          tar -I zstd -xvf PDF.tar.zst
+          tar -I zstd -xvf Book.tar.zst
           mkdir public
           mv _build/html/* public/
 
