@@ -32,13 +32,12 @@ jobs:
           options: -v ${{github.workspace}}:/work
           shell: bash
           run: |
-            sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml --noconfirm >/dev/null 2>&1
+            sudo pacman -Syu python-poetry texlive-latexextra texlive-fontsrecommended --noconfirm >/dev/null 2>&1
+            # python-click python-docutils python-jinja python-jsonschema python-linkify-it-py python-sphinx-copybutton python-sphinxcontrib-bibtex python-yaml
             sudo chown -R gitpod:gitpod /work
             cd /work/pde-book
-            poetry config virtualenvs.options.system-site-packages true
             poetry config virtualenvs.in-project true
-            # https://github.com/python-poetry/poetry/issues/1573#issuecomment-555480711
-            # mkdir -p /work/pde-book/.cache/pypoetry/virtualenvs/
+            poetry config virtualenvs.options.system-site-packages true
             poetry install
             poetry run jb build .
 

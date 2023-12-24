@@ -5,7 +5,7 @@ For more about MyST, see [the MyST Markdown Overview](https://jupyterbook.org/co
 Here is a "note" directive:
 
 ```{note}
-Here is a note
+a note
 ```
 
 Here is an inline directive to refer to a document: {doc}`markdown-notebooks`.
