@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "python-pde"
+version = "0.1.0"
+description = "Book of numerical approximations for simple PDEs"
+authors = ["Carlos Aznarán <caznaranl@uni.pe>"]
+license = "GPL2"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+jupyter-book = "^0.15.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
