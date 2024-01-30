@@ -4,9 +4,9 @@
 format: jb-book
 root: intro
 chapters:
-- file: py-pde-examples
-- file: notes-examples
-- file: findiff-examples
+- file: py-pde
+- file: notes
+- file: findiff
 - file: symbolic-findiff
 - file: solve-findiff
 # - file: finite-differences

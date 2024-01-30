@@ -1,0 +1,4 @@
+text.usetex: True
+text.latex.preamble: "\usepackage{mathtools}"
+font.serif: Computer Modern
+animation.html: html5
