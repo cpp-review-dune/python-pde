@@ -4,11 +4,11 @@
 format: jb-book
 root: intro
 chapters:
-- file: notes
-- file: py-pde
-- file: findiff
-- file: symbolic-findiff
-- file: solve-findiff
-- file: advectionper
-- file: diffusioncrancknic
+  - file: notes
+  - file: py-pde
+  - file: findiff
+  - file: symbolic-findiff
+  - file: solve-findiff
+  - file: advectionper
+  - file: diffusioncrancknic
 # - file: finite-differences
