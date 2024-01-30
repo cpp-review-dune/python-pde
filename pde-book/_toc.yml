@@ -9,4 +9,6 @@ chapters:
 - file: findiff
 - file: symbolic-findiff
 - file: solve-findiff
+- file: advectionper
+- file: diffusioncrancknic
 # - file: finite-differences
