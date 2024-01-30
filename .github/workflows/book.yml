@@ -39,7 +39,7 @@ jobs:
             poetry config virtualenvs.options.system-site-packages true
             poetry install
             poetry run jb build .
-            cat /work/pde-book/_build/html/reports/py-pde.err.log
+            # cat /work/pde-book/_build/html/reports/py-pde.err.log
 
       - name: "Tar files"
         run: |
