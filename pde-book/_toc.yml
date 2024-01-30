@@ -4,8 +4,8 @@
 format: jb-book
 root: intro
 chapters:
-- file: py-pde
 - file: notes
+- file: py-pde
 - file: findiff
 - file: symbolic-findiff
 - file: solve-findiff
