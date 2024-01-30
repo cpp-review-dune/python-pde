@@ -4,6 +4,9 @@
 format: jb-book
 root: intro
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+- file: py-pde-examples
+- file: notes-examples
+- file: findiff-examples
+- file: symbolic-findiff
+- file: solve-findiff
+- file: finite-differences
