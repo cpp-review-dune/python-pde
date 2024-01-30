@@ -12,3 +12,5 @@ chapters:
   - file: solve-findiff
   - file: advectionper
   - file: diffusioncrancknic
+  - file: pystencils
+  - file: advection-pystencils
