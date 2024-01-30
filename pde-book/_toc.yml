@@ -6,7 +6,7 @@ root: intro
 chapters:
 - file: py-pde-examples
 - file: notes-examples
-- file: findiff-examples
+# - file: findiff-examples
 - file: symbolic-findiff
 - file: solve-findiff
 - file: finite-differences
