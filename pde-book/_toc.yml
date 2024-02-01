@@ -13,6 +13,6 @@ chapters:
   - file: advectionper
   - file: diffusioncrancknic
   - file: pystencils
-  - file: advection-pystencils
+  # - file: advection-pystencils
   - file: jax
 
