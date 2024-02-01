@@ -10,7 +10,7 @@ logo: logo.jpg
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: force
-  timeout: 10000
+  timeout: 20000
 
 # Define the name of the latex output file for PDF builds
 latex:
