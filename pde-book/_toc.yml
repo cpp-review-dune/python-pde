@@ -14,5 +14,5 @@ chapters:
   - file: diffusioncrancknic
   - file: pystencils
   # - file: advection-pystencils
-  - file: jax
+  # - file: jax
 
