@@ -7,12 +7,12 @@ chapters:
   - file: notes-python
   - file: notes-octave
   - file: py-pde
-  # - file: findiff
+  - file: findiff
   - file: symbolic-findiff
   - file: solve-findiff
   - file: advectionper
   - file: diffusioncrancknic
   - file: pystencils
-  # - file: advection-pystencils
-  # - file: jax
+  - file: advection-pystencils
+  - file: jax
 
