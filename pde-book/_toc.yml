@@ -3,18 +3,24 @@
 
 format: jb-book
 root: intro
-chapters:
-  - file: notes-pde
-  - file: notes-fda
-  - file: notes-elliptic
-  - file: octave
-  - file: py-pde
-  - file: findiff
-  - file: symbolic-findiff
-  - file: solve-findiff
-  - file: advectionper
-  - file: diffusioncrancknic
-  - file: pystencils
-  - file: advection-pystencils
-  - file: jax
-
+parts:
+  - caption: The Finite Difference Method
+    numbered: true
+    chapters:
+      - file: notes-pde
+      - file: notes-fda
+      - file: notes-elliptic
+      - file: octave
+  - caption: The Finite Volume Method
+    chapters:
+      - file: jax
+  - caption: The Mimetic Finite Difference Method
+    chapters:
+      - file: py-pde
+      - file: findiff
+      - file: symbolic-findiff
+      - file: solve-findiff
+      - file: advectionper
+      - file: diffusioncrancknic
+      - file: pystencils
+      - file: advection-pystencils
