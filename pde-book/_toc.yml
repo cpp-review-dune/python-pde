@@ -6,6 +6,7 @@ root: intro
 chapters:
   - file: notes-pde
   - file: notes-fda
+  - file: notes-elliptic
   - file: octave
   - file: py-pde
   - file: findiff
