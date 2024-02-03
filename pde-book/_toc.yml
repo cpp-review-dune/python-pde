@@ -4,8 +4,9 @@
 format: jb-book
 root: intro
 chapters:
-  - file: notes-python
-  - file: notes-octave
+  - file: notes-pde
+  - file: notes-fda
+  - file: octave
   - file: py-pde
   - file: findiff
   - file: symbolic-findiff
