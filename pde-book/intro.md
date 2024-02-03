@@ -2,6 +2,12 @@
 
 Welcome to the PDE tutorial.
 
+- Homesite: https://jonshiach.github.io/files/notes/finite_difference_methods_notes.pdf
+- Course: Numerical Methods for Partial Differential Equations II
+- Recordings:
+  - https://mmutube.mmu.ac.uk/media/PDEs_Chapter_2_Exercises_Q3-7/1_85dac601
+  - https://www.youtube.com/playlist?list=PLgPpaTsP_3Dq5KsWd6-8wmjNs3ipnvCU3
+
 ## Contents
 
 ```{tableofcontents}
