@@ -15,8 +15,11 @@ Welcome to the PDE tutorial.
 
 ## Software
 
-- [`octave`](https://archlinux.org/packages/extra/x86_64/octave)
-- [`python-py-pde`](https://aur.archlinux.org/packages/python-py-pde)
-- [`python-findiff`](https://aur.archlinux.org/packages/python-findiff)
-- [`python-pystencils`](https://aur.archlinux.org/packages/python-pystencils)
-<!-- - [`python-pystencils`](https://aur.archlinux.org/packages/python-pystencils) -->
+[`octave`](https://archlinux.org/packages/extra/x86_64/octave),
+[`python-py-pde`](https://aur.archlinux.org/packages/python-py-pde),
+[`python-findiff`](https://aur.archlinux.org/packages/python-findiff),
+[`python-pystencils`](https://aur.archlinux.org/packages/python-pystencils),
+[`python-finitediffx`](https://aur.archlinux.org/packages/python-finitediffx),
+[`python-kernex`](https://aur.archlinux.org/packages/python-kernex),
+[`python-clawpack`](https://aur.archlinux.org/packages/python-clawpack),
+[`mole`]()
