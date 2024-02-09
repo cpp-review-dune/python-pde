@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: ghcr.io
-          image: ghcr.io/cpp-review-dune/introductory-review/jupyter-python-py-pde:latest
+          image: ghcr.io/cpp-review-dune/introductory-review/pde:latest
           options: -v ${{github.workspace}}:/work
           shell: bash
           run: |
