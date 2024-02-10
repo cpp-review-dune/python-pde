@@ -12,6 +12,7 @@ def cleaner(symbolsToDelete: list):
         print("Symbolic variables already cleared")
 
 
+# https://github.com/sympy/sympy/issues/12875
 class Approx(Eq):
     def _latex(self, printer):
         return rf"{printer._print(self.lhs)} \approx {printer._print(self.rhs)}"
