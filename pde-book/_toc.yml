@@ -29,3 +29,26 @@ parts:
   - caption: Simulating Fluid Flows Using Python
     chapters:
       - file: PureDifusion
+  - caption: Computers, Waves, Simulations
+    chapters:
+      - file: waves/W1
+      - file: waves/W2_P1
+      - file: waves/W2_P2
+      - file: waves/W2_P3
+      - file: waves/W3_P1_Gaussian
+      - file: waves/W3_P2_Gaussian_analytical
+      - file: waves/W4_ac1d_optimal_operators
+      - file: waves/W4_fd_ac2d_heterogeneous_solutions
+      - file: waves/W4_fd_ac2d_homogeneous
+      - file: waves/W4_fd_advection_1d
+      - file: waves/W4_fd_elastic1d_staggered_solution
+      - file: waves/W5_ps_cheby_derivative_solution
+      - file: waves/W5_ps_cheby_elastic_1d_solution
+      - file: waves/W5_ps_fourier_acoustic_1d
+      - file: waves/W5_ps_fourier_acoustic_2d
+      - file: waves/W6_fe_static_elasticity
+      - file: waves/W7_fe_elastic_1d_solution
+      - file: waves/W8_se_Lagrange_interpolation_simple
+      - file: waves/W8_se_numerical_integration_GLL
+      - file: waves/W9_se_hetero_1d_solution
+      - file: waves/W9_se_homo_1d_solution
