@@ -11,16 +11,21 @@ parts:
       - file: notes-fda
       - file: notes-elliptic
       - file: octave
-  - caption: The Finite Volume Method
-    chapters:
+      - file: pystencils
       - file: jax
-  - caption: The Mimetic Finite Difference Method
-    chapters:
       - file: py-pde
       - file: findiff
       - file: symbolic-findiff
       - file: solve-findiff
       - file: advectionper
       - file: diffusioncrancknic
-      - file: pystencils
       - file: advection-pystencils
+  # - caption: The Finite Volume Method
+  #   chapters:
+  #     - file: clawpack
+  - caption: The Mimetic Finite Difference Method
+    chapters:
+      - file: mole
+  - caption: Simulating Fluid Flows Using Python
+    chapters:
+      - file: PureDifusion
