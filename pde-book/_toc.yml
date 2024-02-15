@@ -31,7 +31,6 @@ parts:
       - file: PureDifusion
   - caption: Computers, Waves, Simulations
     chapters:
-      - file: waves/W1
       - file: waves/W2_P1
       - file: waves/W2_P2
       - file: waves/W2_P3
