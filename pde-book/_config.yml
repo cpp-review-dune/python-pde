@@ -1,10 +1,10 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: PDE
+title: PDE tutorial
 author: Carlos Aznarán
-copyright: "February 2024"
 logo: logo.jpg
+copyright: "February 2024"
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -27,12 +27,27 @@ repository:
   path_to_book: pde-book  # Optional path to your book, relative to the repository root
   branch: main  # Which branch of the repository should be used when creating links (optional)
 
+sphinx:
+  config:
+    html_last_updated_fmt: "%b %d, %Y"
+
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
   use_issues_button: true
   use_repository_button: true
+  use_edit_page_button: true
+
+  extra_footer: |
+    <div>
+        This webpage is distributed under the terms of the
+        <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+        which permits use, duplication, adaptation, distribution and
+        reproduction in any medium or format, as long as you give appropriate
+        credit to the original author(s) and the source, provide a link to the Creative
+        Commons license and indicate if changes were made.
+    </div>
 
 # https://github.com/executablebooks/jupyter-book/issues/1918#issuecomment-1440833493
-exclude_patterns: [_build, "**.ipynb_checkpoints", ".venv/*"]
+exclude_patterns: [_build, "**.ipynb_checkpoints", ".venv/*", "_output"]
 only_build_toc_files: true

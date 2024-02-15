@@ -20,9 +20,10 @@ parts:
       - file: advectionper
       - file: diffusioncrancknic
       - file: advection-pystencils
-  # - caption: The Finite Volume Method
-  #   chapters:
-  #     - file: clawpack
+      - file: petsc
+  - caption: The Finite Volume Method
+    chapters:
+      - file: clawpack
   - caption: The Mimetic Finite Difference Method
     chapters:
       - file: mole
