@@ -1,4 +1,6 @@
 text.usetex: True
 text.latex.preamble: "\usepackage{mathtools}"
 font.serif: Computer Modern
+#figure.dpi: 300
+#savefig.dpi: 300
 #animation.html: html5
