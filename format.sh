@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 nbqa isort pde-book/*.ipynb --float-to-top
 nbqa black pde-book/*.ipynb
