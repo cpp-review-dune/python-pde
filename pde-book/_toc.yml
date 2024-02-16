@@ -7,12 +7,14 @@ parts:
   - caption: The Finite Difference Method
     numbered: true
     chapters:
-      - file: notes-pde
-      - file: notes-fda
-      - file: notes-elliptic
-      - file: octave
+      - file: notes/pde
+      - file: notes/fda
+      - file: notes/elliptic
+      - file: notes/octave
       - file: pystencils
-      - file: jax
+      - file: jax/jax
+      - file: jax/finitediffx
+      - file: jax/kernex
       - file: py-pde
       - file: findiff
       - file: symbolic-findiff
@@ -22,15 +24,19 @@ parts:
       - file: advection-pystencils
       - file: petsc
   - caption: The Finite Volume Method
+    numbered: true
     chapters:
       - file: clawpack
   - caption: The Mimetic Finite Difference Method
+    numbered: true
     chapters:
       - file: mole
   - caption: Simulating Fluid Flows Using Python
+    numbered: true
     chapters:
       - file: PureDifusion
   - caption: Computers, Waves, Simulations
+    numbered: true
     chapters:
       - file: waves/W2_P1
       - file: waves/W2_P2
