@@ -30,7 +30,7 @@ parts:
   - caption: The Mimetic Finite Difference Method
     numbered: true
     chapters:
-      - file: mole
+      - file: mimetic/mole
   - caption: Simulating Fluid Flows Using Python
     numbered: true
     chapters:
