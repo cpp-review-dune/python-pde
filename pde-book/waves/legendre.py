@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import numpy as np
 
 
@@ -17,7 +16,6 @@ def legendre(N, x):
         P[0] = 1
         P[1] = x
     for i in range(2, N + 1):
-        P[i] = (1.0 / float(i)) * ((2 * i - 1) * x * P[i - 1] - (i - 1) *
-                                   P[i - 2])
+        P[i] = (1.0 / float(i)) * ((2 * i - 1) * x * P[i - 1] - (i - 1) * P[i - 2])
 
-    return(P[N])
+    return P[N]
