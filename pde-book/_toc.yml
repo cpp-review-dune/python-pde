@@ -58,3 +58,4 @@ parts:
       - file: waves/W8_se_numerical_integration_GLL
       - file: waves/W9_se_hetero_1d_solution
       - file: waves/W9_se_homo_1d_solution
+  - file: bibliography
