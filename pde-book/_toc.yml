@@ -34,7 +34,9 @@ parts:
   - caption: Simulating Fluid Flows Using Python
     numbered: true
     chapters:
-      - file: PureDifusion
+      - file: fluids/PureDifusion-I
+      - file: advection-diffusion-1d
+      - file: fluids/PureDifusion-II
   - caption: Computers, Waves, Simulations
     numbered: true
     chapters:
