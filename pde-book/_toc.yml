@@ -5,7 +5,7 @@ format: jb-book
 root: intro
 parts:
   - caption: The Finite Difference Method
-    numbered: true
+    numbered: false
     chapters:
       - file: notes/pde
       - file: notes/fda
@@ -24,11 +24,11 @@ parts:
       - file: advection-pystencils
       - file: petsc
   - caption: The Finite Volume Method
-    numbered: true
+    numbered: false
     chapters:
       - file: clawpack
   - caption: The Mimetic Finite Difference Method
-    numbered: true
+    numbered: false
     chapters:
       - file: mimetic/mole
   - caption: Simulating Fluid Flows Using Python
@@ -58,4 +58,7 @@ parts:
       - file: waves/W8_se_numerical_integration_GLL
       - file: waves/W9_se_hetero_1d_solution
       - file: waves/W9_se_homo_1d_solution
-  - file: bibliography
+  - caption: End Matter
+    numbered: false
+    chapters:
+      - file: bibliography
