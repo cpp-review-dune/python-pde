@@ -39,7 +39,11 @@ parts:
       - file: fluids/lecture3
       - file: fluids/lecture4
       - file: fluids/lecture5
-      # - file: fluids/lecture6
+      - file: fluids/lecture6
+      - file: fluids/lecture7
+      - file: fluids/lecture8
+      - file: fluids/lecture9
+      - file: fluids/lecture10
   - caption: Computers, Waves, Simulations
     numbered: true
     chapters:
