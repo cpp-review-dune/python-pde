@@ -5,7 +5,7 @@ format: jb-book
 root: intro
 parts:
   - caption: The Finite Difference Method
-    numbered: false
+    numbered: true
     chapters:
       - file: notes/pde
       - file: notes/fda
