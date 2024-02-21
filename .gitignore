@@ -133,3 +133,4 @@ _build
 *.jupyter_ystore.db
 _output
 *.mp4
+*.gif
