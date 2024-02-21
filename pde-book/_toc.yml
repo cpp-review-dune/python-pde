@@ -67,6 +67,24 @@ parts:
       - file: waves/W8_se_numerical_integration_GLL
       - file: waves/W9_se_hetero_1d_solution
       - file: waves/W9_se_homo_1d_solution
+  - caption: Differential equations and Fourier analysis
+    numbered: true
+    chapters:
+      - file: TMA4125/fourier_series_supplemental_material
+      - file: TMA4125/LagrangeInterpolation
+      - file: TMA4125/RungeKuttaNuMeODE
+      - file: TMA4125/TwoPointBoundaryProblems
+      - file: TMA4125/CompositeQuadrature
+      - file: TMA4125/GaussQuadrature
+      - file: TMA4125/lecture_01_introduction
+      - file: TMA4125/SimpleCovidModel
+      - file: TMA4125/ErrorAnalysisNuMeODE
+      - file: TMA4125/Introduction
+      - file: TMA4125/NewtonInterpolation
+      - file: TMA4125/SimpleQuadrature
+      - file: TMA4125/ErrorTheoryInterpolation
+      - file: TMA4125/IntroductionNuMeODE
+      - file: TMA4125/NumericalMethodsHeatEquation
   - caption: Finite Difference Computing with PDEs
     numbered: true
     chapters:
