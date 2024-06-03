@@ -1,0 +1,1251 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>78. Polynomial interpolation: Error theory &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/ErrorTheoryInterpolation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method" href="IntroductionNuMeODE.html" />
+    <link rel="prev" title="74. Numerical integration" href="SimpleQuadrature.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/ErrorTheoryInterpolation.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/ErrorTheoryInterpolation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/ErrorTheoryInterpolation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Polynomial interpolation: Error theory</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">78. Polynomial interpolation: Error theory</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#theory">79. Theory</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-interpolation-of-sin-x">79.1. Example 1: Interpolation of <span class="math notranslate nohighlight">\(\sin x\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-interpolation-of-tfrac-1-1-x-2">79.2. Exercise 1: Interpolation of <span class="math notranslate nohighlight">\(\tfrac{1}{1+x^2}\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-analysis">79.3. Error Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-interpolation-error">79.4. Theorem 1: Interpolation error</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equidistributed-nodes">79.4.1. Equidistributed nodes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-interpolation-error-for-sin-x-revisited">79.5. Exercise 2: Interpolation error for <span class="math notranslate nohighlight">\(\sin(x)\)</span> revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-choice-of-interpolation-points">79.6. Optimal choice of interpolation points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-chebyshev-interpolation">79.7. Exercise 3: Chebyshev interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- dom:TITLE: Polynomial interpolation: Error theory -->
+<section class="tex2jax_ignore mathjax_ignore" id="polynomial-interpolation-error-theory">
+<h1><span class="section-number">78. </span>Polynomial interpolation: Error theory<a class="headerlink" href="#polynomial-interpolation-error-theory" title="Link to this heading">#</a></h1>
+<!-- dom:AUTHOR: Anne Kværnø (modified by André Massing) -->
+<!-- Author: -->  
+<p><strong>Anne Kværnø (modified by André Massing)</strong></p>
+<p>Date: <strong>Jan 21, 2021</strong></p>
+<p>If you want to have a nicer theme for your jupyter notebook,
+download the <a class="reference external" href="https://www.math.ntnu.no/emner/TMA4125/2020v/part_II/notebooks/tma4125.css">cascade stylesheet file tma4125.css</a>
+and execute the next cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">solve</span>  <span class="c1"># Solve linear systems and compute norms</span>
+
+
+<span class="k">def</span> <span class="nf">css_styling</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tma4125.css&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">styles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Do nothing</span>
+
+
+<span class="c1"># Comment out next line and execute this cell to restore the default notebook style</span>
+<span class="n">css_styling</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:100,300,400,500,700,800,900,100italic,300italic,400italic,500italic,700italic,800italic,900italic' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=News+Cycle" rel="stylesheet"> <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> <style> @font-face {
+    /*font-family: "Computer Modern";*/
+    /*src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');*/
+    font-family: 'News Cycle', sans-serif;
+}
+
+
+/* main background */
+
+
+/*#notebook_panel { 
+        background: #C9D4E2;
+    }*/
+
+div.cell {
+    /*max-width:600px;*/
+    /*margin-left:16% !important;*/
+    /*margin-right:auto;*/
+}
+
+div.text_cell {
+    max-width: 120ex;
+    /* instead of 100%, */
+}
+
+div.text_cell_render {
+    font-family: 'Alegreya Sans', Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva,   sans-serif;
+    line-height: 135%;
+    /*font-size:    45pt;*/
+    font-size: 130%;
+    /*width:600px;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+}
+
+.CodeMirror {
+    /*font-family: 'Source Code Pro', monospace;*/
+    /*font-style: italic;*/
+    /*font-weight: bold;*/
+    /*font-size: 120%;*/
+}
+
+
+/*.prompt{
+        display: None;
+    }*/
+
+.text_cell_render h1 {
+    font-family: 'Nixie One', serifV;
+    font-style: regular;
+    font-weight: 400;
+    font-size: 45pt;
+    line-height: 100%;
+        color: #497BB9;    
+    /*color: #5889C5;*/
+    /*color: rgb(0, 51, 102);*/
+    /*font-weight: 200;*/
+    /*font-size: 50pt;*/
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    display: block;
+}
+
+.text_cell_render h2 {
+    font-family: 'Nixie One', serif;
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 100%;
+    /*color: rgb(0,51,102);*/
+    color: #497BB9;    
+    margin-bottom: 0.1em;
+    margin-top: 0.3em;
+    display: block;
+}	
+
+.text_cell_render h3 {
+    font-family: 'Nixie One', serif;
+    margin-top:16px;
+    font-size: 22pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-style: regular;
+    color: rgb(102,102,0);
+}
+
+.text_cell_render h4 {    /*Use this for captions*/
+    font-family: 'Nixie One', serif;
+    font-size: 14pt;
+/*    text-align: center;*/
+    margin-top: 0em;
+    margin-bottom: 2em;
+    font-style: regular;
+}
+
+.text_cell_render h5 {  /*Use this for small titles*/
+    font-family: 'Nixie One', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: rgb(163,0,0);
+    /*color: #5889C5;*/
+    /*margin-bottom: .5em;
+    margin-top: 0.5em;*/
+    font-style: italic;
+    margin-bottom: .1em;
+    margin-top: 0.8em;
+    display: block;
+}
+
+.warning {
+    color: rgb( 240, 20, 20)
+}
+
+</style> 
+<script>
+ MathJax.Hub.Config( {
+    TeX: {
+        Macros: {
+            NN: "{\\bf N}",
+            RR: "{\\mathbb{R}}",
+            mcO: "{\\mathcal{O}}"
+        },
+        equationNumbers: { autoNumber: "AMS" },
+        extensions: ["AMSmath.js", "begingroup.js"] 
+    },
+    tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"]], displayMath: [ ['$$', '$$'], ["\\[", "\\]"]]
+    },
+    displayAlign: 'center', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {
+            '.MathJax_Display': {
+                "margin": 4
+            }
+        }
+    }
+}
+);
+</script>
+</div></div>
+</div>
+<p>And of course we want to import the required Modules.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+
+<span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">),</span>
+    <span class="s2">&quot;axes.grid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we also run the LagrangePolynomial.ipynb to import
+the function <code class="docutils literal notranslate"><span class="pre">cardinal</span></code> and <code class="docutils literal notranslate"><span class="pre">lagrange</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">run</span> LagrangeInterpolation.ipynb
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/9c845cb761ef606f4f1fbc0633cef85e990be4c0bd14b535e5d6672aa25a5e13.png"><img alt="../_images/9c845cb761ef606f4f1fbc0633cef85e990be4c0bd14b535e5d6672aa25a5e13.png" src="../_images/9c845cb761ef606f4f1fbc0633cef85e990be4c0bd14b535e5d6672aa25a5e13.png" style="width: 525px; height: 510px;" /></a>
+<a class="reference internal image-reference" href="../_images/c16f129e268a013e257bb08729b4acade22d26bec52d65bfc9863f8cdbb88acb.png"><img alt="../_images/c16f129e268a013e257bb08729b4acade22d26bec52d65bfc9863f8cdbb88acb.png" src="../_images/c16f129e268a013e257bb08729b4acade22d26bec52d65bfc9863f8cdbb88acb.png" style="width: 662px; height: 407px;" /></a>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="theory">
+<h1><span class="section-number">79. </span>Theory<a class="headerlink" href="#theory" title="Link to this heading">#</a></h1>
+<p>Given some function <span class="math notranslate nohighlight">\(f\in C[a,b]\)</span>. Choose <span class="math notranslate nohighlight">\(n+1\)</span> distinct nodes in
+<span class="math notranslate nohighlight">\([a,b]\)</span> and let <span class="math notranslate nohighlight">\(p_n(x) \in \mathbb{P}_n\)</span> satisfy the interpolation
+condition</p>
+<div class="math notranslate nohighlight">
+\[
+p_n(x_i) = f(x_i), \qquad i=0,\dots,n.
+\]</div>
+<p>What can be said about the error <span class="math notranslate nohighlight">\(e(x)=f(x)-p_n(x)\)</span>?</p>
+<p>The goal of this section is to cover a few theoretical aspects, and to
+give the answer to the natural question:</p>
+<ul class="simple">
+<li><p>If the polynomial is used to approximate a function, can we find an
+expression for the error?</p></li>
+<li><p>How can the error be made as small as possible?</p></li>
+</ul>
+<p>Let us start with an numerical experiment, to have a certain feeling
+of what to expect.</p>
+<section id="example-1-interpolation-of-sin-x">
+<h2><span class="section-number">79.1. </span>Example 1: Interpolation of <span class="math notranslate nohighlight">\(\sin x\)</span><a class="headerlink" href="#example-1-interpolation-of-sin-x" title="Link to this heading">#</a></h2>
+<div id="interpolation:ex:example_sin_interpolation"></div>
+Let $f(x)=\sin(x)$, $x\in [0,2\pi]$. Choose $n+1$ equidistributed
+nodes, that is $x_i=ih$, $i=0,\dots,n$, and $h=2\pi/n$. Calculate the
+interpolation polynomial by use of the functions `cardinal` and
+`lagrange`. Plot the error $e_n(x)=f(x)-p_n(x)$ for different values
+of $n$. Choose $n=4,8,16$ and $32$.  Notice how the error is
+distributed over the interval, and find the maximum error
+$\max_{x\in[a,b]}|e_n(x)|$ for each $n$.<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the function</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="c1"># Set the interval</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>  <span class="c1"># The interpolation interval</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>  <span class="c1"># The &#39;x-axis&#39;</span>
+
+<span class="c1"># Set the interpolation points</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Interpolation points</span>
+<span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Equidistributed nodes (can be changed)</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>
+
+<span class="c1"># Evaluate the interpolation polynomial in the x-values</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">cardinal</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">lagrange</span><span class="p">(</span><span class="n">ydata</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot f(x) og p(x) and the interpolation points</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;f(x)&quot;</span><span class="p">,</span> <span class="s2">&quot;p(x)&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot the interpolation error</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Error: f(x)-p(x)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max error is </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Max error is 1.20e-03
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/4dba7175f192b58c99473f9ba8af7bd1eca25ec815c8e376ae71b4832cc4029a.png"><img alt="../_images/4dba7175f192b58c99473f9ba8af7bd1eca25ec815c8e376ae71b4832cc4029a.png" src="../_images/4dba7175f192b58c99473f9ba8af7bd1eca25ec815c8e376ae71b4832cc4029a.png" style="width: 746px; height: 382px;" /></a>
+</div>
+</div>
+<!-- --- begin exercise --- -->
+</section>
+<section id="exercise-1-interpolation-of-tfrac-1-1-x-2">
+<h2><span class="section-number">79.2. </span>Exercise 1: Interpolation of <span class="math notranslate nohighlight">\(\tfrac{1}{1+x^2}\)</span><a class="headerlink" href="#exercise-1-interpolation-of-tfrac-1-1-x-2" title="Link to this heading">#</a></h2>
+<p>Repeat the previous experiment with Runge’s function</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = \frac{1}{1+x^2}, \qquad x\in [-5,5].
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- end exercise --- -->
+</section>
+<section id="error-analysis">
+<h2><span class="section-number">79.3. </span>Error Analysis<a class="headerlink" href="#error-analysis" title="Link to this heading">#</a></h2>
+<p><strong>Taylor polynomials once more.</strong>
+Before we turn to the analysis of the interpolation error
+<span class="math notranslate nohighlight">\(e(x) = f(x) - p_n(x)\)</span>, we quickly recall (once more)
+Taylor polynomials and their error representation.
+For <span class="math notranslate nohighlight">\(f \in C^{n+1}[a,b]\)</span> and <span class="math notranslate nohighlight">\(x_0 \in (a,b)\)</span>,
+we defined the <span class="math notranslate nohighlight">\(n\)</span>-th order Taylor polynomial <span class="math notranslate nohighlight">\(T^n_{x_0}f(x)\)</span>
+of <span class="math notranslate nohighlight">\(f\)</span> around <span class="math notranslate nohighlight">\(x_0\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align*}
+T^n_{x_0}f(x) &amp;:= \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
+\end{align*}
+\]</div>
+<p>Note that the Taylor polynomial is in fact a polynomial of order <span class="math notranslate nohighlight">\(n\)</span>
+which not only interpolates <span class="math notranslate nohighlight">\(f\)</span> in <span class="math notranslate nohighlight">\(x_0\)</span>, but also
+its first, second etc. and <span class="math notranslate nohighlight">\(n\)</span>-th derivative <span class="math notranslate nohighlight">\(f', f'', \ldots f^{(n)}\)</span> in <span class="math notranslate nohighlight">\(x_0\)</span>!</p>
+<p>So the Taylor polynomial the unique polynomial of order <span class="math notranslate nohighlight">\(n\)</span> which
+interpolates the <em>first <span class="math notranslate nohighlight">\(n\)</span> derivatives</em>
+of <span class="math notranslate nohighlight">\(f\)</span> in a <em>single point <span class="math notranslate nohighlight">\(x_0\)</span></em>. In contrast,
+the interpolation polynomial <span class="math notranslate nohighlight">\(p_n\)</span> is the unique polynomial of order <span class="math notranslate nohighlight">\(n\)</span>
+which <em>interpolates only the <span class="math notranslate nohighlight">\(0\)</span>-order</em> (that is, <span class="math notranslate nohighlight">\(f\)</span>
+itself), but in <em><span class="math notranslate nohighlight">\(n\)</span> distinctive points</em> <span class="math notranslate nohighlight">\(x_0, x_1,\ldots x_n\)</span>.</p>
+<p>For the Taylor polynomial <span class="math notranslate nohighlight">\(T^n_{x_0}f(x)\)</span> we have the error
+representation</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align*}
+f(x) - T^n_{x_0}f(x) = R_{n+1}(x_0) \qquad
+\text{where }
+R_{n+1}(x_0) = \frac{f^{(n+1)}(\xi)}{(n+1)!} (x-x_0)^{n+1},
+\end{align*}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\xi\)</span> between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(x_0\)</span>.</p>
+<p>Of course, we usually don’t know the exact location of <span class="math notranslate nohighlight">\(\xi\)</span>
+and thus not the exact error,
+but we can at least estimate
+it and bound it from above:</p>
+<div class="math notranslate nohighlight">
+\[
+|f(x) - T^n_{x_0}f(x)| \leqslant
+ \frac{M}{(n+1)!} h^{n+1}
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+M=\max_{x\in[a,b]}|f^{(n+1)}(x)| \qquad \text{and} \qquad h = |x-x_0|.
+\]</div>
+<p>The next theorem gives us an  expression for the interpolation
+error <span class="math notranslate nohighlight">\(e(x)=f(x)-p_n(x)\)</span> which is similar to what we have just
+seen for the error between the Taylor polynomial and the original function
+<span class="math notranslate nohighlight">\(f\)</span>.</p>
+</section>
+<section id="theorem-1-interpolation-error">
+<h2><span class="section-number">79.4. </span>Theorem 1: Interpolation error<a class="headerlink" href="#theorem-1-interpolation-error" title="Link to this heading">#</a></h2>
+<p>Given <span class="math notranslate nohighlight">\(f \in C^{(n+1)}[a,b]\)</span>. Let <span class="math notranslate nohighlight">\(p_{n} \in \mathbb{P}_n\)</span> interpolate <span class="math notranslate nohighlight">\(f\)</span> in
+<span class="math notranslate nohighlight">\(n+1\)</span> distinct nodes <span class="math notranslate nohighlight">\(x_i \in [a,b]\)</span>. For each <span class="math notranslate nohighlight">\(x\in [a,b]\)</span> there is at least
+one <span class="math notranslate nohighlight">\(\xi(x) \in (a,b)\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) - p_n(x) = \frac{f^{(n+1)}(\xi(x))}{(n+1)!}\prod_{i=0}^n(x-x_i).
+\]</div>
+<p><strong>Proof.</strong>
+We start fromt the Newton polynomial <span class="math notranslate nohighlight">\(\omega_{n+1} =: \omega(x)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\omega(x) = \prod_{i=0}^{n}(x-x_i) = x^{n+1} + \dotsm.
+\]</div>
+<p>Clearly, the error in the nodes, <span class="math notranslate nohighlight">\(e(x_i)=0\)</span>.
+Choose an <em>arbitrary</em> <span class="math notranslate nohighlight">\(x\in [a,b]\)</span>, <span class="math notranslate nohighlight">\(x\in [a,b]\)</span>, where <span class="math notranslate nohighlight">\(x\not=x_i\)</span>,
+<span class="math notranslate nohighlight">\(i=0,1,\dotsc,n\)</span>. For this fixed <span class="math notranslate nohighlight">\(x\)</span>, define a function in <span class="math notranslate nohighlight">\(t\)</span> as:</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(t) = e(t)\omega(x) - e(x)\omega(t).
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(e(t) = f(t)-p_n(t)\)</span>.</p>
+<p>Notice that <span class="math notranslate nohighlight">\(\varphi(t)\)</span> is as differentiable with respect to <span class="math notranslate nohighlight">\(t\)</span> as <span class="math notranslate nohighlight">\(f(t)\)</span>. The
+function <span class="math notranslate nohighlight">\(\varphi(t)\)</span> has <span class="math notranslate nohighlight">\(n+2\)</span> distinct zeros (the nodes and the fixed x). As a
+consequence of <a class="reference external" href="https://en.wikipedia.org/wiki/Rolle's_theorem">Rolle’s theorem</a>,  the derivative
+<span class="math notranslate nohighlight">\(\varphi'(t)\)</span> has at least <span class="math notranslate nohighlight">\(n+1\)</span> distinct zeros, one between each of the zeros
+of <span class="math notranslate nohighlight">\(\varphi(t)\)</span>. So <span class="math notranslate nohighlight">\(\varphi''(t)\)</span> has <span class="math notranslate nohighlight">\(n\)</span> distinct
+zeros, etc. By repeating this argument, we can see that <span class="math notranslate nohighlight">\(\varphi^{n+1}(t)\)</span>
+has at least one zero in <span class="math notranslate nohighlight">\([a,b]\)</span>, let us call this <span class="math notranslate nohighlight">\(\xi(x)\)</span>, as it does depend on the fixed <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>Since
+<span class="math notranslate nohighlight">\(\omega^{(n+1)}(t)=(n+1)!\)</span> and <span class="math notranslate nohighlight">\(e^{(n+1)}(t)=f^{(n+1)}(t)\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi^{(n+1)}(\xi)= 0 = f^{(n+1)}(\xi)\omega(x) - e(x)(n+1)!
+\]</div>
+<p>which concludes the proof.</p>
+<p><strong>Observation.</strong> The interpolation error consists of three elements: The derivative of the
+function <span class="math notranslate nohighlight">\(f\)</span>, the number of interpolation points <span class="math notranslate nohighlight">\(n+1\)</span> and the distribution of
+the nodes <span class="math notranslate nohighlight">\(x_i\)</span>. We cannot do much with the first of these, but we can choose
+the two others. Let us first look at the most obvious choice of nodes.</p>
+<section id="equidistributed-nodes">
+<h3><span class="section-number">79.4.1. </span>Equidistributed nodes<a class="headerlink" href="#equidistributed-nodes" title="Link to this heading">#</a></h3>
+<p>The nodes are <em>equidistributed</em> over the interval <span class="math notranslate nohighlight">\([a,b]\)</span> if <span class="math notranslate nohighlight">\(x_i=a+ih\)</span>, <span class="math notranslate nohighlight">\(h=(b-a)/n\)</span>. In this case it can
+be proved that:</p>
+<div class="math notranslate nohighlight">
+\[
+|\omega(x)| \leq \frac{h^{n+1}}{4}n!
+\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[
+|e(x)| \leq \frac{h^{n+1}}{4(n+1)}M, \qquad M=\max_{x\in[a,b]}|f^{(n+1)}(x)|.
+\]</div>
+<p>for all <span class="math notranslate nohighlight">\(x\in [a,b]\)</span>.</p>
+<p>Let us now see how good this error bound is by an example.</p>
+<!-- --- begin exercise --- -->
+</section>
+</section>
+<section id="exercise-2-interpolation-error-for-sin-x-revisited">
+<h2><span class="section-number">79.5. </span>Exercise 2: Interpolation error for <span class="math notranslate nohighlight">\(\sin(x)\)</span> revisited<a class="headerlink" href="#exercise-2-interpolation-error-for-sin-x-revisited" title="Link to this heading">#</a></h2>
+<p>Let again <span class="math notranslate nohighlight">\(f(x)=\sin(x)\)</span> and <span class="math notranslate nohighlight">\(p_n(x)\)</span> the polynomial interpolating <span class="math notranslate nohighlight">\(f(x)\)</span> in
+<span class="math notranslate nohighlight">\(n+1\)</span> equidistributed points on <span class="math notranslate nohighlight">\([0,1]\)</span>.
+An upper bound for the error for different values of <span class="math notranslate nohighlight">\(n\)</span>
+can be found easily. Clearly,
+<span class="math notranslate nohighlight">\(\max_{x\in[0,2\pi]}|f^{(n+1)}(x)|=M=1\)</span> for all <span class="math notranslate nohighlight">\(n\)</span>, so</p>
+<div class="math notranslate nohighlight">
+\[
+|e_n(x)| = |f(x)-p_n(x)| \leq
+\frac{1}{4(n+1)}\left(\frac{2\pi}{n}\right)^{n+1}, \qquad x\in[a,b].
+\]</div>
+<p>Use the code in the first Example of this lecture to verify the result
+for <span class="math notranslate nohighlight">\(n = 2, 4, 8, 16\)</span>. How close is the bound to the real error?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- end exercise --- -->
+</section>
+<section id="optimal-choice-of-interpolation-points">
+<h2><span class="section-number">79.6. </span>Optimal choice of interpolation points<a class="headerlink" href="#optimal-choice-of-interpolation-points" title="Link to this heading">#</a></h2>
+<p>So how can the error be reduced? For a given <span class="math notranslate nohighlight">\(n\)</span> there is only one choice: to
+distribute the nodes in order to make
+<span class="math notranslate nohighlight">\(|\omega(x)|= \prod_{j=0}^{n}|x-x_i|\)</span> as small as possible. We will first do this
+on a standard interval <span class="math notranslate nohighlight">\([-1,1]\)</span>, and then transfer the results to some arbitrary
+interval <span class="math notranslate nohighlight">\([a,b]\)</span>.</p>
+<p>Let us start taking a look at <span class="math notranslate nohighlight">\(\omega(x)\)</span> for equidistributed nodes on the
+interval <span class="math notranslate nohighlight">\([-1,1]\)</span>, for
+different values of <span class="math notranslate nohighlight">\(n\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">omega</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># compute omega(x) for the nodes in xdata</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>
+    <span class="n">omega_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n1</span><span class="p">):</span>
+        <span class="n">omega_value</span> <span class="o">=</span> <span class="n">omega_value</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">xdata</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>  <span class="c1"># (x-x_0)(x-x_1)...(x-x_n)</span>
+    <span class="k">return</span> <span class="n">omega_value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot omega(x)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Number of interpolation points is n+1</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># The interval</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">501</span><span class="p">)</span>
+<span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">omega</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;omega(x)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n = </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">, max|omega(x)| = </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n =  8, max|omega(x)| = 2.84e-02
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/6d8971dea5be76fb42a098f47f72b97e5688cf2b4263d54c845ae53063ccd1a4.png"><img alt="../_images/6d8971dea5be76fb42a098f47f72b97e5688cf2b4263d54c845ae53063ccd1a4.png" src="../_images/6d8971dea5be76fb42a098f47f72b97e5688cf2b4263d54c845ae53063ccd1a4.png" style="width: 578px; height: 304px;" /></a>
+</div>
+</div>
+<p>Run the code for different values of <span class="math notranslate nohighlight">\(n\)</span>. Notice the following:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\max_{x\in[-1,1]} |\omega(x)|\)</span> becomes smaller with increasing <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(|\omega(x)|\)</span> has its maximum values near the boundaries of <span class="math notranslate nohighlight">\([-1, 1]\)</span>.</p></li>
+</ul>
+<p>A a consequence of the latter, it seems reasonable to move the nodes towards the boundaries.
+It can be proved that the optimal choice of nodes are the <em>Chebyshev-nodes</em>, given by</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{x}_i = \cos \left( \frac{(2i+1)\pi}{2(n+1)} \right), \qquad i=0,\dotsc,n
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\omega_{Cheb}(x) = \prod_{j=1}^n(x-\tilde{x}_i)\)</span>. It is then possible to prove that</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{2^{n}} = \max_{x\in [-1, 1]} |\omega_{Cheb}(x)| \leq \max_{x \in [-1, 1]} |q(x)|
+\]</div>
+<p>for all polynomials <span class="math notranslate nohighlight">\(q\in \mathbb{P}_n\)</span> such that <span class="math notranslate nohighlight">\(q(x)=x^n + c_{n-1}x^{n-1}+\dotsm+c_1x + c_0\)</span>.</p>
+<p>The distribution of nodes can be transferred to an interval <span class="math notranslate nohighlight">\([a,b]\)</span> by the linear transformation</p>
+<div class="math notranslate nohighlight">
+\[
+x = \frac{b-a}{2}\tilde{x} + \frac{b+a}{2}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\in[a,b]\)</span> and <span class="math notranslate nohighlight">\(\tilde{x} \in [-1,1]\)</span>.</p>
+<p>By doing so we get</p>
+<div class="math notranslate nohighlight">
+\[
+\omega(x) = \prod_{j=0}^n (x-x_i) =
+  \left(\frac{b-a}{2}\right)^{n+1} \prod_{j=0}^n (\tilde{x}-\tilde{x}_i)
+  = \left(\frac{b-a}{2}\right)^{n+1} \omega_{Cheb}(\tilde{x}).
+\]</div>
+<p>From the theorem on interpolation errors we can conclude:</p>
+<p><strong>Theorem (interpolation error for Chebyshev interpolation).</strong></p>
+<p>Given <span class="math notranslate nohighlight">\(f \in C^{(n+1)}[a,b]\)</span>, and let <span class="math notranslate nohighlight">\(M_{n+1} = \max_{x\in [a,b]}|f^{(n+1)}(x)|\)</span>.  Let <span class="math notranslate nohighlight">\(p_{n} \in \mathbb{P}_n\)</span> interpolate <span class="math notranslate nohighlight">\(f\)</span> i <span class="math notranslate nohighlight">\(n+1\)</span> Chebyshev-nodes <span class="math notranslate nohighlight">\(x_i \in [a,b]\)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[
+\max_{x\in[a,b]}|f(x) - p_n(x)| \leq \frac{(b-a)^{n+1}}{2^{2n+1}(n+1)!} M_{n+1}.
+\]</div>
+<p>The Chebyshev nodes over an interval <span class="math notranslate nohighlight">\([a,b]\)</span> are evaluated in the following function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chebyshev_nodes</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># n Chebyshev nodes in the interval [a, b]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>  <span class="c1"># i = [0,1,2,3, ....n-1]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span><span class="p">)))</span>  <span class="c1"># nodes over the interval [-1,1]</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span>  <span class="c1"># nodes over the interval [a,b]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- begin exercise --- -->
+</section>
+<section id="exercise-3-chebyshev-interpolation">
+<h2><span class="section-number">79.7. </span>Exercise 3: Chebyshev interpolation<a class="headerlink" href="#exercise-3-chebyshev-interpolation" title="Link to this heading">#</a></h2>
+<p><strong>a)</strong>
+Plot <span class="math notranslate nohighlight">\(\omega_{Cheb}(x)\)</span> for <span class="math notranslate nohighlight">\(3, 5, 9, 17\)</span> interpolation points on the interval <span class="math notranslate nohighlight">\([-1,1]\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>b)</strong>
+Repeat Example 3 using Chebyshev interpolation on the functions below. Compare with the results you got from equidistributed nodes.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+  f(x) &amp;= \sin(x), &amp;&amp; x\in[0,2\pi] \\ 
+  f(x) &amp;= \frac{1}{1+x^2}, &amp;&amp; x\in[-5,5]. 
+\end{align*}
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>For information</strong>:
+<a class="reference external" href="http://www.chebfun.org/">Chebfun</a> is software package which makes it possible to manipulate functions and to solve equations with accuracy close to machine accuracy. The algorithms are based on polynomial interpolation in Chebyshev nodes.</p>
+<!-- --- end exercise --- --></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="SimpleQuadrature.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">74. </span>Numerical integration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="IntroductionNuMeODE.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">80. </span>Numerical solution of ordinary differential equations: Euler’s and Heun’s method</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">78. Polynomial interpolation: Error theory</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#theory">79. Theory</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-interpolation-of-sin-x">79.1. Example 1: Interpolation of <span class="math notranslate nohighlight">\(\sin x\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-interpolation-of-tfrac-1-1-x-2">79.2. Exercise 1: Interpolation of <span class="math notranslate nohighlight">\(\tfrac{1}{1+x^2}\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-analysis">79.3. Error Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-interpolation-error">79.4. Theorem 1: Interpolation error</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equidistributed-nodes">79.4.1. Equidistributed nodes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-interpolation-error-for-sin-x-revisited">79.5. Exercise 2: Interpolation error for <span class="math notranslate nohighlight">\(\sin(x)\)</span> revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-choice-of-interpolation-points">79.6. Optimal choice of interpolation points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-chebyshev-interpolation">79.7. Exercise 3: Chebyshev interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

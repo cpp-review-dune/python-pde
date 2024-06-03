@@ -1,0 +1,972 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'waves/W9_se_homo_1d_solution';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="47. Fourier series: supplemental material" href="../TMA4125/fourier_series_supplemental_material.html" />
+    <link rel="prev" title="45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case" href="W9_se_hetero_1d_solution.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/waves/W9_se_homo_1d_solution.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fwaves/W9_se_homo_1d_solution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/waves/W9_se_homo_1d_solution.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-equations">46.1. Basic Equations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation-with-lagrange-polynomials">46.1.1. Interpolation with Lagrange Polynomials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-integration">46.1.2. Numerical Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initialization-of-setup">46.1.3. 1. Initialization of setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mass-matrix">46.1.4. 2. The Mass Matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stiffness-matrix">46.1.5. 3. The Stiffness matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-element-solution">46.1.6. 4. Spectral Element solution</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div style='background-image: url("title01.png") ; padding: 0px ; background-size: cover ; border-radius: 5px ; height: 200px'>
+<div style="float: right ; margin: 50px ; padding: 20px ; background: rgba(255 , 255 , 255 , 0.7) ; width: 50% ; height: 150px">
+        <div style="position: relative ; top: 50% ; transform: translatey(-50%)">
+            <div style="font-size: xx-large ; font-weight: 900 ; color: rgba(0 , 0 , 0 , 0.8) ; line-height: 100%">Computers, Waves, Simulations</div>
+            <div style="font-size: large ; padding-top: 20px ; color: rgba(0 , 0 , 0 , 0.5)">Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</div>
+        </div>
+    </div>
+</div><section class="tex2jax_ignore mathjax_ignore" id="spectral-element-method-elastic-wave-equation-1d-homogeneous-case">
+<h1><span class="section-number">46. </span>Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case<a class="headerlink" href="#spectral-element-method-elastic-wave-equation-1d-homogeneous-case" title="Link to this heading">#</a></h1>
+<p>This notebook covers the following aspects:</p>
+<ul class="simple">
+<li><p>The weak form of the 1D elastic wave equation</p></li>
+<li><p>Initialization and implementataion of the Mass and Stiffness Matrices</p></li>
+<li><p>Solution using the finite difference scheme and its comparion with FEM solution</p></li>
+</ul>
+<section id="basic-equations">
+<h2><span class="section-number">46.1. </span>Basic Equations<a class="headerlink" href="#basic-equations" title="Link to this heading">#</a></h2>
+<p>This notebook presents the numerical solution for the 1D elastic wave equation</p>
+<p>\begin{equation}
+\rho(x) \partial_t^2 u(x,t) = \partial_x (\mu(x) \partial_x u(x,t)) + f(x,t),
+\end{equation}</p>
+<p>using the spectral element method. This is done after a series of steps summarized as follow:</p>
+<ol class="arabic simple">
+<li><p>The wave equation is written into its weak form</p></li>
+<li><p>Assume stress-free boundary condition after integration by parts</p></li>
+<li><p>Approximate the wave field as a linear combination of some basis</p></li>
+</ol>
+<p>\begin{equation}
+u(x,t) \ \approx \ \overline{u}(x,t) \ = \ \sum_{i=1}^{n} u_i(t) \ \varphi_i(x)
+\end{equation}</p>
+<ol class="arabic simple" start="4">
+<li><p>Use the same basis functions in <span class="math notranslate nohighlight">\(u(x, t)\)</span> as test functions in the weak form, the so call Galerkin principle.</p></li>
+<li><p>The continuous weak form is written as a system of linear equations by considering the approximated displacement field.</p></li>
+</ol>
+<p>\begin{equation}
+\mathbf{M}^T\partial_t^2 \mathbf{u} + \mathbf{K}^T\mathbf{u} = \mathbf{f}
+\end{equation}</p>
+<ol class="arabic simple" start="7">
+<li><p>Time extrapolation with centered finite differences scheme</p></li>
+</ol>
+<p>\begin{equation}
+\mathbf{u}(t + dt) = dt^2 (\mathbf{M}^T)^{-1}[\mathbf{f} - \mathbf{K}^T\mathbf{u}] + 2\mathbf{u} - \mathbf{u}(t-dt).
+\end{equation}</p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{M}\)</span> is known as the mass matrix, and <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> the stiffness matrix.</p>
+<p>The above solution is exactly the same presented for the classic finite-element method. Now we introduce appropriated basis functions and integration scheme to efficiently solve the system of matrices.</p>
+<section id="interpolation-with-lagrange-polynomials">
+<h3><span class="section-number">46.1.1. </span>Interpolation with Lagrange Polynomials<a class="headerlink" href="#interpolation-with-lagrange-polynomials" title="Link to this heading">#</a></h3>
+<p>At the elemental level, we introduce as interpolating functions the Lagrange polynomials and use <span class="math notranslate nohighlight">\(\xi\)</span> as the space variable representing our elemental domain:</p>
+<p>\begin{equation}
+\varphi_i \ \rightarrow \ \ell_i^{(N)} (\xi) \ := \ \prod_{j \neq i}^{N+1} \frac{\xi - \xi_j}{\xi_i-\xi_j}, \qquad   i,j = 1, 2, \dotsc , N + 1<br />
+\end{equation}</p>
+</section>
+<section id="numerical-integration">
+<h3><span class="section-number">46.1.2. </span>Numerical Integration<a class="headerlink" href="#numerical-integration" title="Link to this heading">#</a></h3>
+<p>The integral of a continuous function <span class="math notranslate nohighlight">\(f(x)\)</span> can be calculated after replacing <span class="math notranslate nohighlight">\(f(x)\)</span> by a polynomial approximation that can be integrated analytically. As interpolating functions we use again the Lagrange polynomials and
+obtain Gauss-Lobatto-Legendre quadrature. Here, the GLL points are used to perform the integral.</p>
+<p>\begin{equation}
+\int_{-1}^1 f(x) \ dx \approx \int <em>{-1}^1 P_N(x) dx = \sum</em>{i=1}^{N+1}
+w_i f(x_i)
+\end{equation}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">gll</span> <span class="kn">import</span> <span class="n">gll</span>
+<span class="kn">from</span> <span class="nn">lagrange1st</span> <span class="kn">import</span> <span class="n">lagrange1st</span>
+<span class="kn">from</span> <span class="nn">ricker</span> <span class="kn">import</span> <span class="n">ricker</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show Plot in The Notebook</span>
+<span class="c1"># matplotlib.use(&quot;nbagg&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="initialization-of-setup">
+<h3><span class="section-number">46.1.3. </span>1. Initialization of setup<a class="headerlink" href="#initialization-of-setup" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialization of setup</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">600</span>  <span class="c1"># number of time steps</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">10000.0</span>  <span class="c1"># Length of domain [m]</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="mf">2500.0</span>  <span class="c1"># S velocity [m/s]</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># Density [kg/m^3]</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">vs</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Shear modulus mu</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Order of Lagrange polynomials</span>
+<span class="n">ne</span> <span class="o">=</span> <span class="mi">125</span>  <span class="c1"># Number of elements</span>
+<span class="n">Tdom</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Dominant period of Ricker source wavelet</span>
+<span class="n">iplot</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Plotting each iplot snapshot</span>
+
+<span class="c1"># variables for elemental matrices</span>
+<span class="n">Me</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">Ke</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="c1"># ----------------------------------------------------------------</span>
+
+<span class="c1"># Initialization of GLL points integration weights</span>
+<span class="p">[</span><span class="n">xi</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">gll</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>  <span class="c1"># xi, N+1 coordinates [-1 1] of GLL points</span>
+<span class="c1"># w Integration weights at GLL locations</span>
+<span class="c1"># Space domain</span>
+<span class="n">le</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">/</span> <span class="n">ne</span>  <span class="c1"># Length of elements</span>
+<span class="c1"># Vector with GLL points</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Initialization of physical coordinates xg in the entire space (commment added May 15, 2020)</span>
+<span class="n">xg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span> <span class="o">*</span> <span class="n">ne</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">xg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ne</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">le</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xi</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">le</span>
+
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="n">dxmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xg</span><span class="p">))</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># Courant value</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">dxmin</span> <span class="o">/</span> <span class="n">vs</span>  <span class="c1"># Global time step</span>
+
+<span class="c1"># Mapping - Jacobian</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">le</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">Ji</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">J</span>  <span class="c1"># Inverse Jacobian</span>
+
+<span class="c1"># 1st derivative of Lagrange polynomials</span>
+<span class="n">l1d</span> <span class="o">=</span> <span class="n">lagrange1st</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>  <span class="c1"># Array with GLL as columns for each N+1 polynomial</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-mass-matrix">
+<h3><span class="section-number">46.1.4. </span>2. The Mass Matrix<a class="headerlink" href="#the-mass-matrix" title="Link to this heading">#</a></h3>
+<p>Now we initialize the mass and stiffness matrices. In general, the mass matrix at the elemental level is given</p>
+<p>\begin{equation}
+M_{ji}^e \ = \ w_j  \ \rho (\xi)  \ \frac{\mathrm{d}x}{\mathrm{d}\xi} \delta_{ij} \vert_ {\xi = \xi_j}
+\end{equation}</p>
+<p>We implement the mass matrix using the integration weights at GLL locations <span class="math notranslate nohighlight">\(w\)</span>, the jacobian <span class="math notranslate nohighlight">\(J\)</span>, and density <span class="math notranslate nohighlight">\(\rho\)</span>. Then, perform the global assembly of the mass matrix, compute its inverse, and display the inverse mass matrix to visually inspect how it looks like.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Elemental Mass matrix</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">Me</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">J</span>  <span class="c1"># stored as a vector since it&#39;s diagonal</span>
+
+<span class="c1"># Global Mass matrix</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="n">k</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">ng</span> <span class="o">=</span> <span class="p">(</span><span class="n">ne</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ng</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ne</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">Me</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+<span class="c1"># Inverse matrix of M</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="n">Minv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">ng</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ng</span><span class="p">):</span>
+    <span class="n">Minv</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="c1"># Display inverse mass matrix inv(M)</span>
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Minv</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Mass Matrix $\mathbf</span><span class="si">{M}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/4f421aad3d6d39930e791ff3e29423c8f6bfaa459eec622b998eb7718bf4df81.png"><img alt="../_images/4f421aad3d6d39930e791ff3e29423c8f6bfaa459eec622b998eb7718bf4df81.png" src="../_images/4f421aad3d6d39930e791ff3e29423c8f6bfaa459eec622b998eb7718bf4df81.png" style="width: 448px; height: 470px;" /></a>
+</div>
+</div>
+</section>
+<section id="the-stiffness-matrix">
+<h3><span class="section-number">46.1.5. </span>3. The Stiffness matrix<a class="headerlink" href="#the-stiffness-matrix" title="Link to this heading">#</a></h3>
+<p>On the other hand, the general form of the stiffness matrix at the elemtal level is</p>
+<p>\begin{equation}
+K_{ji}^e \ = \ \sum_{k = 1}^{N+1} w_k \mu (\xi) \partial_\xi \ell_j (\xi) \partial_\xi \ell_i (\xi) \left(\frac{\mathrm{d}\xi}{\mathrm{d}x} \right)^2 \frac{\mathrm{d}x}{\mathrm{d}\xi} \vert_{\xi = \xi_k}
+\end{equation}</p>
+<p>We implement the stiffness matrix using the integration weights at GLL locations <span class="math notranslate nohighlight">\(w\)</span>, the jacobian <span class="math notranslate nohighlight">\(J\)</span>, and shear stress <span class="math notranslate nohighlight">\(\mu\)</span>. Then, perform the global assembly of the mass matrix and display the matrix to visually inspect how it looks like.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Elemental Stiffness Matrix</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">Ke</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ke</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ji</span> <span class="o">*</span> <span class="n">l1d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">l1d</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+
+<span class="c1"># Global Stiffness Matrix</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">ng</span><span class="p">,</span> <span class="n">ng</span><span class="p">])</span>
+<span class="c1"># Values except at element boundaries</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ne</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">i0</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">j0</span> <span class="o">=</span> <span class="n">i0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+            <span class="n">K</span><span class="p">[</span><span class="n">i0</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">j0</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ke</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Values at element boundaries</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ne</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">i0</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span>
+    <span class="n">j0</span> <span class="o">=</span> <span class="n">i0</span>
+    <span class="n">K</span><span class="p">[</span><span class="n">i0</span><span class="p">,</span> <span class="n">j0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ke</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Ke</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span>
+
+
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="c1"># Display stiffness matrix K</span>
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Stiffness Matrix $\mathbf</span><span class="si">{K}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/966a37eabd7dbec995b93b37bdd2053d1cb7cdc1297e36fbbd3aac6f1e6db5e7.png"><img alt="../_images/966a37eabd7dbec995b93b37bdd2053d1cb7cdc1297e36fbbd3aac6f1e6db5e7.png" src="../_images/966a37eabd7dbec995b93b37bdd2053d1cb7cdc1297e36fbbd3aac6f1e6db5e7.png" style="width: 448px; height: 470px;" /></a>
+</div>
+</div>
+</section>
+<section id="spectral-element-solution">
+<h3><span class="section-number">46.1.6. </span>4. Spectral Element solution<a class="headerlink" href="#spectral-element-solution" title="Link to this heading">#</a></h3>
+<p>Finally we implement the spectral element solution using the computed mass <span class="math notranslate nohighlight">\(M\)</span> and stiffness <span class="math notranslate nohighlight">\(K\)</span> matrices together with a finite differences extrapolation scheme</p>
+<p>\begin{equation}
+\mathbf{u}(t + dt) = dt^2 (\mathbf{M}^T)^{-1}[\mathbf{f} - \mathbf{K}^T\mathbf{u}] + 2\mathbf{u} - \mathbf{u}(t-dt).
+\end{equation}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SE Solution, Time extrapolation</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+
+<span class="c1"># initialize source time function and force vector f</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">ricker</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">Tdom</span><span class="p">)</span>
+<span class="n">isrc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">ng</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># Source location</span>
+
+<span class="c1"># Initialization of solution vectors</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ng</span><span class="p">)</span>
+<span class="n">uold</span> <span class="o">=</span> <span class="n">u</span>
+<span class="n">unew</span> <span class="o">=</span> <span class="n">u</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">u</span>
+
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="c1"># Initialize animated plot</span>
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;SEM 1D Animation&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot; x (m)&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot; Amplitude &quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;xtick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># fontsize of the tick labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;ytick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># fontsize of the tick labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>  <span class="c1"># set interective mode</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="c1"># Time extrapolation</span>
+<span class="c1"># ---------------------------------------------------------------</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="c1"># Source initialization</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">isrc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">it</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Time extrapolation</span>
+    <span class="n">unew</span> <span class="o">=</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Minv</span> <span class="o">@</span> <span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span> <span class="o">-</span> <span class="n">uold</span>
+    <span class="n">uold</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">,</span> <span class="n">unew</span>
+
+    <span class="c1"># --------------------------------------</span>
+    <span class="c1"># Animation plot. Display solution</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">it</span> <span class="o">%</span> <span class="n">iplot</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="c1"># --------------------------------------</span>
+        <span class="c1"># Display lines</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/261ecc0461b30e4fa363130493384d88a1af9cc4c30097a8be495a5bad4d39b8.png"><img alt="../_images/261ecc0461b30e4fa363130493384d88a1af9cc4c30097a8be495a5bad4d39b8.png" src="../_images/261ecc0461b30e4fa363130493384d88a1af9cc4c30097a8be495a5bad4d39b8.png" style="width: 884px; height: 576px;" /></a>
+<a class="reference internal image-reference" href="../_images/2d1904699038da25c6c488a0e250ef989886648657bbc2d69d8fd3a2a200e869.png"><img alt="../_images/2d1904699038da25c6c488a0e250ef989886648657bbc2d69d8fd3a2a200e869.png" src="../_images/2d1904699038da25c6c488a0e250ef989886648657bbc2d69d8fd3a2a200e869.png" style="width: 591px; height: 451px;" /></a>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./waves"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="W9_se_hetero_1d_solution.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">45. </span>Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../TMA4125/fourier_series_supplemental_material.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">47. </span>Fourier series: supplemental material</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-equations">46.1. Basic Equations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation-with-lagrange-polynomials">46.1.1. Interpolation with Lagrange Polynomials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-integration">46.1.2. Numerical Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initialization-of-setup">46.1.3. 1. Initialization of setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mass-matrix">46.1.4. 2. The Mass Matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stiffness-matrix">46.1.5. 3. The Stiffness matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-element-solution">46.1.6. 4. Spectral Element solution</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

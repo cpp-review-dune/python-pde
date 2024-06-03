@@ -1,0 +1,1837 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>36. Grid-Staggering Elastic 1D &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'waves/W4_fd_elastic1d_staggered_solution';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix" href="W5_ps_cheby_derivative_solution.html" />
+    <link rel="prev" title="35. Advection equation 1D" href="W4_fd_advection_1d.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/waves/W4_fd_elastic1d_staggered_solution.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fwaves/W4_fd_elastic1d_staggered_solution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/waves/W4_fd_elastic1d_staggered_solution.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Grid-Staggering Elastic 1D</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-equations">36.1. Basic Equations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div style='background-image: url("title01.png") ; padding: 0px ; background-size: cover ; border-radius: 5px ; height: 200px'>
+<div style="float: right ; margin: 50px ; padding: 20px ; background: rgba(255 , 255 , 255 , 0.7) ; width: 50% ; height: 150px">
+        <div style="position: relative ; top: 50% ; transform: translatey(-50%)">
+            <div style="font-size: xx-large ; font-weight: 900 ; color: rgba(0 , 0 , 0 , 0.8) ; line-height: 100%">Computers, Waves, Simulations</div>
+            <div style="font-size: large ; padding-top: 20px ; color: rgba(0 , 0 , 0 , 0.5)">Finite Differences - Grid-Staggering Elastic 1D</div>
+        </div>
+    </div>
+</div><section class="tex2jax_ignore mathjax_ignore" id="grid-staggering-elastic-1d">
+<h1><span class="section-number">36. </span>Grid-Staggering Elastic 1D<a class="headerlink" href="#grid-staggering-elastic-1d" title="Link to this heading">#</a></h1>
+<p>This exercise covers the following aspects:</p>
+<ul class="simple">
+<li><p>Solving velocity-stress formulation of 1D wave equation with finite difference method</p></li>
+<li><p>Understanding the grid-staggering in connection with finite difference solution to the elastic wave equation</p></li>
+</ul>
+<hr class="docutils" />
+<section id="basic-equations">
+<h2><span class="section-number">36.1. </span>Basic Equations<a class="headerlink" href="#basic-equations" title="Link to this heading">#</a></h2>
+<p>The 1D wave equation (velocity-stress formulation) as a coupled system of two first-order partial differential equations</p>
+<div class="math notranslate nohighlight">
+\[
+\rho \partial_t v = \partial_x \sigma + f 
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \sigma = \mu \partial_x v 
+\]</div>
+<p>where,</p>
+<p><span class="math notranslate nohighlight">\( \sigma \)</span> is the stress,</p>
+<p><span class="math notranslate nohighlight">\( \rho \)</span> is the density,</p>
+<p><span class="math notranslate nohighlight">\( v \)</span> is the velocity,</p>
+<p><span class="math notranslate nohighlight">\( \mu \)</span> is the shear modulus, and</p>
+<p><span class="math notranslate nohighlight">\( f \)</span> is the source.</p>
+<p>Grid- staggering is the concept in connection with finite-difference solutions to the elastic wave equation.
+The discrete velocity and stress are defined on a regular spaced grid in space and time. Then, partial derivatives are replaced with centered finite-difference approximations to first derivative. However, these are not defined at the grid points of a function but in-between the grid points.
+In grid staggering the following computational scheme is used</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{v_i^{j+ \tfrac{1}{2}} - v_i^{j- \tfrac{1}{2}} }{dt} \ = \ \frac{1}{\rho_i}\frac{\sigma_{i + \tfrac{1}{2}}^j - \sigma_{i - \tfrac{1}{2}}^j }{dx} + \frac{f_i^j}{\rho_i} \
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\frac{\sigma_{i+\tfrac{1}{2}}^{j+1} - \sigma_{i+\tfrac{1}{2}}^j }{dt} \ = \ \mu_{i+\tfrac{1}{2}}  \frac{v_{i + 1}^{j +\tfrac{1}{2}} - v_i^{j + \tfrac{1}{2}} }{dx}
+\]</div>
+<p>The extrapolation scheme becomes</p>
+<div class="math notranslate nohighlight">
+\[
+v_i^{j+ \tfrac{1}{2}} \ = \ \frac{dt}{\rho_i} \frac{\sigma_{i + \tfrac{1}{2}}^j - \sigma_{i - \tfrac{1}{2}}^j }{dx} \ + \ v_i^{j- \tfrac{1}{2}}  + \frac{dt}{\rho_i} \ f_i^j  \
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\sigma_{i+\tfrac{1}{2}}^{j+1} \ = \ dt \ \mu_{i+\tfrac{1}{2}} \frac{v_{i + 1}^{j +\tfrac{1}{2}} - v_i^{j + \tfrac{1}{2}} }{dx} \ + \ \sigma_{i+\tfrac{1}{2}}^j  \ \
+\]</div>
+<p><strong>Note that in the codes below we do not deal with the index fractions.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries (Please run it before the simulation code!)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Show Plot in The Notebook</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;nbagg&quot;</span><span class="p">)</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.facecolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span>  <span class="c1"># remove grey background</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialization of parameters</span>
+
+<span class="c1"># Simple finite difference solver</span>
+<span class="c1"># Elastic wave equation</span>
+<span class="c1"># 1-D regular staggered grid</span>
+
+<span class="c1"># Basic parameters</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="mi">1300</span>  <span class="c1"># number of time steps</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># number of grid points in x</span>
+<span class="n">c0</span> <span class="o">=</span> <span class="mi">4500</span>  <span class="c1"># velocity (m/sec) (shear wave)</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">0.8</span>  <span class="c1"># stability limit</span>
+<span class="n">isnap</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># snapshot frequency</span>
+<span class="n">isx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># source location</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># frequency (Hz)</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">1000000.0</span>  <span class="c1"># maximum range (m)</span>
+<span class="n">rho0</span> <span class="o">=</span> <span class="mf">2500.0</span>  <span class="c1"># density (kg/m**3)</span>
+<span class="n">mu0</span> <span class="o">=</span> <span class="n">rho0</span> <span class="o">*</span> <span class="n">c0</span><span class="o">**</span><span class="mf">2.0</span>  <span class="c1"># shear modulus (Pa)</span>
+<span class="n">nop</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># number of operator either 2 or 4</span>
+
+<span class="n">dx</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># calculate space increment (m)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>  <span class="c1"># initialize space coordinates</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">c0</span>  <span class="c1"># calculate time step from stability criterion(s)</span>
+
+<span class="c1"># Source time function</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>  <span class="c1"># initialize time axis</span>
+<span class="n">T0</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">f0</span>  <span class="c1"># period</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="n">T0</span>  <span class="c1"># half-width (so called sigma)</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">T0</span> <span class="o">/</span> <span class="n">dt</span>
+<span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nt</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">it</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="n">it</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">a</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="p">)</span>  <span class="c1"># derivative of Gaussian (so called sigma)</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nt</span><span class="p">)</span>  <span class="c1"># source</span>
+<span class="n">src</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)]</span> <span class="o">=</span> <span class="n">tmp</span>
+<span class="n">lam</span> <span class="o">=</span> <span class="n">c0</span> <span class="o">*</span> <span class="n">T0</span>  <span class="c1"># wavelength</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extrapolation scheme and the plots</span>
+<span class="c1"># Initialization of plot</span>
+
+<span class="c1"># Initialization of fields</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>  <span class="c1"># velocity</span>
+<span class="n">vnew</span> <span class="o">=</span> <span class="n">v</span>
+<span class="n">dv</span> <span class="o">=</span> <span class="n">v</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>  <span class="c1"># stress</span>
+<span class="n">snew</span> <span class="o">=</span> <span class="n">s</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">s</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>  <span class="c1"># shear modulus</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">mu</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">+</span> <span class="n">rho0</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">mu0</span>
+
+<span class="c1"># Print setup parameters</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;rho =&quot;</span><span class="p">,</span> <span class="n">rho0</span><span class="p">,</span> <span class="s2">&quot;, f_dom =&quot;</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="s2">&quot;, stability limit =&quot;</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="s2">&quot;, n_lambda&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">lam</span> <span class="o">/</span> <span class="n">dx</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialize the plot</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;FD Elastic 1D staggered grid&quot;</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">line1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">line2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;velocity (m/s)&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;stress (Pa)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rho = 2500.0 , f_dom = 0.1 , stability limit = 0.8 , n_lambda 44.955
+</pre></div>
+</div>
+<script type="application/javascript">/* Put everything inside the global mpl namespace */
+/* global mpl */
+window.mpl = {};
+
+mpl.get_websocket_type = function () {
+    if (typeof WebSocket !== 'undefined') {
+        return WebSocket;
+    } else if (typeof MozWebSocket !== 'undefined') {
+        return MozWebSocket;
+    } else {
+        alert(
+            'Your browser does not have WebSocket support. ' +
+                'Please try Chrome, Safari or Firefox ≥ 6. ' +
+                'Firefox 4 and 5 are also supported but you ' +
+                'have to enable WebSockets in about:config.'
+        );
+    }
+};
+
+mpl.figure = function (figure_id, websocket, ondownload, parent_element) {
+    this.id = figure_id;
+
+    this.ws = websocket;
+
+    this.supports_binary = this.ws.binaryType !== undefined;
+
+    if (!this.supports_binary) {
+        var warnings = document.getElementById('mpl-warnings');
+        if (warnings) {
+            warnings.style.display = 'block';
+            warnings.textContent =
+                'This browser does not support binary websocket messages. ' +
+                'Performance may be slow.';
+        }
+    }
+
+    this.imageObj = new Image();
+
+    this.context = undefined;
+    this.message = undefined;
+    this.canvas = undefined;
+    this.rubberband_canvas = undefined;
+    this.rubberband_context = undefined;
+    this.format_dropdown = undefined;
+
+    this.image_mode = 'full';
+
+    this.root = document.createElement('div');
+    this.root.setAttribute('style', 'display: inline-block');
+    this._root_extra_style(this.root);
+
+    parent_element.appendChild(this.root);
+
+    this._init_header(this);
+    this._init_canvas(this);
+    this._init_toolbar(this);
+
+    var fig = this;
+
+    this.waiting = false;
+
+    this.ws.onopen = function () {
+        fig.send_message('supports_binary', { value: fig.supports_binary });
+        fig.send_message('send_image_mode', {});
+        if (fig.ratio !== 1) {
+            fig.send_message('set_device_pixel_ratio', {
+                device_pixel_ratio: fig.ratio,
+            });
+        }
+        fig.send_message('refresh', {});
+    };
+
+    this.imageObj.onload = function () {
+        if (fig.image_mode === 'full') {
+            // Full images could contain transparency (where diff images
+            // almost always do), so we need to clear the canvas so that
+            // there is no ghosting.
+            fig.context.clearRect(0, 0, fig.canvas.width, fig.canvas.height);
+        }
+        fig.context.drawImage(fig.imageObj, 0, 0);
+    };
+
+    this.imageObj.onunload = function () {
+        fig.ws.close();
+    };
+
+    this.ws.onmessage = this._make_on_message_function(this);
+
+    this.ondownload = ondownload;
+};
+
+mpl.figure.prototype._init_header = function () {
+    var titlebar = document.createElement('div');
+    titlebar.classList =
+        'ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix';
+    var titletext = document.createElement('div');
+    titletext.classList = 'ui-dialog-title';
+    titletext.setAttribute(
+        'style',
+        'width: 100%; text-align: center; padding: 3px;'
+    );
+    titlebar.appendChild(titletext);
+    this.root.appendChild(titlebar);
+    this.header = titletext;
+};
+
+mpl.figure.prototype._canvas_extra_style = function (_canvas_div) {};
+
+mpl.figure.prototype._root_extra_style = function (_canvas_div) {};
+
+mpl.figure.prototype._init_canvas = function () {
+    var fig = this;
+
+    var canvas_div = (this.canvas_div = document.createElement('div'));
+    canvas_div.setAttribute('tabindex', '0');
+    canvas_div.setAttribute(
+        'style',
+        'border: 1px solid #ddd;' +
+            'box-sizing: content-box;' +
+            'clear: both;' +
+            'min-height: 1px;' +
+            'min-width: 1px;' +
+            'outline: 0;' +
+            'overflow: hidden;' +
+            'position: relative;' +
+            'resize: both;' +
+            'z-index: 2;'
+    );
+
+    function on_keyboard_event_closure(name) {
+        return function (event) {
+            return fig.key_event(event, name);
+        };
+    }
+
+    canvas_div.addEventListener(
+        'keydown',
+        on_keyboard_event_closure('key_press')
+    );
+    canvas_div.addEventListener(
+        'keyup',
+        on_keyboard_event_closure('key_release')
+    );
+
+    this._canvas_extra_style(canvas_div);
+    this.root.appendChild(canvas_div);
+
+    var canvas = (this.canvas = document.createElement('canvas'));
+    canvas.classList.add('mpl-canvas');
+    canvas.setAttribute(
+        'style',
+        'box-sizing: content-box;' +
+            'pointer-events: none;' +
+            'position: relative;' +
+            'z-index: 0;'
+    );
+
+    this.context = canvas.getContext('2d');
+
+    var backingStore =
+        this.context.backingStorePixelRatio ||
+        this.context.webkitBackingStorePixelRatio ||
+        this.context.mozBackingStorePixelRatio ||
+        this.context.msBackingStorePixelRatio ||
+        this.context.oBackingStorePixelRatio ||
+        this.context.backingStorePixelRatio ||
+        1;
+
+    this.ratio = (window.devicePixelRatio || 1) / backingStore;
+
+    var rubberband_canvas = (this.rubberband_canvas = document.createElement(
+        'canvas'
+    ));
+    rubberband_canvas.setAttribute(
+        'style',
+        'box-sizing: content-box;' +
+            'left: 0;' +
+            'pointer-events: none;' +
+            'position: absolute;' +
+            'top: 0;' +
+            'z-index: 1;'
+    );
+
+    // Apply a ponyfill if ResizeObserver is not implemented by browser.
+    if (this.ResizeObserver === undefined) {
+        if (window.ResizeObserver !== undefined) {
+            this.ResizeObserver = window.ResizeObserver;
+        } else {
+            var obs = _JSXTOOLS_RESIZE_OBSERVER({});
+            this.ResizeObserver = obs.ResizeObserver;
+        }
+    }
+
+    this.resizeObserverInstance = new this.ResizeObserver(function (entries) {
+        var nentries = entries.length;
+        for (var i = 0; i < nentries; i++) {
+            var entry = entries[i];
+            var width, height;
+            if (entry.contentBoxSize) {
+                if (entry.contentBoxSize instanceof Array) {
+                    // Chrome 84 implements new version of spec.
+                    width = entry.contentBoxSize[0].inlineSize;
+                    height = entry.contentBoxSize[0].blockSize;
+                } else {
+                    // Firefox implements old version of spec.
+                    width = entry.contentBoxSize.inlineSize;
+                    height = entry.contentBoxSize.blockSize;
+                }
+            } else {
+                // Chrome <84 implements even older version of spec.
+                width = entry.contentRect.width;
+                height = entry.contentRect.height;
+            }
+
+            // Keep the size of the canvas and rubber band canvas in sync with
+            // the canvas container.
+            if (entry.devicePixelContentBoxSize) {
+                // Chrome 84 implements new version of spec.
+                canvas.setAttribute(
+                    'width',
+                    entry.devicePixelContentBoxSize[0].inlineSize
+                );
+                canvas.setAttribute(
+                    'height',
+                    entry.devicePixelContentBoxSize[0].blockSize
+                );
+            } else {
+                canvas.setAttribute('width', width * fig.ratio);
+                canvas.setAttribute('height', height * fig.ratio);
+            }
+            /* This rescales the canvas back to display pixels, so that it
+             * appears correct on HiDPI screens. */
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+
+            rubberband_canvas.setAttribute('width', width);
+            rubberband_canvas.setAttribute('height', height);
+
+            // And update the size in Python. We ignore the initial 0/0 size
+            // that occurs as the element is placed into the DOM, which should
+            // otherwise not happen due to the minimum size styling.
+            if (fig.ws.readyState == 1 && width != 0 && height != 0) {
+                fig.request_resize(width, height);
+            }
+        }
+    });
+    this.resizeObserverInstance.observe(canvas_div);
+
+    function on_mouse_event_closure(name) {
+        /* User Agent sniffing is bad, but WebKit is busted:
+         * https://bugs.webkit.org/show_bug.cgi?id=144526
+         * https://bugs.webkit.org/show_bug.cgi?id=181818
+         * The worst that happens here is that they get an extra browser
+         * selection when dragging, if this check fails to catch them.
+         */
+        var UA = navigator.userAgent;
+        var isWebKit = /AppleWebKit/.test(UA) && !/Chrome/.test(UA);
+        if(isWebKit) {
+            return function (event) {
+                /* This prevents the web browser from automatically changing to
+                 * the text insertion cursor when the button is pressed. We
+                 * want to control all of the cursor setting manually through
+                 * the 'cursor' event from matplotlib */
+                event.preventDefault()
+                return fig.mouse_event(event, name);
+            };
+        } else {
+            return function (event) {
+                return fig.mouse_event(event, name);
+            };
+        }
+    }
+
+    canvas_div.addEventListener(
+        'mousedown',
+        on_mouse_event_closure('button_press')
+    );
+    canvas_div.addEventListener(
+        'mouseup',
+        on_mouse_event_closure('button_release')
+    );
+    canvas_div.addEventListener(
+        'dblclick',
+        on_mouse_event_closure('dblclick')
+    );
+    // Throttle sequential mouse events to 1 every 20ms.
+    canvas_div.addEventListener(
+        'mousemove',
+        on_mouse_event_closure('motion_notify')
+    );
+
+    canvas_div.addEventListener(
+        'mouseenter',
+        on_mouse_event_closure('figure_enter')
+    );
+    canvas_div.addEventListener(
+        'mouseleave',
+        on_mouse_event_closure('figure_leave')
+    );
+
+    canvas_div.addEventListener('wheel', function (event) {
+        if (event.deltaY < 0) {
+            event.step = 1;
+        } else {
+            event.step = -1;
+        }
+        on_mouse_event_closure('scroll')(event);
+    });
+
+    canvas_div.appendChild(canvas);
+    canvas_div.appendChild(rubberband_canvas);
+
+    this.rubberband_context = rubberband_canvas.getContext('2d');
+    this.rubberband_context.strokeStyle = '#000000';
+
+    this._resize_canvas = function (width, height, forward) {
+        if (forward) {
+            canvas_div.style.width = width + 'px';
+            canvas_div.style.height = height + 'px';
+        }
+    };
+
+    // Disable right mouse context menu.
+    canvas_div.addEventListener('contextmenu', function (_e) {
+        event.preventDefault();
+        return false;
+    });
+
+    function set_focus() {
+        canvas.focus();
+        canvas_div.focus();
+    }
+
+    window.setTimeout(set_focus, 100);
+};
+
+mpl.figure.prototype._init_toolbar = function () {
+    var fig = this;
+
+    var toolbar = document.createElement('div');
+    toolbar.classList = 'mpl-toolbar';
+    this.root.appendChild(toolbar);
+
+    function on_click_closure(name) {
+        return function (_event) {
+            return fig.toolbar_button_onclick(name);
+        };
+    }
+
+    function on_mouseover_closure(tooltip) {
+        return function (event) {
+            if (!event.currentTarget.disabled) {
+                return fig.toolbar_button_onmouseover(tooltip);
+            }
+        };
+    }
+
+    fig.buttons = {};
+    var buttonGroup = document.createElement('div');
+    buttonGroup.classList = 'mpl-button-group';
+    for (var toolbar_ind in mpl.toolbar_items) {
+        var name = mpl.toolbar_items[toolbar_ind][0];
+        var tooltip = mpl.toolbar_items[toolbar_ind][1];
+        var image = mpl.toolbar_items[toolbar_ind][2];
+        var method_name = mpl.toolbar_items[toolbar_ind][3];
+
+        if (!name) {
+            /* Instead of a spacer, we start a new button group. */
+            if (buttonGroup.hasChildNodes()) {
+                toolbar.appendChild(buttonGroup);
+            }
+            buttonGroup = document.createElement('div');
+            buttonGroup.classList = 'mpl-button-group';
+            continue;
+        }
+
+        var button = (fig.buttons[name] = document.createElement('button'));
+        button.classList = 'mpl-widget';
+        button.setAttribute('role', 'button');
+        button.setAttribute('aria-disabled', 'false');
+        button.addEventListener('click', on_click_closure(method_name));
+        button.addEventListener('mouseover', on_mouseover_closure(tooltip));
+
+        var icon_img = document.createElement('img');
+        icon_img.src = '_images/' + image + '.png';
+        icon_img.srcset = '_images/' + image + '_large.png 2x';
+        icon_img.alt = tooltip;
+        button.appendChild(icon_img);
+
+        buttonGroup.appendChild(button);
+    }
+
+    if (buttonGroup.hasChildNodes()) {
+        toolbar.appendChild(buttonGroup);
+    }
+
+    var fmt_picker = document.createElement('select');
+    fmt_picker.classList = 'mpl-widget';
+    toolbar.appendChild(fmt_picker);
+    this.format_dropdown = fmt_picker;
+
+    for (var ind in mpl.extensions) {
+        var fmt = mpl.extensions[ind];
+        var option = document.createElement('option');
+        option.selected = fmt === mpl.default_extension;
+        option.innerHTML = fmt;
+        fmt_picker.appendChild(option);
+    }
+
+    var status_bar = document.createElement('span');
+    status_bar.classList = 'mpl-message';
+    toolbar.appendChild(status_bar);
+    this.message = status_bar;
+};
+
+mpl.figure.prototype.request_resize = function (x_pixels, y_pixels) {
+    // Request matplotlib to resize the figure. Matplotlib will then trigger a resize in the client,
+    // which will in turn request a refresh of the image.
+    this.send_message('resize', { width: x_pixels, height: y_pixels });
+};
+
+mpl.figure.prototype.send_message = function (type, properties) {
+    properties['type'] = type;
+    properties['figure_id'] = this.id;
+    this.ws.send(JSON.stringify(properties));
+};
+
+mpl.figure.prototype.send_draw_message = function () {
+    if (!this.waiting) {
+        this.waiting = true;
+        this.ws.send(JSON.stringify({ type: 'draw', figure_id: this.id }));
+    }
+};
+
+mpl.figure.prototype.handle_save = function (fig, _msg) {
+    var format_dropdown = fig.format_dropdown;
+    var format = format_dropdown.options[format_dropdown.selectedIndex].value;
+    fig.ondownload(fig, format);
+};
+
+mpl.figure.prototype.handle_resize = function (fig, msg) {
+    var size = msg['size'];
+    if (size[0] !== fig.canvas.width || size[1] !== fig.canvas.height) {
+        fig._resize_canvas(size[0], size[1], msg['forward']);
+        fig.send_message('refresh', {});
+    }
+};
+
+mpl.figure.prototype.handle_rubberband = function (fig, msg) {
+    var x0 = msg['x0'] / fig.ratio;
+    var y0 = (fig.canvas.height - msg['y0']) / fig.ratio;
+    var x1 = msg['x1'] / fig.ratio;
+    var y1 = (fig.canvas.height - msg['y1']) / fig.ratio;
+    x0 = Math.floor(x0) + 0.5;
+    y0 = Math.floor(y0) + 0.5;
+    x1 = Math.floor(x1) + 0.5;
+    y1 = Math.floor(y1) + 0.5;
+    var min_x = Math.min(x0, x1);
+    var min_y = Math.min(y0, y1);
+    var width = Math.abs(x1 - x0);
+    var height = Math.abs(y1 - y0);
+
+    fig.rubberband_context.clearRect(
+        0,
+        0,
+        fig.canvas.width / fig.ratio,
+        fig.canvas.height / fig.ratio
+    );
+
+    fig.rubberband_context.strokeRect(min_x, min_y, width, height);
+};
+
+mpl.figure.prototype.handle_figure_label = function (fig, msg) {
+    // Updates the figure title.
+    fig.header.textContent = msg['label'];
+};
+
+mpl.figure.prototype.handle_cursor = function (fig, msg) {
+    fig.canvas_div.style.cursor = msg['cursor'];
+};
+
+mpl.figure.prototype.handle_message = function (fig, msg) {
+    fig.message.textContent = msg['message'];
+};
+
+mpl.figure.prototype.handle_draw = function (fig, _msg) {
+    // Request the server to send over a new figure.
+    fig.send_draw_message();
+};
+
+mpl.figure.prototype.handle_image_mode = function (fig, msg) {
+    fig.image_mode = msg['mode'];
+};
+
+mpl.figure.prototype.handle_history_buttons = function (fig, msg) {
+    for (var key in msg) {
+        if (!(key in fig.buttons)) {
+            continue;
+        }
+        fig.buttons[key].disabled = !msg[key];
+        fig.buttons[key].setAttribute('aria-disabled', !msg[key]);
+    }
+};
+
+mpl.figure.prototype.handle_navigate_mode = function (fig, msg) {
+    if (msg['mode'] === 'PAN') {
+        fig.buttons['Pan'].classList.add('active');
+        fig.buttons['Zoom'].classList.remove('active');
+    } else if (msg['mode'] === 'ZOOM') {
+        fig.buttons['Pan'].classList.remove('active');
+        fig.buttons['Zoom'].classList.add('active');
+    } else {
+        fig.buttons['Pan'].classList.remove('active');
+        fig.buttons['Zoom'].classList.remove('active');
+    }
+};
+
+mpl.figure.prototype.updated_canvas_event = function () {
+    // Called whenever the canvas gets updated.
+    this.send_message('ack', {});
+};
+
+// A function to construct a web socket function for onmessage handling.
+// Called in the figure constructor.
+mpl.figure.prototype._make_on_message_function = function (fig) {
+    return function socket_on_message(evt) {
+        if (evt.data instanceof Blob) {
+            var img = evt.data;
+            if (img.type !== 'image/png') {
+                /* FIXME: We get "Resource interpreted as Image but
+                 * transferred with MIME type text/plain:" errors on
+                 * Chrome.  But how to set the MIME type?  It doesn't seem
+                 * to be part of the websocket stream */
+                img.type = 'image/png';
+            }
+
+            /* Free the memory for the previous frames */
+            if (fig.imageObj.src) {
+                (window.URL || window.webkitURL).revokeObjectURL(
+                    fig.imageObj.src
+                );
+            }
+
+            fig.imageObj.src = (window.URL || window.webkitURL).createObjectURL(
+                img
+            );
+            fig.updated_canvas_event();
+            fig.waiting = false;
+            return;
+        } else if (
+            typeof evt.data === 'string' &&
+            evt.data.slice(0, 21) === 'data:image/png;base64'
+        ) {
+            fig.imageObj.src = evt.data;
+            fig.updated_canvas_event();
+            fig.waiting = false;
+            return;
+        }
+
+        var msg = JSON.parse(evt.data);
+        var msg_type = msg['type'];
+
+        // Call the  "handle_{type}" callback, which takes
+        // the figure and JSON message as its only arguments.
+        try {
+            var callback = fig['handle_' + msg_type];
+        } catch (e) {
+            console.log(
+                "No handler for the '" + msg_type + "' message type: ",
+                msg
+            );
+            return;
+        }
+
+        if (callback) {
+            try {
+                // console.log("Handling '" + msg_type + "' message: ", msg);
+                callback(fig, msg);
+            } catch (e) {
+                console.log(
+                    "Exception inside the 'handler_" + msg_type + "' callback:",
+                    e,
+                    e.stack,
+                    msg
+                );
+            }
+        }
+    };
+};
+
+function getModifiers(event) {
+    var mods = [];
+    if (event.ctrlKey) {
+        mods.push('ctrl');
+    }
+    if (event.altKey) {
+        mods.push('alt');
+    }
+    if (event.shiftKey) {
+        mods.push('shift');
+    }
+    if (event.metaKey) {
+        mods.push('meta');
+    }
+    return mods;
+}
+
+/*
+ * return a copy of an object with only non-object keys
+ * we need this to avoid circular references
+ * https://stackoverflow.com/a/24161582/3208463
+ */
+function simpleKeys(original) {
+    return Object.keys(original).reduce(function (obj, key) {
+        if (typeof original[key] !== 'object') {
+            obj[key] = original[key];
+        }
+        return obj;
+    }, {});
+}
+
+mpl.figure.prototype.mouse_event = function (event, name) {
+    if (name === 'button_press') {
+        this.canvas.focus();
+        this.canvas_div.focus();
+    }
+
+    // from https://stackoverflow.com/q/1114465
+    var boundingRect = this.canvas.getBoundingClientRect();
+    var x = (event.clientX - boundingRect.left) * this.ratio;
+    var y = (event.clientY - boundingRect.top) * this.ratio;
+
+    this.send_message(name, {
+        x: x,
+        y: y,
+        button: event.button,
+        step: event.step,
+        modifiers: getModifiers(event),
+        guiEvent: simpleKeys(event),
+    });
+
+    return false;
+};
+
+mpl.figure.prototype._key_event_extra = function (_event, _name) {
+    // Handle any extra behaviour associated with a key event
+};
+
+mpl.figure.prototype.key_event = function (event, name) {
+    // Prevent repeat events
+    if (name === 'key_press') {
+        if (event.key === this._key) {
+            return;
+        } else {
+            this._key = event.key;
+        }
+    }
+    if (name === 'key_release') {
+        this._key = null;
+    }
+
+    var value = '';
+    if (event.ctrlKey && event.key !== 'Control') {
+        value += 'ctrl+';
+    }
+    else if (event.altKey && event.key !== 'Alt') {
+        value += 'alt+';
+    }
+    else if (event.shiftKey && event.key !== 'Shift') {
+        value += 'shift+';
+    }
+
+    value += 'k' + event.key;
+
+    this._key_event_extra(event, name);
+
+    this.send_message(name, { key: value, guiEvent: simpleKeys(event) });
+    return false;
+};
+
+mpl.figure.prototype.toolbar_button_onclick = function (name) {
+    if (name === 'download') {
+        this.handle_save(this, null);
+    } else {
+        this.send_message('toolbar_button', { name: name });
+    }
+};
+
+mpl.figure.prototype.toolbar_button_onmouseover = function (tooltip) {
+    this.message.textContent = tooltip;
+};
+
+///////////////// REMAINING CONTENT GENERATED BY embed_js.py /////////////////
+// prettier-ignore
+var _JSXTOOLS_RESIZE_OBSERVER=function(A){var t,i=new WeakMap,n=new WeakMap,a=new WeakMap,r=new WeakMap,o=new Set;function s(e){if(!(this instanceof s))throw new TypeError("Constructor requires 'new' operator");i.set(this,e)}function h(){throw new TypeError("Function is not a constructor")}function c(e,t,i,n){e=0 in arguments?Number(arguments[0]):0,t=1 in arguments?Number(arguments[1]):0,i=2 in arguments?Number(arguments[2]):0,n=3 in arguments?Number(arguments[3]):0,this.right=(this.x=this.left=e)+(this.width=i),this.bottom=(this.y=this.top=t)+(this.height=n),Object.freeze(this)}function d(){t=requestAnimationFrame(d);var s=new WeakMap,p=new Set;o.forEach((function(t){r.get(t).forEach((function(i){var r=t instanceof window.SVGElement,o=a.get(t),d=r?0:parseFloat(o.paddingTop),f=r?0:parseFloat(o.paddingRight),l=r?0:parseFloat(o.paddingBottom),u=r?0:parseFloat(o.paddingLeft),g=r?0:parseFloat(o.borderTopWidth),m=r?0:parseFloat(o.borderRightWidth),w=r?0:parseFloat(o.borderBottomWidth),b=u+f,F=d+l,v=(r?0:parseFloat(o.borderLeftWidth))+m,W=g+w,y=r?0:t.offsetHeight-W-t.clientHeight,E=r?0:t.offsetWidth-v-t.clientWidth,R=b+v,z=F+W,M=r?t.width:parseFloat(o.width)-R-E,O=r?t.height:parseFloat(o.height)-z-y;if(n.has(t)){var k=n.get(t);if(k[0]===M&&k[1]===O)return}n.set(t,[M,O]);var S=Object.create(h.prototype);S.target=t,S.contentRect=new c(u,d,M,O),s.has(i)||(s.set(i,[]),p.add(i)),s.get(i).push(S)}))})),p.forEach((function(e){i.get(e).call(e,s.get(e),e)}))}return s.prototype.observe=function(i){if(i instanceof window.Element){r.has(i)||(r.set(i,new Set),o.add(i),a.set(i,window.getComputedStyle(i)));var n=r.get(i);n.has(this)||n.add(this),cancelAnimationFrame(t),t=requestAnimationFrame(d)}},s.prototype.unobserve=function(i){if(i instanceof window.Element&&r.has(i)){var n=r.get(i);n.has(this)&&(n.delete(this),n.size||(r.delete(i),o.delete(i))),n.size||r.delete(i),o.size||cancelAnimationFrame(t)}},A.DOMRectReadOnly=c,A.ResizeObserver=s,A.ResizeObserverEntry=h,A}; // eslint-disable-line
+mpl.toolbar_items = [["Home", "Reset original view", "fa fa-home", "home"], ["Back", "Back to previous view", "fa fa-arrow-left", "back"], ["Forward", "Forward to next view", "fa fa-arrow-right", "forward"], ["", "", "", ""], ["Pan", "Left button pans, Right button zooms\nx/y fixes axis, CTRL fixes aspect", "fa fa-arrows", "pan"], ["Zoom", "Zoom to rectangle\nx/y fixes axis", "fa fa-square-o", "zoom"], ["", "", "", ""], ["Download", "Download plot", "fa fa-floppy-o", "download"]];
+
+mpl.extensions = ["eps", "jpeg", "pgf", "pdf", "png", "ps", "raw", "svg", "tif", "webp"];
+
+mpl.default_extension = "png";/* global mpl */
+
+var comm_websocket_adapter = function (comm) {
+    // Create a "websocket"-like object which calls the given IPython comm
+    // object with the appropriate methods. Currently this is a non binary
+    // socket, so there is still some room for performance tuning.
+    var ws = {};
+
+    ws.binaryType = comm.kernel.ws.binaryType;
+    ws.readyState = comm.kernel.ws.readyState;
+    function updateReadyState(_event) {
+        if (comm.kernel.ws) {
+            ws.readyState = comm.kernel.ws.readyState;
+        } else {
+            ws.readyState = 3; // Closed state.
+        }
+    }
+    comm.kernel.ws.addEventListener('open', updateReadyState);
+    comm.kernel.ws.addEventListener('close', updateReadyState);
+    comm.kernel.ws.addEventListener('error', updateReadyState);
+
+    ws.close = function () {
+        comm.close();
+    };
+    ws.send = function (m) {
+        //console.log('sending', m);
+        comm.send(m);
+    };
+    // Register the callback with on_msg.
+    comm.on_msg(function (msg) {
+        //console.log('receiving', msg['content']['data'], msg);
+        var data = msg['content']['data'];
+        if (data['blob'] !== undefined) {
+            data = {
+                data: new Blob(msg['buffers'], { type: data['blob'] }),
+            };
+        }
+        // Pass the mpl event to the overridden (by mpl) onmessage function.
+        ws.onmessage(data);
+    });
+    return ws;
+};
+
+mpl.mpl_figure_comm = function (comm, msg) {
+    // This is the function which gets called when the mpl process
+    // starts-up an IPython Comm through the "matplotlib" channel.
+
+    var id = msg.content.data.id;
+    // Get hold of the div created by the display call when the Comm
+    // socket was opened in Python.
+    var element = document.getElementById(id);
+    var ws_proxy = comm_websocket_adapter(comm);
+
+    function ondownload(figure, _format) {
+        window.open(figure.canvas.toDataURL());
+    }
+
+    var fig = new mpl.figure(id, ws_proxy, ondownload, element);
+
+    // Call onopen now - mpl needs it, as it is assuming we've passed it a real
+    // web socket which is closed, not our websocket->open comm proxy.
+    ws_proxy.onopen();
+
+    fig.parent_element = element;
+    fig.cell_info = mpl.find_output_cell("<div id='" + id + "'></div>");
+    if (!fig.cell_info) {
+        console.error('Failed to find cell for figure', id, fig);
+        return;
+    }
+    fig.cell_info[0].output_area.element.on(
+        'cleared',
+        { fig: fig },
+        fig._remove_fig_handler
+    );
+};
+
+mpl.figure.prototype.handle_close = function (fig, msg) {
+    var width = fig.canvas.width / fig.ratio;
+    fig.cell_info[0].output_area.element.off(
+        'cleared',
+        fig._remove_fig_handler
+    );
+    fig.resizeObserverInstance.unobserve(fig.canvas_div);
+
+    // Update the output cell to use the data from the current canvas.
+    fig.push_to_output();
+    var dataURL = fig.canvas.toDataURL();
+    // Re-enable the keyboard manager in IPython - without this line, in FF,
+    // the notebook keyboard shortcuts fail.
+    IPython.keyboard_manager.enable();
+    fig.parent_element.innerHTML =
+        '<img src="' + dataURL + '" width="' + width + '">';
+    fig.close_ws(fig, msg);
+};
+
+mpl.figure.prototype.close_ws = function (fig, msg) {
+    fig.send_message('closing', msg);
+    // fig.ws.close()
+};
+
+mpl.figure.prototype.push_to_output = function (_remove_interactive) {
+    // Turn the data on the canvas into data in the output cell.
+    var width = this.canvas.width / this.ratio;
+    var dataURL = this.canvas.toDataURL();
+    this.cell_info[1]['text/html'] =
+        '<img src="' + dataURL + '" width="' + width + '">';
+};
+
+mpl.figure.prototype.updated_canvas_event = function () {
+    // Tell IPython that the notebook contents must change.
+    IPython.notebook.set_dirty(true);
+    this.send_message('ack', {});
+    var fig = this;
+    // Wait a second, then push the new image to the DOM so
+    // that it is saved nicely (might be nice to debounce this).
+    setTimeout(function () {
+        fig.push_to_output();
+    }, 1000);
+};
+
+mpl.figure.prototype._init_toolbar = function () {
+    var fig = this;
+
+    var toolbar = document.createElement('div');
+    toolbar.classList = 'btn-toolbar';
+    this.root.appendChild(toolbar);
+
+    function on_click_closure(name) {
+        return function (_event) {
+            return fig.toolbar_button_onclick(name);
+        };
+    }
+
+    function on_mouseover_closure(tooltip) {
+        return function (event) {
+            if (!event.currentTarget.disabled) {
+                return fig.toolbar_button_onmouseover(tooltip);
+            }
+        };
+    }
+
+    fig.buttons = {};
+    var buttonGroup = document.createElement('div');
+    buttonGroup.classList = 'btn-group';
+    var button;
+    for (var toolbar_ind in mpl.toolbar_items) {
+        var name = mpl.toolbar_items[toolbar_ind][0];
+        var tooltip = mpl.toolbar_items[toolbar_ind][1];
+        var image = mpl.toolbar_items[toolbar_ind][2];
+        var method_name = mpl.toolbar_items[toolbar_ind][3];
+
+        if (!name) {
+            /* Instead of a spacer, we start a new button group. */
+            if (buttonGroup.hasChildNodes()) {
+                toolbar.appendChild(buttonGroup);
+            }
+            buttonGroup = document.createElement('div');
+            buttonGroup.classList = 'btn-group';
+            continue;
+        }
+
+        button = fig.buttons[name] = document.createElement('button');
+        button.classList = 'btn btn-default';
+        button.href = '#';
+        button.title = name;
+        button.innerHTML = '<i class="fa ' + image + ' fa-lg"></i>';
+        button.addEventListener('click', on_click_closure(method_name));
+        button.addEventListener('mouseover', on_mouseover_closure(tooltip));
+        buttonGroup.appendChild(button);
+    }
+
+    if (buttonGroup.hasChildNodes()) {
+        toolbar.appendChild(buttonGroup);
+    }
+
+    // Add the status bar.
+    var status_bar = document.createElement('span');
+    status_bar.classList = 'mpl-message pull-right';
+    toolbar.appendChild(status_bar);
+    this.message = status_bar;
+
+    // Add the close button to the window.
+    var buttongrp = document.createElement('div');
+    buttongrp.classList = 'btn-group inline pull-right';
+    button = document.createElement('button');
+    button.classList = 'btn btn-mini btn-primary';
+    button.href = '#';
+    button.title = 'Stop Interaction';
+    button.innerHTML = '<i class="fa fa-power-off icon-remove icon-large"></i>';
+    button.addEventListener('click', function (_evt) {
+        fig.handle_close(fig, {});
+    });
+    button.addEventListener(
+        'mouseover',
+        on_mouseover_closure('Stop Interaction')
+    );
+    buttongrp.appendChild(button);
+    var titlebar = this.root.querySelector('.ui-dialog-titlebar');
+    titlebar.insertBefore(buttongrp, titlebar.firstChild);
+};
+
+mpl.figure.prototype._remove_fig_handler = function (event) {
+    var fig = event.data.fig;
+    if (event.target !== this) {
+        // Ignore bubbled events from children.
+        return;
+    }
+    fig.close_ws(fig, {});
+};
+
+mpl.figure.prototype._root_extra_style = function (el) {
+    el.style.boxSizing = 'content-box'; // override notebook setting of border-box.
+};
+
+mpl.figure.prototype._canvas_extra_style = function (el) {
+    // this is important to make the div 'focusable
+    el.setAttribute('tabindex', 0);
+    // reach out to IPython and tell the keyboard manager to turn it's self
+    // off when our div gets focus
+
+    // location in version 3
+    if (IPython.notebook.keyboard_manager) {
+        IPython.notebook.keyboard_manager.register_events(el);
+    } else {
+        // location in version 2
+        IPython.keyboard_manager.register_events(el);
+    }
+};
+
+mpl.figure.prototype._key_event_extra = function (event, _name) {
+    // Check for shift+enter
+    if (event.shiftKey && event.which === 13) {
+        this.canvas_div.blur();
+        // select the cell after this one
+        var index = IPython.notebook.find_cell_index(this.cell_info[0]);
+        IPython.notebook.select(index + 1);
+    }
+};
+
+mpl.figure.prototype.handle_save = function (fig, _msg) {
+    fig.ondownload(fig, null);
+};
+
+mpl.find_output_cell = function (html_output) {
+    // Return the cell and output element which can be found *uniquely* in the notebook.
+    // Note - this is a bit hacky, but it is done because the "notebook_saving.Notebook"
+    // IPython event is triggered only after the cells have been serialised, which for
+    // our purposes (turning an active figure into a static one), is too late.
+    var cells = IPython.notebook.get_cells();
+    var ncells = cells.length;
+    for (var i = 0; i < ncells; i++) {
+        var cell = cells[i];
+        if (cell.cell_type === 'code') {
+            for (var j = 0; j < cell.output_area.outputs.length; j++) {
+                var data = cell.output_area.outputs[j];
+                if (data.data) {
+                    // IPython >= 3 moved mimebundle to data attribute of output
+                    data = data.data;
+                }
+                if (data['text/html'] === html_output) {
+                    return [cell, data, j];
+                }
+            }
+        }
+    }
+};
+
+// Register the function which deals with the matplotlib target/channel.
+// The kernel may be null if the page has been refreshed.
+if (IPython.notebook.kernel !== null) {
+    IPython.notebook.kernel.comm_manager.register_target(
+        'matplotlib',
+        mpl.mpl_figure_comm
+    );
+}
+</script><div class="output text_html"><div id='3645e121-a1ec-4273-be36-41741ca84b35'></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Begin extrapolation and update the plot</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="c1"># Stress derivative</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">ds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.0416666</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="mf">1.125</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="o">+</span> <span class="mf">1.125</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="mf">0.0416666</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+
+    <span class="c1"># Velocity extrapolation</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">ds</span> <span class="o">/</span> <span class="n">rho</span>
+
+    <span class="c1"># Add source term at isx</span>
+    <span class="n">v</span><span class="p">[</span><span class="n">isx</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">isx</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">src</span><span class="p">[</span><span class="n">it</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt</span> <span class="o">*</span> <span class="n">rho</span><span class="p">[</span><span class="n">isx</span><span class="p">])</span>
+
+    <span class="c1"># Velocity derivative</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">dv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.0416666</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="o">-</span> <span class="mf">1.125</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="o">+</span> <span class="mf">1.125</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="o">-</span> <span class="mf">0.0416666</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+
+    <span class="c1"># Stress extrapolation</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">dv</span>
+
+    <span class="c1"># Updating the plots</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">it</span> <span class="o">%</span> <span class="n">isnap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">line1</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">line2</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="n">line1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">line2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;, time step: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">it</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./waves"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="W4_fd_advection_1d.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">35. </span>Advection equation 1D</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="W5_ps_cheby_derivative_solution.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">37. </span>The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-equations">36.1. Basic Equations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

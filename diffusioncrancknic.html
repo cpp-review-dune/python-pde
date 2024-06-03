@@ -1,0 +1,922 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>14. DiffusionCrankNic.m &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'diffusioncrancknic';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="15. Advection pystencils example" href="advection-pystencils.html" />
+    <link rel="prev" title="13. AdvectionPer.m" href="advectionper.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/diffusioncrancknic.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fdiffusioncrancknic.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/diffusioncrancknic.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DiffusionCrankNic.m</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="diffusioncranknic-m">
+<h1><span class="section-number">14. </span><code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code><a class="headerlink" href="#diffusioncranknic-m" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="nf">[x, err] = TriDiagonal</span><span class="p">(</span>a, b, c, f<span class="p">)</span>
+<span class="w">    </span><span class="c">% Solution of a linear system of equations with a tridiagonal</span>
+    <span class="c">% matrix.</span>
+    <span class="c">%</span>
+    <span class="c">%   a(k) x(k-1) + b(k) x(k) + c(k) x(k+1) = f(k)</span>
+    <span class="c">%</span>
+    <span class="c">% with a(1) = c(n) = 0.</span>
+    <span class="c">%</span>
+    <span class="c">% Input</span>
+    <span class="c">%   a(1:n), b(1:n), c(1:n) : the coefficients of the system</span>
+    <span class="c">%                            matrix</span>
+    <span class="c">%   f(1:n) : the right hand side vector</span>
+    <span class="c">%</span>
+    <span class="c">% Output</span>
+    <span class="c">%   x(1:n) : the solution to the linear system of equations, if</span>
+    <span class="c">%            no division by zero occurs</span>
+    <span class="c">%   err : = 0, if no division by zero occurs</span>
+    <span class="c">%         = 1, if division by zero is encountered</span>
+    <span class="n">n</span> <span class="p">=</span> <span class="nb">length</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="n">alpha</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="nb">beta</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">err</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="nb">eps</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">alpha</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="o">-</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="nb">beta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">err</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="k">end</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">2</span><span class="p">:</span><span class="n">n</span>
+        <span class="n">denominator</span> <span class="p">=</span> <span class="n">a</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">denominator</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">eps</span><span class="p">(</span><span class="n">denominator</span><span class="p">)</span>
+            <span class="n">alpha</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="p">=</span><span class="o">-</span> <span class="n">c</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span>
+            <span class="nb">beta</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="nb">beta</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">err</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="k">end</span>
+
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">&gt;</span> <span class="nb">eps</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">x</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="nb">beta</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+    <span class="k">else</span>
+        <span class="n">err</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="k">end</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="p">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span>
+        <span class="n">x</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="p">=</span> <span class="n">alpha</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">beta</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+    <span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>warning: using the gnuplot graphics toolkit is discouraged
+
+The gnuplot graphics toolkit is not actively maintained and has a number
+of limitations that are unlikely to be fixed.  Communication with gnuplot
+uses a one-directional pipe and limited information is passed back to the
+Octave interpreter so most changes made interactively in the plot window
+will not be reflected in the graphics properties managed by Octave.  For
+example, if the plot window is closed with a mouse click, Octave will not
+be notified and will not update its internal list of open figure windows.
+The qt toolkit is recommended instead.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>frc<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">fForcing</span><span class="p">(</span>N, t<span class="p">)</span>
+<span class="w">    </span><span class="c">%</span>
+    <span class="c">% Constructs the forcing term:</span>
+    <span class="c">%</span>
+    <span class="c">% Input</span>
+    <span class="c">%   N : to compute the mesh size</span>
+    <span class="c">%   t : the current time at the time interval midpoint</span>
+    <span class="c">%</span>
+    <span class="c">% Output</span>
+    <span class="c">%   f(1:N-1) : the array of values of the forcing function</span>
+    <span class="c">%</span>
+    <span class="n">frc</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">h</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">N</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">tpx</span> <span class="p">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">tpt</span> <span class="p">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+        <span class="n">frc</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="nb">sin</span><span class="p">(</span><span class="n">tpt</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">sin</span><span class="p">(</span><span class="n">tpx</span><span class="p">)))</span> <span class="p">...</span>
+            <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="nb">cos</span><span class="p">(</span><span class="n">tpt</span><span class="p">)</span> <span class="o">*</span> <span class="nb">exp</span><span class="p">(</span><span class="nb">sin</span><span class="p">(</span><span class="n">tpx</span><span class="p">))</span> <span class="p">...</span>
+            <span class="o">*</span> <span class="p">(</span><span class="nb">sin</span><span class="p">(</span><span class="n">tpx</span><span class="p">)</span> <span class="o">-</span> <span class="nb">cos</span><span class="p">(</span><span class="n">tpx</span><span class="p">)</span> <span class="o">*</span> <span class="nb">cos</span><span class="p">(</span><span class="n">tpx</span><span class="p">));</span>
+    <span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>ue<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">uExact</span><span class="p">(</span>N, t<span class="p">)</span>
+<span class="w">    </span><span class="c">%</span>
+    <span class="c">% Constructs the exact solution:</span>
+    <span class="c">%</span>
+    <span class="c">% Input</span>
+    <span class="c">%   N : to compute the mesh size</span>
+    <span class="c">%   t : the current time</span>
+    <span class="c">%</span>
+    <span class="c">% Output</span>
+    <span class="c">%   ue(1:N+1) : the array of values of the exact solution</span>
+    <span class="c">%</span>
+    <span class="n">ue</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">h</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">N</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="p">=</span> <span class="mi">0</span><span class="p">:</span><span class="n">N</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">tpx</span> <span class="p">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">tpt</span> <span class="p">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
+        <span class="n">ue</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="nb">cos</span><span class="p">(</span><span class="n">tpt</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">exp</span><span class="p">(</span><span class="nb">sin</span><span class="p">(</span><span class="n">tpx</span><span class="p">))</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[error]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">DiffusionCrankNic</span><span class="p">(</span>finalT, N, K, numPlots<span class="p">)</span>
+<span class="w">    </span><span class="c">%</span>
+    <span class="c">% This function computes numerical approximations to solutions</span>
+    <span class="c">% of the linear diffusion equation</span>
+    <span class="c">%</span>
+    <span class="c">% u_t - u_xx = f(x,t)</span>
+    <span class="c">%</span>
+    <span class="c">% using the Crank-Nicolson (CN) method on the domain [0,1]. The</span>
+    <span class="c">% forcing function, f, and the intial conditions are constructed</span>
+    <span class="c">% so that the true solution is</span>
+    <span class="c">%</span>
+    <span class="c">% u(x,t) = cos(2*pi*t)*(exp(sin(2*pi*x))-1.0).</span>
+    <span class="c">%</span>
+    <span class="c">% This can be easily modified.</span>
+    <span class="c">%</span>
+    <span class="c">% Input</span>
+    <span class="c">%   finalT : the final time</span>
+    <span class="c">%   N : the number of spatial grid points in [0,1]</span>
+    <span class="c">%   K : the number of time steps in the interval [0,finalT]</span>
+    <span class="c">%   numPlots : the number of output frames in the time interval</span>
+    <span class="c">%              [0,finalT]. numPlots must be a divisor of K.</span>
+    <span class="c">%</span>
+    <span class="c">% Output</span>
+    <span class="c">%   error: the max norm error of the CN scheme at t = finalT</span>
+    <span class="c">%</span>
+    <span class="nb">error</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">N</span> <span class="o">-</span> <span class="nb">floor</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">h</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">N</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="nb">display</span><span class="p">(</span><span class="s">&#39;Error: N must be a positive integer.&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">K</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">K</span> <span class="o">-</span> <span class="nb">floor</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">finalT</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">tau</span> <span class="p">=</span> <span class="n">finalT</span> <span class="o">/</span> <span class="n">K</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="nb">display</span><span class="p">(</span><span class="s">&#39;Error: K must be a positive integer, and&#39;</span><span class="p">)</span>
+        <span class="nb">display</span><span class="p">(</span><span class="s">&#39;       finalT must be positive.&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">end</span>
+
+    <span class="n">mu</span> <span class="p">=</span> <span class="n">tau</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">h</span><span class="p">);</span>
+
+    <span class="n">x</span> <span class="p">=</span> <span class="mi">0</span><span class="p">:</span><span class="n">h</span><span class="p">:</span><span class="mf">1.0</span><span class="p">;</span>
+    <span class="n">uoCN</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="n">uExact</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="nb">mod</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">numPlots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">stepsPerPlot</span> <span class="p">=</span> <span class="n">K</span> <span class="o">/</span> <span class="n">numPlots</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="nb">display</span><span class="p">(</span><span class="s">&#39;Error: numPlots is not a divisor of K.&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">end</span>
+
+    <span class="c">%</span>
+    <span class="c">% Define the tridiagonal system matrix to be inverted:</span>
+    <span class="c">%</span>
+    <span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="n">a</span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="o">-</span><span class="n">mu</span><span class="p">;</span>
+    <span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">mu</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="o">-</span><span class="n">mu</span><span class="p">;</span>
+    <span class="n">c</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="c">%</span>
+    <span class="c">% Main time loop:</span>
+    <span class="c">%</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">numPlots</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">stepsPerPlot</span>
+            <span class="n">kk</span> <span class="p">=</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">stepsPerPlot</span> <span class="o">+</span> <span class="n">j</span><span class="p">;</span>
+            <span class="n">currTime</span> <span class="p">=</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">kk</span><span class="p">);</span>
+            <span class="n">lastTime</span> <span class="p">=</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">kk</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">);</span>
+            <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">fForcing</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">currTime</span><span class="p">)</span> <span class="p">...</span>
+                <span class="o">+</span><span class="n">fForcing</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">lastTime</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">;</span>
+
+            <span class="k">for</span> <span class="n">ell</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">rhs</span><span class="p">(</span><span class="n">ell</span><span class="p">)</span> <span class="p">=</span> <span class="n">f</span><span class="p">(</span><span class="n">ell</span><span class="p">)</span> <span class="o">+</span> <span class="n">uoCN</span><span class="p">(</span><span class="n">ell</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">uoCN</span><span class="p">(</span><span class="n">ell</span><span class="p">)</span> <span class="p">...</span>
+                    <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">uoCN</span><span class="p">(</span><span class="n">ell</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">uoCN</span><span class="p">(</span><span class="n">ell</span> <span class="o">+</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="k">end</span>
+
+            <span class="p">[</span><span class="n">uCN</span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="n">N</span><span class="p">),</span> <span class="n">err</span><span class="p">]</span> <span class="p">=</span> <span class="n">TriDiagonal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span>
+            <span class="n">uCN</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">;</span>
+            <span class="n">uCN</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">;</span>
+            <span class="n">uoCN</span> <span class="p">=</span> <span class="n">uCN</span><span class="p">;</span>
+        <span class="k">end</span>
+
+        <span class="n">hf</span> <span class="p">=</span> <span class="nb">figure</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+        <span class="nb">clf</span>
+        <span class="nb">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">uExact</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">currTime</span><span class="p">),</span> <span class="s">&#39;k-&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">uCN</span><span class="p">,</span> <span class="s">&#39;b-o&#39;</span><span class="p">)</span>
+        <span class="nb">grid</span> <span class="n">on</span><span class="p">,</span>
+        <span class="nb">xlabel</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">);</span>
+        <span class="nb">ylabel</span><span class="p">(</span><span class="s">&#39;exact and approximate solutions&#39;</span><span class="p">);</span>
+        <span class="nb">title</span><span class="p">([</span><span class="s">&#39;Crank--Nicolson Approximation at T = &#39;</span><span class="p">,</span> <span class="p">...</span>
+                <span class="n">num2str</span><span class="p">(</span><span class="n">currTime</span><span class="p">),</span> <span class="s">&#39;, h = &#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="p">...</span>
+                <span class="s">&#39;, and tau =&#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">tau</span><span class="p">)]);</span>
+        <span class="nb">legend</span><span class="p">(</span><span class="s">&quot;Exact&quot;</span><span class="p">,</span> <span class="s">&quot;Crank--Nicolson&quot;</span><span class="p">)</span>
+        <span class="k">set</span><span class="p">(</span><span class="nb">gca</span><span class="p">,</span> <span class="s">&quot;xTick&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">s1</span> <span class="p">=</span> <span class="p">[</span><span class="s">&#39;000&#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">k</span><span class="p">)];</span>
+        <span class="n">s2</span> <span class="p">=</span> <span class="n">s1</span><span class="p">((</span><span class="nb">length</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="p">):</span><span class="nb">length</span><span class="p">(</span><span class="n">s1</span><span class="p">));</span>
+        <span class="n">s3</span> <span class="p">=</span> <span class="p">[</span><span class="s">&#39;OUT/diff&#39;</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="s">&#39;.pdf&#39;</span><span class="p">];</span>
+        <span class="c">%exportgraphics(gca, s3)</span>
+    <span class="k">end</span>
+
+    <span class="nb">error</span> <span class="p">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">uExact</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">currTime</span><span class="p">)</span> <span class="o">-</span> <span class="n">uCN</span><span class="p">));</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="n">finalT</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">N</span> <span class="p">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">K</span> <span class="p">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="n">numPlots</span> <span class="p">=</span> <span class="mi">25</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-octave notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="nb">error</span><span class="p">]</span> <span class="p">=</span> <span class="n">DiffusionCrankNic</span><span class="p">(</span><span class="n">finalT</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">numPlots</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>error = 0.019031
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/179a420f1d8bba7796c1a7d53dc604a128022ff10d4c044af67d418b17c8c5df.png"><img alt="_images/179a420f1d8bba7796c1a7d53dc604a128022ff10d4c044af67d418b17c8c5df.png" src="_images/179a420f1d8bba7796c1a7d53dc604a128022ff10d4c044af67d418b17c8c5df.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/28ab3da7c018e5fff8a7d42823fab9842b53539248169ee058dedf0148d81798.png"><img alt="_images/28ab3da7c018e5fff8a7d42823fab9842b53539248169ee058dedf0148d81798.png" src="_images/28ab3da7c018e5fff8a7d42823fab9842b53539248169ee058dedf0148d81798.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/832dd55d40c57aa61a041bbd46fd5bd65a146b3630a4f3760991b770a6be751d.png"><img alt="_images/832dd55d40c57aa61a041bbd46fd5bd65a146b3630a4f3760991b770a6be751d.png" src="_images/832dd55d40c57aa61a041bbd46fd5bd65a146b3630a4f3760991b770a6be751d.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/bf8d89f6b4bc206b83d1dda738b47415a9fd0701bd8e45d7da0f5008382e3296.png"><img alt="_images/bf8d89f6b4bc206b83d1dda738b47415a9fd0701bd8e45d7da0f5008382e3296.png" src="_images/bf8d89f6b4bc206b83d1dda738b47415a9fd0701bd8e45d7da0f5008382e3296.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/8c90751e29fe7858e7500396cfc5b2811ac30f72000933fa26048b9ad85cc8f9.png"><img alt="_images/8c90751e29fe7858e7500396cfc5b2811ac30f72000933fa26048b9ad85cc8f9.png" src="_images/8c90751e29fe7858e7500396cfc5b2811ac30f72000933fa26048b9ad85cc8f9.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/79cb132ef887829fe0520eaa54d811520fdc05a92b92b781fe094fdb4b95660c.png"><img alt="_images/79cb132ef887829fe0520eaa54d811520fdc05a92b92b781fe094fdb4b95660c.png" src="_images/79cb132ef887829fe0520eaa54d811520fdc05a92b92b781fe094fdb4b95660c.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/0ad687769147c9a81488bec2b508b839e4b0183932f9e81aefeb9cc43a09f9f0.png"><img alt="_images/0ad687769147c9a81488bec2b508b839e4b0183932f9e81aefeb9cc43a09f9f0.png" src="_images/0ad687769147c9a81488bec2b508b839e4b0183932f9e81aefeb9cc43a09f9f0.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/c020d333f834e5352e764b88f7e81e65634abc3208d0833cc65b7b469e51fe47.png"><img alt="_images/c020d333f834e5352e764b88f7e81e65634abc3208d0833cc65b7b469e51fe47.png" src="_images/c020d333f834e5352e764b88f7e81e65634abc3208d0833cc65b7b469e51fe47.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/785f8fe9ad17b1c93323e4dbf320c48990954de87fdbb3c05058e1e2bf811602.png"><img alt="_images/785f8fe9ad17b1c93323e4dbf320c48990954de87fdbb3c05058e1e2bf811602.png" src="_images/785f8fe9ad17b1c93323e4dbf320c48990954de87fdbb3c05058e1e2bf811602.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/3363a00a3ff3489a784b082611efc743fdd77b796d0ebacd8bc967552cc84034.png"><img alt="_images/3363a00a3ff3489a784b082611efc743fdd77b796d0ebacd8bc967552cc84034.png" src="_images/3363a00a3ff3489a784b082611efc743fdd77b796d0ebacd8bc967552cc84034.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/992389ff97d9beadea1d52092248392f9e059aeac15b7cdd05defa7ccee757de.png"><img alt="_images/992389ff97d9beadea1d52092248392f9e059aeac15b7cdd05defa7ccee757de.png" src="_images/992389ff97d9beadea1d52092248392f9e059aeac15b7cdd05defa7ccee757de.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/0c5b22bc91cc63fe31e41ae5179430672f15ef51d6ca0395b6778414e171e63c.png"><img alt="_images/0c5b22bc91cc63fe31e41ae5179430672f15ef51d6ca0395b6778414e171e63c.png" src="_images/0c5b22bc91cc63fe31e41ae5179430672f15ef51d6ca0395b6778414e171e63c.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/66f1cd286a51b6c930f97304fadadc4fc47262faa7ff2c84c28cd0979f48d97c.png"><img alt="_images/66f1cd286a51b6c930f97304fadadc4fc47262faa7ff2c84c28cd0979f48d97c.png" src="_images/66f1cd286a51b6c930f97304fadadc4fc47262faa7ff2c84c28cd0979f48d97c.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/fa65da6f2aaaa1fc3a0c4a3fa4b88bb912ce4edfb73df48b0439f376487dcdbf.png"><img alt="_images/fa65da6f2aaaa1fc3a0c4a3fa4b88bb912ce4edfb73df48b0439f376487dcdbf.png" src="_images/fa65da6f2aaaa1fc3a0c4a3fa4b88bb912ce4edfb73df48b0439f376487dcdbf.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/16b47e808c1208b2476da77dd66a3f9208d99af5bcff8d2e98d5a2f2a8da4cf5.png"><img alt="_images/16b47e808c1208b2476da77dd66a3f9208d99af5bcff8d2e98d5a2f2a8da4cf5.png" src="_images/16b47e808c1208b2476da77dd66a3f9208d99af5bcff8d2e98d5a2f2a8da4cf5.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/d6ffbf4e68eeb0cddade7b39ab53d23c7c2f1d3b90fc10e96845d044fc6a9ee4.png"><img alt="_images/d6ffbf4e68eeb0cddade7b39ab53d23c7c2f1d3b90fc10e96845d044fc6a9ee4.png" src="_images/d6ffbf4e68eeb0cddade7b39ab53d23c7c2f1d3b90fc10e96845d044fc6a9ee4.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/8de585bf3786c226c1bd9582ece6a39e2979f512417abeadfd8686f412d3f6db.png"><img alt="_images/8de585bf3786c226c1bd9582ece6a39e2979f512417abeadfd8686f412d3f6db.png" src="_images/8de585bf3786c226c1bd9582ece6a39e2979f512417abeadfd8686f412d3f6db.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/de8c0d45809963e6b22b64455892ab7a95cad71f6bbb0983b7277b5c31a4ef06.png"><img alt="_images/de8c0d45809963e6b22b64455892ab7a95cad71f6bbb0983b7277b5c31a4ef06.png" src="_images/de8c0d45809963e6b22b64455892ab7a95cad71f6bbb0983b7277b5c31a4ef06.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/fbe34e28bcab03605c5ee422c9aa62edab9d3b84df868a42a8c27349c289708f.png"><img alt="_images/fbe34e28bcab03605c5ee422c9aa62edab9d3b84df868a42a8c27349c289708f.png" src="_images/fbe34e28bcab03605c5ee422c9aa62edab9d3b84df868a42a8c27349c289708f.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/0f2112b202bfef96d315cfb812177c1b48ef396075142489e08787c8ac50c8c9.png"><img alt="_images/0f2112b202bfef96d315cfb812177c1b48ef396075142489e08787c8ac50c8c9.png" src="_images/0f2112b202bfef96d315cfb812177c1b48ef396075142489e08787c8ac50c8c9.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/a168e3ca425a7d333435f20339107e9ca29326cbc173fa61870d4f436385e55b.png"><img alt="_images/a168e3ca425a7d333435f20339107e9ca29326cbc173fa61870d4f436385e55b.png" src="_images/a168e3ca425a7d333435f20339107e9ca29326cbc173fa61870d4f436385e55b.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/fa55df6b7394976b2791127f004cec1fd7cfd3cc508051ce61403375c0d24d15.png"><img alt="_images/fa55df6b7394976b2791127f004cec1fd7cfd3cc508051ce61403375c0d24d15.png" src="_images/fa55df6b7394976b2791127f004cec1fd7cfd3cc508051ce61403375c0d24d15.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/123a4fb04cf3e049f37c4ad3458b745fa8c3d0982ade326cf4bcfaf6e780d7db.png"><img alt="_images/123a4fb04cf3e049f37c4ad3458b745fa8c3d0982ade326cf4bcfaf6e780d7db.png" src="_images/123a4fb04cf3e049f37c4ad3458b745fa8c3d0982ade326cf4bcfaf6e780d7db.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/0fb164b1f6f36b5be25e8805dd9aa7bfeed0db041d0894ca8bca2535f58cac62.png"><img alt="_images/0fb164b1f6f36b5be25e8805dd9aa7bfeed0db041d0894ca8bca2535f58cac62.png" src="_images/0fb164b1f6f36b5be25e8805dd9aa7bfeed0db041d0894ca8bca2535f58cac62.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/302f71ee08b6dd2ae4775655545100724a170f9028bdf39418df22c0b5ff6ac1.png"><img alt="_images/302f71ee08b6dd2ae4775655545100724a170f9028bdf39418df22c0b5ff6ac1.png" src="_images/302f71ee08b6dd2ae4775655545100724a170f9028bdf39418df22c0b5ff6ac1.png" style="width: 1650px; height: 1234px;" /></a>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "octave"
+        },
+        kernelOptions: {
+            name: "octave",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'octave'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="advectionper.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">13. </span><code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="advection-pystencils.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>Advection pystencils example</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

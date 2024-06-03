@@ -1,0 +1,854 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>16. 1D heat diffusion &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'petsc';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1D advection equation" href="clawpack.html" />
+    <link rel="prev" title="15. Advection pystencils example" href="advection-pystencils.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/petsc.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fpetsc.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/petsc.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1D heat diffusion</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="d-heat-diffusion">
+<h1><span class="section-number">16. </span>1D heat diffusion<a class="headerlink" href="#d-heat-diffusion" title="Link to this heading">#</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Uses the Python interface to PETSc (petsc4py) to solve the transient 1D heat
+diffusion with Dirichlet Boundary Conditions. This is a super simple example
+showcase of the linear iterative solvers PETSc has to offer. It runs
+sequentially without MPI.
+
+Consider the 1D heat equation defining how a temperature is distributed e.g.
+over a one-dimensional rod.
+
+    ∂u/∂t = ∂²u/∂x²
+
+with Dirichlet Boundary Conditions at both ends of a unit domain
+
+    u(t, x=0) = 0 = u(t, x=1)
+
+and the following initial condition
+
+         ┌────────────────────────────────────────┐   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠒⠒⠒⠒⠒⠒⢲⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ │ y1
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀│   
+         │⢼⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠧⠤⠤⠤⠤⠤⠤⠼⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│   
+         └────────────────────────────────────────┘   
+          0.0                                   1.0
+
+-----
+
+Solution strategy (BTCS):
+
+Denote with û the solution at the next point in time. Then use
+Finite Difference discretization on a uniform mesh. Discretize
+the time derivative by implicit Euler and the second spatial
+derivative by central differences.
+
+    (û[i] − u[i])/Δt = (û[i−1] − 2 û[i] + û[i+1])/Δx²
+
+with the conditions on the Dirichlet Boundary points
+
+    û[0] = 0.0
+
+    û[-1] = 0.0
+
+Move all points at next time step to the lhs and all terms at
+previous time step to rhs.
+
+    û[i] + Δt/Δx² (− û[i−1] + 2 û[i] − û[i+1]) = u[i]
+
+This can be expressed as a linear system of equations
+
+    A x = b
+
+with A being
+
+    +-----                                                ------+
+    |   1.0                                                     |
+    | −Δt/Δx²  1 + 2Δt/Δx²  −Δt/Δx²                             |
+    |           −Δt/Δx²  1 + 2Δt/Δx²  −Δt/Δx²
+A = |                       −Δt/Δx²  1 + 2Δt/Δx²  −Δt/Δx²
+    |                           ⋱         ⋱         ⋱
+    |                             ⋱         ⋱         ⋱
+    |                            −Δt/Δx²  1 + 2Δt/Δx²  −Δt/Δx²  |
+    |                                                    1.0    |
+    +-----                                                ------+
+
+A therefore has the following sparsity structure
+
+    +---------------+
+    |*              |
+    |* * *          |
+    |  * * *        |
+A = |    * * *      |
+    |      * * *    |
+    |        * * *  |
+    |          * * *|
+    |              *|
+    +---------------+
+
+which is not fully tri-diagonal, because we did not eliminate the
+Dirichlet DoF. Hence, it is also not symmetric.
+
+-----
+
+The PETSc linear solver can be set at runtime.
+
+Use this command to monitor the solution process:
+
+    python petsc_python_simple_heat_diffusion.py -ksp_monitor
+
+Use this flag to swap the linear solver
+
+    python petsc_python_simple_heat_diffusion.py -ksp_type [SOLVER_NAME]
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">petsc4py</span> <span class="kn">import</span> <span class="n">PETSc</span><span class="p">,</span> <span class="n">init</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[63d0ce6eb901:04150] shmem: mmap: an error occurred while determining whether or not /tmp/ompi.63d0ce6eb901.33333/jf.0/2385772544/shared_mem_cuda_pool.63d0ce6eb901 could be created.
+[63d0ce6eb901:04150] create_and_attach: unable to create shared memory BTL coordinating structure :: size 134217728 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">init</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_POINTS</span> <span class="o">=</span> <span class="mi">1001</span>
+<span class="n">TIME_STEP_LENGTH</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">N_TIME_STEPS</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">element_length</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">N_POINTS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">N_POINTS</span><span class="p">)</span>
+
+    <span class="c1"># Create a new sparse PETSc matrix, fill it and then assemble it</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Mat</span><span class="p">()</span><span class="o">.</span><span class="n">createAIJ</span><span class="p">([</span><span class="n">N_POINTS</span><span class="p">,</span> <span class="n">N_POINTS</span><span class="p">])</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+
+    <span class="n">diagonal_entry</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">TIME_STEP_LENGTH</span> <span class="o">/</span> <span class="n">element_length</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">off_diagonal_entry</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">TIME_STEP_LENGTH</span> <span class="o">/</span> <span class="n">element_length</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">N_POINTS</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_POINTS</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_POINTS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">diagonal_entry</span><span class="p">)</span>
+        <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">off_diagonal_entry</span><span class="p">)</span>
+        <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">off_diagonal_entry</span><span class="p">)</span>
+    
+    <span class="n">A</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+
+    <span class="c1"># Define the initial condition</span>
+    <span class="n">initial_condition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">mesh</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mesh</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Assemble the initial rhs to the linear system</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Vec</span><span class="p">()</span><span class="o">.</span><span class="n">createSeq</span><span class="p">(</span><span class="n">N_POINTS</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">setArray</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">N_POINTS</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="c1"># Allocate a PETSc vector storing the solution to the linear system</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Vec</span><span class="p">()</span><span class="o">.</span><span class="n">createSeq</span><span class="p">(</span><span class="n">N_POINTS</span><span class="p">)</span>
+
+    <span class="c1"># Instantiate a linear solver: Krylow subspace linear iterative solver</span>
+    <span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+    <span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">ksp</span><span class="o">.</span><span class="n">setFromOptions</span><span class="p">()</span>
+
+    <span class="n">chosen_solver</span> <span class="o">=</span> <span class="n">ksp</span><span class="o">.</span><span class="n">getType</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solving with </span><span class="si">{</span><span class="n">chosen_solver</span><span class="si">:}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_TIME_STEPS</span><span class="p">):</span>
+        <span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># Re-assemble the rhs to move forward in time</span>
+        <span class="n">current_solution</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">getArray</span><span class="p">()</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">setArray</span><span class="p">(</span><span class="n">current_solution</span><span class="p">)</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">N_POINTS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Visualize</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">current_solution</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solving with gmres
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/39b7d5c4ef28edf6e820a018eaa00115d05aa0f1e928dd2355a2e3f9bb31cfd8.png"><img alt="_images/39b7d5c4ef28edf6e820a018eaa00115d05aa0f1e928dd2355a2e3f9bb31cfd8.png" src="_images/39b7d5c4ef28edf6e820a018eaa00115d05aa0f1e928dd2355a2e3f9bb31cfd8.png" style="width: 1630px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/cb5082172ca1b9b8cae02689f8d2c748237f69416b65274838bee480a39e568a.png"><img alt="_images/cb5082172ca1b9b8cae02689f8d2c748237f69416b65274838bee480a39e568a.png" src="_images/cb5082172ca1b9b8cae02689f8d2c748237f69416b65274838bee480a39e568a.png" style="width: 1630px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/ba10e5a92186bc065d16f7a0d8b03991db73d1115f4304a545e2633e41a847cd.png"><img alt="_images/ba10e5a92186bc065d16f7a0d8b03991db73d1115f4304a545e2633e41a847cd.png" src="_images/ba10e5a92186bc065d16f7a0d8b03991db73d1115f4304a545e2633e41a847cd.png" style="width: 1630px; height: 1243px;" /></a>
+<a class="reference internal image-reference" href="_images/2302e6c3e962eea07c31477780bf6dc3a745b56ba4772a816268f635b02c258e.png"><img alt="_images/2302e6c3e962eea07c31477780bf6dc3a745b56ba4772a816268f635b02c258e.png" src="_images/2302e6c3e962eea07c31477780bf6dc3a745b56ba4772a816268f635b02c258e.png" style="width: 1630px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/1fd640b81fe5fb140782af9b8100b35bbc1f1cfecf8f09bfe0d16a7e46c2e6ec.png"><img alt="_images/1fd640b81fe5fb140782af9b8100b35bbc1f1cfecf8f09bfe0d16a7e46c2e6ec.png" src="_images/1fd640b81fe5fb140782af9b8100b35bbc1f1cfecf8f09bfe0d16a7e46c2e6ec.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/80430a80f48eae31dda447f63f06ad4eebb8ee32774e7a18a84754b809e0bb27.png"><img alt="_images/80430a80f48eae31dda447f63f06ad4eebb8ee32774e7a18a84754b809e0bb27.png" src="_images/80430a80f48eae31dda447f63f06ad4eebb8ee32774e7a18a84754b809e0bb27.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/590bc0bca9d89ee3cfe6b695ea559953dc08de495014b3e4ff91e847f774d02a.png"><img alt="_images/590bc0bca9d89ee3cfe6b695ea559953dc08de495014b3e4ff91e847f774d02a.png" src="_images/590bc0bca9d89ee3cfe6b695ea559953dc08de495014b3e4ff91e847f774d02a.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/555230d7f021164b81bf60b480698f7f9b3271effe0e3d30592d96923071ab9b.png"><img alt="_images/555230d7f021164b81bf60b480698f7f9b3271effe0e3d30592d96923071ab9b.png" src="_images/555230d7f021164b81bf60b480698f7f9b3271effe0e3d30592d96923071ab9b.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/d0968827938eb8bf890ec8722549d90c45f0ae7b3d98a6f4363c294585b45546.png"><img alt="_images/d0968827938eb8bf890ec8722549d90c45f0ae7b3d98a6f4363c294585b45546.png" src="_images/d0968827938eb8bf890ec8722549d90c45f0ae7b3d98a6f4363c294585b45546.png" style="width: 1650px; height: 1234px;" /></a>
+<a class="reference internal image-reference" href="_images/cee955caaa72b8e0aabcab17127b4a801689ce93eed8c4a9dc8d1688ab93442c.png"><img alt="_images/cee955caaa72b8e0aabcab17127b4a801689ce93eed8c4a9dc8d1688ab93442c.png" src="_images/cee955caaa72b8e0aabcab17127b4a801689ce93eed8c4a9dc8d1688ab93442c.png" style="width: 1650px; height: 1234px;" /></a>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="advection-pystencils.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>Advection pystencils example</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="clawpack.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">1D advection equation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

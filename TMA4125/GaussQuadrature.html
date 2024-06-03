@@ -1,0 +1,1306 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>61. Numerical integration: Part IV &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/GaussQuadrature';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="64. Introduction to TMA4125" href="lecture_01_introduction.html" />
+    <link rel="prev" title="57. Numerical integration: Part II" href="CompositeQuadrature.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/GaussQuadrature.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/GaussQuadrature.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/GaussQuadrature.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Numerical integration: Part IV</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">61. Numerical integration: Part IV</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-cotes-and-gausz-quadrature-formulas">61.1. Newton-Cotes and Gauß quadrature formulas</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-cotes-formulas">62. Newton-Cotes formulas</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#gausz-quadrature">63. Gauß quadrature</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-1-gaussian-quadrature">63.1. Definition 1: Gaussian quadrature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orthogonal-polynomials">63.2. Orthogonal polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-orthogonal-polynomials-on-a-b">63.3. Theorem 1: Orthogonal polynomials on <span class="math notranslate nohighlight">\([a,b]\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-2-roots-of-orthogonal-polynomials">63.4. Theorem 2: Roots of orthogonal polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-3-construction-of-gaussian-quadrature">63.5. Theorem 3: Construction of Gaussian quadrature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-revisiting-gausz-legendre-quadrature-with-2-nodes">63.6. Example: Revisiting Gauß-Legendre quadrature with 2 nodes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-now-construct-a-gaussian-quadrature-for-n-3-or-n-4-points">63.7. Exercise: Now construct a Gaussian quadrature for n=3 or n=4 points.</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- KODE = "ja", "nei", default "ja" -->
+<!-- dom:TITLE: Numerical integration: Newton-Cotes and Gauß quadrature formulas -->
+<section class="tex2jax_ignore mathjax_ignore" id="numerical-integration-part-iv">
+<h1><span class="section-number">61. </span>Numerical integration: Part IV<a class="headerlink" href="#numerical-integration-part-iv" title="Link to this heading">#</a></h1>
+<section id="newton-cotes-and-gausz-quadrature-formulas">
+<h2><span class="section-number">61.1. </span>Newton-Cotes and Gauß quadrature formulas<a class="headerlink" href="#newton-cotes-and-gausz-quadrature-formulas" title="Link to this heading">#</a></h2>
+<!-- dom:AUTHOR: Anne Kværnø, André Massing -->
+<!-- Author: -->  
+<p><strong>Anne Kværnø, André Massing</strong></p>
+<p>Date: <strong>Feb 1, 2021</strong></p>
+<p>If you want to have a nicer theme for your jupyter notebook,
+download the <a class="reference external" href="https://www.math.ntnu.no/emner/TMA4125/2020v/part_II/notebooks/tma4125.css">cascade stylesheet file tma4125.css</a>
+and execute the next cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">integrate</span>
+<span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="kn">import</span> <span class="n">x</span>  <span class="c1"># Denote our integration variable x</span>
+<span class="kn">from</span> <span class="nn">sympy.solvers</span> <span class="kn">import</span> <span class="n">solve</span>
+
+
+<span class="k">def</span> <span class="nf">css_styling</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tma4125.css&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">styles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Do nothing</span>
+
+
+<span class="c1"># Comment out next line and execute this cell to restore the default notebook style</span>
+<span class="n">css_styling</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:100,300,400,500,700,800,900,100italic,300italic,400italic,500italic,700italic,800italic,900italic' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=News+Cycle" rel="stylesheet"> <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> <style> @font-face {
+    /*font-family: "Computer Modern";*/
+    /*src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');*/
+    font-family: 'News Cycle', sans-serif;
+}
+
+
+/* main background */
+
+
+/*#notebook_panel { 
+        background: #C9D4E2;
+    }*/
+
+div.cell {
+    /*max-width:600px;*/
+    /*margin-left:16% !important;*/
+    /*margin-right:auto;*/
+}
+
+div.text_cell {
+    max-width: 120ex;
+    /* instead of 100%, */
+}
+
+div.text_cell_render {
+    font-family: 'Alegreya Sans', Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva,   sans-serif;
+    line-height: 135%;
+    /*font-size:    45pt;*/
+    font-size: 130%;
+    /*width:600px;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+}
+
+.CodeMirror {
+    /*font-family: 'Source Code Pro', monospace;*/
+    /*font-style: italic;*/
+    /*font-weight: bold;*/
+    /*font-size: 120%;*/
+}
+
+
+/*.prompt{
+        display: None;
+    }*/
+
+.text_cell_render h1 {
+    font-family: 'Nixie One', serifV;
+    font-style: regular;
+    font-weight: 400;
+    font-size: 45pt;
+    line-height: 100%;
+        color: #497BB9;    
+    /*color: #5889C5;*/
+    /*color: rgb(0, 51, 102);*/
+    /*font-weight: 200;*/
+    /*font-size: 50pt;*/
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    display: block;
+}
+
+.text_cell_render h2 {
+    font-family: 'Nixie One', serif;
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 100%;
+    /*color: rgb(0,51,102);*/
+    color: #497BB9;    
+    margin-bottom: 0.1em;
+    margin-top: 0.3em;
+    display: block;
+}	
+
+.text_cell_render h3 {
+    font-family: 'Nixie One', serif;
+    margin-top:16px;
+    font-size: 22pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-style: regular;
+    color: rgb(102,102,0);
+}
+
+.text_cell_render h4 {    /*Use this for captions*/
+    font-family: 'Nixie One', serif;
+    font-size: 14pt;
+/*    text-align: center;*/
+    margin-top: 0em;
+    margin-bottom: 2em;
+    font-style: regular;
+}
+
+.text_cell_render h5 {  /*Use this for small titles*/
+    font-family: 'Nixie One', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: rgb(163,0,0);
+    /*color: #5889C5;*/
+    /*margin-bottom: .5em;
+    margin-top: 0.5em;*/
+    font-style: italic;
+    margin-bottom: .1em;
+    margin-top: 0.8em;
+    display: block;
+}
+
+.warning {
+    color: rgb( 240, 20, 20)
+}
+
+</style> 
+<script>
+ MathJax.Hub.Config( {
+    TeX: {
+        Macros: {
+            NN: "{\\bf N}",
+            RR: "{\\mathbb{R}}",
+            mcO: "{\\mathcal{O}}"
+        },
+        equationNumbers: { autoNumber: "AMS" },
+        extensions: ["AMSmath.js", "begingroup.js"] 
+    },
+    tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"]], displayMath: [ ['$$', '$$'], ["\\[", "\\]"]]
+    },
+    displayAlign: 'center', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {
+            '.MathJax_Display': {
+                "margin": 4
+            }
+        }
+    }
+}
+);
+</script>
+</div></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="newton-cotes-formulas">
+<h1><span class="section-number">62. </span>Newton-Cotes formulas<a class="headerlink" href="#newton-cotes-formulas" title="Link to this heading">#</a></h1>
+<p>We have already seen that <em>given</em> <span class="math notranslate nohighlight">\(n+1\)</span> distinct but
+otherwise arbitrary quadrature
+nodes <span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n \subset [a,b]\)</span>, we can construct
+a quadrature rule
+<span class="math notranslate nohighlight">\(
+\mathrm{Q}[\cdot](\{x_i\}_{i=0}^{n+1},\{w_i\}_{i=0}^{n+1})
+\)</span>
+based on polynomial interpolation
+which has degree of exactness equals to <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<p>An classical example was the trapezoidal rule,
+which are based on the
+two quadrature points <span class="math notranslate nohighlight">\(x_0=a\)</span> and <span class="math notranslate nohighlight">\(x_1=b\)</span>
+and which has degree of exactness equal
+to <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p>The trapezoidal is the simplest example of a quadrature formula
+which belongs to the so-called <strong>Newton Cotes formulas</strong>.</p>
+<p>By definition, <strong>Newton-Cotes formulas</strong> are quadrature rules
+which are based on <strong>equidistributed nodes</strong>
+<span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n \subset [a,b]\)</span>
+and have degree of exactness equals to <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<p>The simplest choices here — the
+<em>closed</em> Newton-Cotes methods — use the nodes
+<span class="math notranslate nohighlight">\(x_i = a + ih\)</span> with <span class="math notranslate nohighlight">\(h = (b-a)/n\)</span>. Examples of these are the Trapezoidal rule and Simpson’s rule.
+The main appeal of these rules is the simple definition of the nodes.</p>
+<p>If <span class="math notranslate nohighlight">\(n\)</span> is odd, the Newton-Cotes method with <span class="math notranslate nohighlight">\(n+1\)</span> nodes has degree of precision <span class="math notranslate nohighlight">\(n\)</span>;
+if <span class="math notranslate nohighlight">\(n\)</span> is even, it has degree of precision <span class="math notranslate nohighlight">\(n+1\)</span>. The corresponding convergence order
+for the composite rule is, as for all such rules, one larger than the degree of precision,
+provided that the function <span class="math notranslate nohighlight">\(f\)</span> is sufficiently smooth.</p>
+<p>However, for <span class="math notranslate nohighlight">\(n \ge 8\)</span> negative weights begin to appear in the definitions.
+Note that for a positive function <span class="math notranslate nohighlight">\(f(x) \geqslant 0\)</span>
+we have that the integral <span class="math notranslate nohighlight">\(I[f](a,b) \geqslant 0\)</span>
+But for a quadrature rule with negative weights
+<strong>we have not necessarily that <span class="math notranslate nohighlight">\(Q[f](a,b) \geqslant 0\)</span>!</strong>
+This has the undesired effect that the numerical integral of a positive function
+can be negative.</p>
+<p>In addition, this can lead to cancellation errors in the
+numerical evaluation, which may result in a lower practical accuracy.
+Since the rules with <span class="math notranslate nohighlight">\(n=6\)</span> and <span class="math notranslate nohighlight">\(n=7\)</span> yield the same convergence order,
+this mean that it is mostly the rules with <span class="math notranslate nohighlight">\(n \le 6\)</span> that are used in practice.</p>
+<p>The <em>open</em> Newton-Cotes methods, in contrast, use the nodes
+<span class="math notranslate nohighlight">\(x_i = a + (i+1/2)h\)</span> with <span class="math notranslate nohighlight">\(h = (b-a)/(n+1)\)</span>. The simplest example here
+is the midpoint rule.
+Here negative weights appear already for <span class="math notranslate nohighlight">\(n \ge 2\)</span>. Thus the midpoint rule
+is the only such rule that is commonly used in applications.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="gausz-quadrature">
+<h1><span class="section-number">63. </span>Gauß quadrature<a class="headerlink" href="#gausz-quadrature" title="Link to this heading">#</a></h1>
+<p>Last lecture, when comparing the trapezoidal rule with Gauß-Legendre
+quadrature rule, both based on two quadrature nodes,
+we observed that</p>
+<ul class="simple">
+<li><p>the Gauß-Legendre quadrature was much more accurate than the
+trapezoidal rule,</p></li>
+<li><p>the Gauß-Legendre quadrature <em>has degree of exactness equal to <span class="math notranslate nohighlight">\(3\)</span>
+and not only <span class="math notranslate nohighlight">\(1\)</span></em>.</p></li>
+</ul>
+<p>So obviously the position of the nodes matters!</p>
+<p><strong>Questions:</strong></p>
+<ul class="simple">
+<li><p>Is there a general approach to construct quadrature rules
+<span class="math notranslate nohighlight">\(Q[\cdot](\{x_i\}_{i=0}^n,\{w_i\}_{i=0}^n)\)</span> based on <span class="math notranslate nohighlight">\(n+1\)</span> nodes with
+a degree of exactness <span class="math notranslate nohighlight">\(&gt; n\)</span>?</p></li>
+<li><p>What is the maximal degree of exactness we can achieve?</p></li>
+</ul>
+<p><strong>Intuition:</strong> If we don’t predefine the quadrature nodes,
+we have <span class="math notranslate nohighlight">\(2n+2\)</span> parameters (<span class="math notranslate nohighlight">\(n+1\)</span> nodes and <span class="math notranslate nohighlight">\(n+1\)</span> weights)
+in total.</p>
+<p>With <span class="math notranslate nohighlight">\(2n+2\)</span> parameters, we might hope that we can construct
+quadrature rules which are exact for <span class="math notranslate nohighlight">\(p \in \mathbb{P}_{2n+1}\)</span>.</p>
+<section id="definition-1-gaussian-quadrature">
+<h2><span class="section-number">63.1. </span>Definition 1: Gaussian quadrature<a class="headerlink" href="#definition-1-gaussian-quadrature" title="Link to this heading">#</a></h2>
+<p>A quadrature rule
+<span class="math notranslate nohighlight">\(Q[\cdot](\{x_i\}_{i=0}^n,\{w_i\}_{i=0}^n)\)</span> based on <span class="math notranslate nohighlight">\(n+1\)</span> nodes
+which has degree of exactness equals to <span class="math notranslate nohighlight">\(2n+1\)</span> is called a
+<strong>Gaussian (Legendre) quadrature</strong> (GQ).</p>
+</section>
+<section id="orthogonal-polynomials">
+<h2><span class="section-number">63.2. </span>Orthogonal polynomials<a class="headerlink" href="#orthogonal-polynomials" title="Link to this heading">#</a></h2>
+<p>To construct Gaussian quadrature rule, we need to briefly review
+the concept of orthogonality, which we introduced when we learned
+about Fourier series.</p>
+<p>Two functions <span class="math notranslate nohighlight">\(f, g: [a,b] \to \mathbb{R}\)</span> are orthogonal if</p>
+<div class="math notranslate nohighlight">
+\[
+{\langle f, g \rangle} := \int_a^b f(x) g(x) {\,\mathrm{d}x} = 0.
+\]</div>
+<p>Usually, it will be clear from the context which interval <span class="math notranslate nohighlight">\([a,b]\)</span>
+we picked.</p>
+</section>
+<section id="theorem-1-orthogonal-polynomials-on-a-b">
+<h2><span class="section-number">63.3. </span>Theorem 1: Orthogonal polynomials on <span class="math notranslate nohighlight">\([a,b]\)</span><a class="headerlink" href="#theorem-1-orthogonal-polynomials-on-a-b" title="Link to this heading">#</a></h2>
+<div id="quad:thm:orthopolys"></div>
+There is a sequence of $\{p_k\}_{k=1}^{\infty}$
+of polynomials satisfying<!-- Equation labels as ordinary links -->
+<div id="_auto1"></div>
+<p>\begin{equation}
+p_0(x) = 1,
+\label{_auto1} \tag{1}
+\end{equation}</p>
+<!-- Equation labels as ordinary links -->
+<div id="quad:eq:poly_normalization"></div>
+<p>\begin{equation}<br />
+p_k(x) = x^k + r_{k-1}(x) \quad \text{for } k=1,2,\ldots
+\label{quad:eq:poly_normalization} \tag{2}
+\end{equation}</p>
+<p>with <span class="math notranslate nohighlight">\(r_{k-1} \in \mathbb{P}_{k-1}\)</span> and …</p>
+<p>satisfying the
+<em>orthogonality property</em></p>
+<!-- Equation labels as ordinary links -->
+<div id="_auto2"></div>
+<p>\begin{equation}
+{\langle p_k, p_l \rangle} = \int_a^b p_k(x) p_l(x) dx = 0
+\quad \text{for } k \neq l,
+\label{_auto2} \tag{3}
+\end{equation}</p>
+<p>and that every polynomial <span class="math notranslate nohighlight">\(q_n \in \mathbb{P}_{n}\)</span>
+can be written as a linear combination of
+those orthogonal polynomials up to order <span class="math notranslate nohighlight">\(n\)</span>.
+In other words</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{P}_{n} = \mathrm{Span} \{p_0,\ldots, p_n\}
+\]</div>
+<p><strong>Proof.</strong>
+We start from the sequence <span class="math notranslate nohighlight">\(\{\phi_k\}_{k=0}^{\infty}\)</span> of monomials
+<span class="math notranslate nohighlight">\(\phi_k(x) = x^k\)</span> and apply the Gram-Schmidt orthogonalization
+procedure:</p>
+<p>\begin{align*}
+\widetilde{p}_0
+&amp;:= 1 = \phi_0
+\
+\widetilde{p}_1
+&amp;:= \phi_1 - \dfrac{|\widetilde{p_0}|^2} \widetilde{p}_0
+\
+\widetilde{p}_2
+&amp;:= \phi_2</p>
+<ul class="simple">
+<li><p>\dfrac{|\widetilde{p}_0|^2} \widetilde{p}_0</p></li>
+<li><p>\dfrac{|\widetilde{p}_1|^2} \widetilde{p}_1
+\
+\ldots
+\
+\widetilde{p}<em>k
+&amp;= \phi_k - \sum</em>{j=0}^{k-1}\frac{
+{\langle \phi_k, \widetilde{p \rangle}_j}}
+{|\widetilde{p}_j|^2} \widetilde{p}_j
+\end{align*}</p></li>
+</ul>
+<p>By construction, <span class="math notranslate nohighlight">\(\widetilde{p}_n \in \mathbb{P}_{n}\)</span> and
+<span class="math notranslate nohighlight">\({\langle p_k, p_l \rangle} = 0\)</span> for <span class="math notranslate nohighlight">\(k\neq l\)</span>.
+Since <span class="math notranslate nohighlight">\(\widetilde{p}_k(x) = a_k x^k + a_{k-1} x^{k-1} + \ldots a_0\)</span>,
+we simply define
+<span class="math notranslate nohighlight">\(p_k(x) = \widetilde{p}_k/a_k\)</span>
+to satisfy (<a class="reference internal" href="#quad:eq:poly_normalization"><span class="xref myst">2</span></a>).</p>
+</section>
+<section id="theorem-2-roots-of-orthogonal-polynomials">
+<h2><span class="section-number">63.4. </span>Theorem 2: Roots of orthogonal polynomials<a class="headerlink" href="#theorem-2-roots-of-orthogonal-polynomials" title="Link to this heading">#</a></h2>
+<p>Each of the polynomials <span class="math notranslate nohighlight">\(p_n\)</span> defined in
+<a class="reference internal" href="#quad:thm:orthopolys"><span class="xref myst">Theorem 1: Orthogonal polynomials on <span class="math notranslate nohighlight">\([a,b]\)</span></span></a>
+has <strong><span class="math notranslate nohighlight">\(n\)</span> distinct real roots</strong>.</p>
+<p><strong>Proof.</strong>
+Without proof, will be added later for the curious among you.</p>
+</section>
+<section id="theorem-3-construction-of-gaussian-quadrature">
+<h2><span class="section-number">63.5. </span>Theorem 3: Construction of Gaussian quadrature<a class="headerlink" href="#theorem-3-construction-of-gaussian-quadrature" title="Link to this heading">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(p_{n+1} \in \mathbb{P}_{n+1}\)</span> be a polynomial
+on <span class="math notranslate nohighlight">\([a,b]\)</span>
+satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+{\langle p_{n+1}, q \rangle} = 0 \quad {\forall\;} q \in \mathbb{P}_{n}.
+\]</div>
+<p>Set <span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span> to be the <span class="math notranslate nohighlight">\(n+1\)</span> real roots of <span class="math notranslate nohighlight">\(p_{n+1}\)</span>
+and define the weights <span class="math notranslate nohighlight">\(\{w_i\}_{i=0}^n\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+w_i = \int_{a}^{b} \ell_i(x) {\,\mathrm{d}x}.
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\{\ell_i\}_{i=0}^n\)</span> are the <span class="math notranslate nohighlight">\(n+1\)</span> cardinal functions
+associated with
+<span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span>.
+The resulting quadrature rule is
+a Gaussian quadrature.</p>
+<p><strong>Proof.</strong> Without proof, will be added later for the curious among you.</p>
+<p><strong>Recipe 1 to construct a Gaussian quadrature.</strong></p>
+<p>To construct a Gaussian formula on <span class="math notranslate nohighlight">\([a,b]\)</span> based
+on <span class="math notranslate nohighlight">\(n+1\)</span> nodes you proceed as follows</p>
+<ol class="arabic simple">
+<li><p>Construct a polynomial <span class="math notranslate nohighlight">\(p_{n+1} \in \mathbb{P}_{n+1}\)</span>
+on the interval <span class="math notranslate nohighlight">\([a, b]\)</span>
+which satisfies</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\int_{a}^b p_{n+1}(x) q(x) {\,\mathrm{d}x} \quad {\forall\;} q \in \mathbb{P}_{n}.
+\]</div>
+<p>You can start from the monomials <span class="math notranslate nohighlight">\(\{1,x, x^2, \ldots, x^{n+1}\}\)</span>
+and use Gram-Schmidt to orthogonalize them.</p>
+<ol class="arabic simple" start="2">
+<li><p>Determine the <span class="math notranslate nohighlight">\(n+1\)</span> <strong>real</strong> roots <span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span>
+of <span class="math notranslate nohighlight">\(p_{n+1}\)</span> which serve then as quadrature
+nodes.</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Calculate the cardinal functions <span class="math notranslate nohighlight">\(\ell_i(x)\)</span> associated
+with <span class="math notranslate nohighlight">\(n+1\)</span> nodes <span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span> and then the weights are given
+by
+<span class="math notranslate nohighlight">\(\displaystyle w_i = \int_{a}^{b} \ell_i(x) {\,\mathrm{d}x}.\)</span></p></li>
+</ol>
+<p>This is the recipe you are asked to use in Exercise set 3.
+Alternatively one can start from a reference interval,
+leading  to</p>
+<p><strong>Recipe 2 to construct a Gaussian quadrature.</strong></p>
+<p>To construct a Gaussian formula on <span class="math notranslate nohighlight">\([a,b]\)</span> based
+on <span class="math notranslate nohighlight">\(n+1\)</span> nodes you proceed as follows</p>
+<ol class="arabic simple">
+<li><p>Construct a polynomial <span class="math notranslate nohighlight">\(p_{n+1} \in \mathbb{P}_{n+1}\)</span>
+on the reference interval <span class="math notranslate nohighlight">\([-1, 1]\)</span>
+which satisfies</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\int_{-1}^1 p_{n+1}(x) q(x) {\,\mathrm{d}x} \quad {\forall\;} q \in \mathbb{P}_{n}.
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>You determine the <span class="math notranslate nohighlight">\(n+1\)</span> <strong>real</strong> roots <span class="math notranslate nohighlight">\(\{\hat{x}_i\}_{i=0}^n\)</span>
+of <span class="math notranslate nohighlight">\(p_{n+1}\)</span> which serve then as quadrature
+nodes.</p></li>
+<li><p>Calculate the cardinal functions <span class="math notranslate nohighlight">\(\ell_i(x)\)</span> associated
+with <span class="math notranslate nohighlight">\(n+1\)</span> nodes <span class="math notranslate nohighlight">\(\{\hat{x}_i\}_{i=0}^n\)</span> and then the weights are given
+by
+<span class="math notranslate nohighlight">\(\displaystyle \hat{w}_i = \int_{-1}^{1} \ell_i(x) {\,\mathrm{d}x}.\)</span></p></li>
+<li><p>Finally, transform the resulting Gauß quadrature formula
+to the desired interval <span class="math notranslate nohighlight">\([a,b]\)</span> via</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+x_i = \frac{b-a}{2}\widehat{x}_i + \frac{b+a}{2}, \quad  w_i = \frac{b-a}{2}\widehat{w}_i
+\quad \text{for } i = 0, \ldots n.
+\]</div>
+</section>
+<section id="example-revisiting-gausz-legendre-quadrature-with-2-nodes">
+<h2><span class="section-number">63.6. </span>Example: Revisiting Gauß-Legendre quadrature with 2 nodes<a class="headerlink" href="#example-revisiting-gausz-legendre-quadrature-with-2-nodes" title="Link to this heading">#</a></h2>
+<p>We will now derive the Gauß-Legendre quadrature with 2 nodes
+we encountered in the previous lectures</p>
+<p>Today we will use the <code class="docutils literal notranslate"><span class="pre">sympy</span></code> quite a bit,
+and start with the snippets</p>
+<p>Spend a minute and have look at <a class="reference external" href="https://docs.sympy.org/latest/modules/integrals/integrals.html">integrate</a> submodule.</p>
+<p>First we construct the first 3 orthogonal polynomials
+(order 0, 1, 2) on <span class="math notranslate nohighlight">\([0,1]\)</span>. Spend 2 minutes to understand the
+code below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Interval</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="c1"># Define scalar product</span>
+
+
+<span class="k">def</span> <span class="nf">scp</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">integrate</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+
+<span class="c1"># Define monomials up to order 2</span>
+<span class="n">mono</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="n">m</span>
+
+
+<span class="k">def</span> <span class="nf">mono</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="n">m</span>
+
+
+<span class="n">phis</span> <span class="o">=</span> <span class="p">[</span><span class="n">mono</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phis</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1, x, x**2]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Construct orthogonal polynomials (not normalized)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Use Gram-Schmidt</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phis</span><span class="p">:</span>
+    <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">scp</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">scp</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ps
+[1, x - 1/2, x**2 - x + 1/6]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now write a code snippet to check whether they are actually orthogonal</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span>
+        <span class="n">int_p_q</span> <span class="o">=</span> <span class="n">scp</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;int_p_q = </span><span class="si">{</span><span class="n">int_p_q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>int_p_q = 1
+int_p_q = 0
+int_p_q = 0
+int_p_q = 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>int_p_q = 1/12
+int_p_q = 0
+int_p_q = 0
+int_p_q = 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>int_p_q = 1/180
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compute the roots of the second order polynomial.
+Of course you can do it by hand
+but le’ts us <code class="docutils literal notranslate"><span class="pre">sympy</span></code> for it.
+Spend a minute a have a look at <a class="reference external" href="https://docs.sympy.org/latest/modules/solvers/solvers.html">solve</a> submodule.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">xqs</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xqs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x**2 - x + 1/6
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1/2 - sqrt(3)/6, sqrt(3)/6 + 1/2]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next constructe the cardinal functions
+<span class="math notranslate nohighlight">\(\ell_0\)</span> and <span class="math notranslate nohighlight">\(\ell_1\)</span> associated with the 2 roots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Non-normalized version</span>
+<span class="n">L_01</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">L_01</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">L_01</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">L_01</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="c1"># Normalize</span>
+<span class="n">L_01</span> <span class="o">/=</span> <span class="n">L_01</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">L_01</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x - 1/2 - sqrt(3)/6
+0
+-sqrt(3)/3
+1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Non-normalized version</span>
+<span class="n">L_11</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Normalize</span>
+<span class="n">L_11</span> <span class="o">/=</span> <span class="n">L_11</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xqs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">Ls</span> <span class="o">=</span> <span class="p">[</span><span class="n">L_01</span><span class="p">,</span> <span class="n">L_11</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Ls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-sqrt(3)*(x - 1/2 - sqrt(3)/6), sqrt(3)*(x - 1/2 + sqrt(3)/6)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, compute the weights.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert code here</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ws</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrate</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="k">for</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">Ls</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1/2, 1/2]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-now-construct-a-gaussian-quadrature-for-n-3-or-n-4-points">
+<h2><span class="section-number">63.7. </span>Exercise: Now construct a Gaussian quadrature for n=3 or n=4 points.<a class="headerlink" href="#exercise-now-construct-a-gaussian-quadrature-for-n-3-or-n-4-points" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="CompositeQuadrature.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">57. </span>Numerical integration: Part II</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lecture_01_introduction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">64. </span>Introduction to TMA4125</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">61. Numerical integration: Part IV</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-cotes-and-gausz-quadrature-formulas">61.1. Newton-Cotes and Gauß quadrature formulas</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-cotes-formulas">62. Newton-Cotes formulas</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#gausz-quadrature">63. Gauß quadrature</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-1-gaussian-quadrature">63.1. Definition 1: Gaussian quadrature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#orthogonal-polynomials">63.2. Orthogonal polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-orthogonal-polynomials-on-a-b">63.3. Theorem 1: Orthogonal polynomials on <span class="math notranslate nohighlight">\([a,b]\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-2-roots-of-orthogonal-polynomials">63.4. Theorem 2: Roots of orthogonal polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-3-construction-of-gaussian-quadrature">63.5. Theorem 3: Construction of Gaussian quadrature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-revisiting-gausz-legendre-quadrature-with-2-nodes">63.6. Example: Revisiting Gauß-Legendre quadrature with 2 nodes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-now-construct-a-gaussian-quadrature-for-n-3-or-n-4-points">63.7. Exercise: Now construct a Gaussian quadrature for n=3 or n=4 points.</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

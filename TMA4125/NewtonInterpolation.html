@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>73. Polynomial interpolation: Newton interpolation &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/NewtonInterpolation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="74. Numerical integration" href="SimpleQuadrature.html" />
+    <link rel="prev" title="70. Introduction to TMA4125" href="Introduction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/NewtonInterpolation.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/NewtonInterpolation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/NewtonInterpolation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Polynomial interpolation: Newton interpolation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-interpolation">73.1. Newton interpolation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">73.2. Implementation</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- dom:TITLE: Polynomial interpolation: Newton interpolation -->
+<section class="tex2jax_ignore mathjax_ignore" id="polynomial-interpolation-newton-interpolation">
+<h1><span class="section-number">73. </span>Polynomial interpolation: Newton interpolation<a class="headerlink" href="#polynomial-interpolation-newton-interpolation" title="Link to this heading">#</a></h1>
+<!-- dom:AUTHOR: Anne Kværnø (modified by André Massing) -->
+<!-- Author: -->  
+<p><strong>Anne Kværnø (modified by André Massing)</strong></p>
+<p>Date: <strong>Jan 18, 2021</strong></p>
+<p>If you want to have a nicer theme for your jupyter notebook,
+download the <a class="reference external" href="https://www.math.ntnu.no/emner/TMA4125/2020v/part_II/notebooks/tma4125.css">cascade stylesheet file tma4125.css</a>
+and execute the next cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">solve</span>  <span class="c1"># Solve linear systems and compute norms</span>
+
+
+<span class="k">def</span> <span class="nf">css_styling</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tma4125.css&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">styles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Do nothing</span>
+
+
+<span class="c1"># Comment out next line and execute this cell to restore the default notebook style</span>
+<span class="n">css_styling</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:100,300,400,500,700,800,900,100italic,300italic,400italic,500italic,700italic,800italic,900italic' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=News+Cycle" rel="stylesheet"> <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> <style> @font-face {
+    /*font-family: "Computer Modern";*/
+    /*src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');*/
+    font-family: 'News Cycle', sans-serif;
+}
+
+
+/* main background */
+
+
+/*#notebook_panel { 
+        background: #C9D4E2;
+    }*/
+
+div.cell {
+    /*max-width:600px;*/
+    /*margin-left:16% !important;*/
+    /*margin-right:auto;*/
+}
+
+div.text_cell {
+    max-width: 120ex;
+    /* instead of 100%, */
+}
+
+div.text_cell_render {
+    font-family: 'Alegreya Sans', Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva,   sans-serif;
+    line-height: 135%;
+    /*font-size:    45pt;*/
+    font-size: 130%;
+    /*width:600px;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+}
+
+.CodeMirror {
+    /*font-family: 'Source Code Pro', monospace;*/
+    /*font-style: italic;*/
+    /*font-weight: bold;*/
+    /*font-size: 120%;*/
+}
+
+
+/*.prompt{
+        display: None;
+    }*/
+
+.text_cell_render h1 {
+    font-family: 'Nixie One', serifV;
+    font-style: regular;
+    font-weight: 400;
+    font-size: 45pt;
+    line-height: 100%;
+        color: #497BB9;    
+    /*color: #5889C5;*/
+    /*color: rgb(0, 51, 102);*/
+    /*font-weight: 200;*/
+    /*font-size: 50pt;*/
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    display: block;
+}
+
+.text_cell_render h2 {
+    font-family: 'Nixie One', serif;
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 100%;
+    /*color: rgb(0,51,102);*/
+    color: #497BB9;    
+    margin-bottom: 0.1em;
+    margin-top: 0.3em;
+    display: block;
+}	
+
+.text_cell_render h3 {
+    font-family: 'Nixie One', serif;
+    margin-top:16px;
+    font-size: 22pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-style: regular;
+    color: rgb(102,102,0);
+}
+
+.text_cell_render h4 {    /*Use this for captions*/
+    font-family: 'Nixie One', serif;
+    font-size: 14pt;
+/*    text-align: center;*/
+    margin-top: 0em;
+    margin-bottom: 2em;
+    font-style: regular;
+}
+
+.text_cell_render h5 {  /*Use this for small titles*/
+    font-family: 'Nixie One', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: rgb(163,0,0);
+    /*color: #5889C5;*/
+    /*margin-bottom: .5em;
+    margin-top: 0.5em;*/
+    font-style: italic;
+    margin-bottom: .1em;
+    margin-top: 0.8em;
+    display: block;
+}
+
+.warning {
+    color: rgb( 240, 20, 20)
+}
+
+</style> 
+<script>
+ MathJax.Hub.Config( {
+    TeX: {
+        Macros: {
+            NN: "{\\bf N}",
+            RR: "{\\mathbb{R}}",
+            mcO: "{\\mathcal{O}}"
+        },
+        equationNumbers: { autoNumber: "AMS" },
+        extensions: ["AMSmath.js", "begingroup.js"] 
+    },
+    tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"]], displayMath: [ ['$$', '$$'], ["\\[", "\\]"]]
+    },
+    displayAlign: 'center', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {
+            '.MathJax_Display': {
+                "margin": 4
+            }
+        }
+    }
+}
+);
+</script>
+</div></div>
+</div>
+<p>And of course we want to import the required modules.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+
+<span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">),</span>
+    <span class="s2">&quot;axes.grid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="newton-interpolation">
+<h2><span class="section-number">73.1. </span>Newton interpolation<a class="headerlink" href="#newton-interpolation" title="Link to this heading">#</a></h2>
+<p>This is an alternative approach to find the interpolation polynomial.
+Let <span class="math notranslate nohighlight">\(x_0,x_1,\ldots,x_n\)</span> be <span class="math notranslate nohighlight">\(n+1\)</span> distinct real numbers.
+Instead of using the Lagrange polynomials to write the
+interpolation polynomial in Lagrange form, we will now employ
+the <strong>Newton</strong> polynomials <span class="math notranslate nohighlight">\(\omega_i\)</span>, <span class="math notranslate nohighlight">\(i=0,\ldots, n\)</span>.
+The Newton polynomials are defined by
+as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\omega_0(x) &amp;= 1,
+\\ 
+\omega_1(x) &amp;= (x-x_0),
+\\ 
+\omega_2(x) &amp;= (x-x_0)(x-x_1),
+\\ 
+\ldots
+\\ 
+\omega_n(x) &amp;= (x-x_0)(x-x_1)\cdots(x-x_{n-1}),
+\end{align*}
+\end{split}\]</div>
+<p>or in more compact notation</p>
+<!-- Equation labels as ordinary links -->
+<div id="eq:newton_poly"></div>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+\omega_i(x)= \prod_{k=0}^{i-1}(x-x_k).
+\label{eq:newton_poly} \tag{1}
+\end{equation}
+\]</div>
+<p>The so-called
+<strong>Newton form</strong> of a polynomial of degree <span class="math notranslate nohighlight">\(n\)</span> is an expansion of the form</p>
+<div class="math notranslate nohighlight">
+\[
+p(x)=\sum_{i=0}^{n} c_i \omega_i(x)
+\]</div>
+<p>or more explicitly</p>
+<div class="math notranslate nohighlight">
+\[
+p(x)=c_n (x-x_0)(x-x_1)\cdots(x-x_{n-1}) + c_{n-1}(x-x_0)(x-x_1)\cdots(x-x_{n-2}) + \cdots + c_1(x-x_0) + c_0.
+\]</div>
+<p>In the light of this form of writing a polynomial, the polynomial
+interpolation problem leads to the following observations. Let us
+start with a single node <span class="math notranslate nohighlight">\(x_0\)</span>, then <span class="math notranslate nohighlight">\(f(x_0)=p(x_0)=c_0\)</span>.</p>
+<p>Going one
+step further and consider two nodes <span class="math notranslate nohighlight">\(x_0,x_1\)</span>. Then we see that
+<span class="math notranslate nohighlight">\(f(x_0)=p(x_0)=c_0\)</span> and <span class="math notranslate nohighlight">\(f(x_1)=p(x_1)=c_0 + c_1(x_1-x_0)\)</span>. The latter
+implies that the coefficient</p>
+<div class="math notranslate nohighlight">
+\[
+c_1=\frac{f(x_1)-f(x_0)}{x_1-x_0}.
+\]</div>
+<p>Given three nodes <span class="math notranslate nohighlight">\(x_0,x_1,x_2\)</span> yields the coefficients <span class="math notranslate nohighlight">\(c_0,c_1\)</span> as defined above, and from</p>
+<div class="math notranslate nohighlight">
+\[
+f(x_2)=p(x_2)=c_0 +  c_1(x_2-x_0) +  c_2(x_2-x_0)(x_2-x_1)
+\]</div>
+<p>we deduce the coefficient</p>
+<div class="math notranslate nohighlight">
+\[
+c_2=\frac{f(x_2) - f(x_0) - \frac{f(x_1)-f(x_0)}{x_1-x_0} (x_2-x_0)}{(x_2-x_0)(x_2-x_1)}.
+\]</div>
+<p>Playing with this quotient gives the much more structured expression</p>
+<div class="math notranslate nohighlight">
+\[
+c_2=\frac{\frac{f(x_2)-f(x_1)}{x_2-x_1} - \frac{f(x_1)-f(x_0)}{x_1-x_0}}{(x_2-x_0)}.
+\]</div>
+<p>This procedure can be continued and yields a so-called triangular
+systems that permits to define the remaining coefficients
+<span class="math notranslate nohighlight">\(c_3,\ldots,c_n\)</span>. One sees quickly that the coefficient <span class="math notranslate nohighlight">\(c_k\)</span> only
+depends on the interpolation points <span class="math notranslate nohighlight">\((x_0,y_0),\ldots,(x_k,y_k)\)</span>,
+where <span class="math notranslate nohighlight">\(y_i:=f(x_i)\)</span>, <span class="math notranslate nohighlight">\(i=0,\ldots,n\)</span>.</p>
+<p>We introduce the folllwing so-called <strong>finite difference</strong> notation for a
+function <span class="math notranslate nohighlight">\(f\)</span>. The 0th order finite difference is defined to be
+<span class="math notranslate nohighlight">\(f[x_0]:=f(x_0)\)</span>. The 1st order finite difference is</p>
+<div class="math notranslate nohighlight">
+\[
+f[x_0,x_1]:=\frac{f(x_1)-f(x_0)}{x_1-x_0}.
+\]</div>
+<p>The second order finite difference is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+f[x_0,x_1,x_2]:= \frac{f[x_1,x_2] - f[x_0,x_1]}{x_2-x_0}.
+\]</div>
+<p>In general, the <strong>nth order finite difference</strong> of the function <span class="math notranslate nohighlight">\(f\)</span>,
+also called the <strong>nth Newton divided difference</strong>, is defined recursively by</p>
+<div class="math notranslate nohighlight">
+\[
+f[x_0,\ldots,x_n]:= \frac{f[x_1,\ldots,x_n] - f[x_0,\ldots,x_{n-1}]}{x_n-x_0}.
+\]</div>
+<p>Newton’s method to solve the polynomial interpolation problem can be
+summarized as follows. Given <span class="math notranslate nohighlight">\(n+1\)</span> interpolation points
+<span class="math notranslate nohighlight">\((x_0,y_0),\ldots,(x_n,y_n)\)</span>, <span class="math notranslate nohighlight">\(y_i:=f(x_i)\)</span>. If the order <span class="math notranslate nohighlight">\(n\)</span>
+interpolation polynomial is expressed in Newton’s form</p>
+<div class="math notranslate nohighlight">
+\[
+p_n(x)=c_n (x-x_0)(x-x_1)\cdots(x-x_{n-1}) + c_{n-1}(x-x_0)(x-x_1)\cdots(x-x_{n-2}) + \cdots + c_1(x-x_0) + c_0,
+\]</div>
+<p>then the coefficients</p>
+<div class="math notranslate nohighlight">
+\[
+c_k = f[x_0,\ldots,x_k]
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(k=0,\ldots,n\)</span>.</p>
+<p>In fact, a recursion is in place</p>
+<div class="math notranslate nohighlight">
+\[
+p_n(x)=p_{n-1}(x) + f[x_0,\ldots,x_n](x-x_0)(x-x_1)\cdots(x-x_{n-1})
+\]</div>
+<p>It is common to write the finite differences in a table, which for <span class="math notranslate nohighlight">\(n=3\)</span> will
+look like:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{c|cccc}
+x_0 &amp; f[x_0] &amp; \\ 
+    &amp;        &amp; f[x_0,x_1] &amp; \\ 
+x_1 &amp; f[x_1] &amp;            &amp; f[x_0,x_1,x_2] \\ 
+    &amp;        &amp; f[x_1,x_2] &amp;                &amp; f[x_0,x_1,x_2, x_3] \\ 
+x_2 &amp; f[x_2] &amp;            &amp; f[x_1,x_2,x_3] \\ 
+    &amp;        &amp; f[x_2,x_3] &amp; \\ 
+x_3 &amp; f[x_3] \\ 
+\end{array}
+\end{split}\]</div>
+<p><strong>Example 1 again:</strong>
+Given the points in Example 1. The corresponding table of divided differences
+becomes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{c|cccc}
+0 &amp; 1 &amp; \\ 
+    &amp;        &amp; -3/4 &amp; \\ 
+2/3 &amp; 1/2 &amp;            &amp;  -3/4 \\ 
+    &amp;        &amp; -3/2 &amp;   \\ 
+1   &amp; 0 &amp;            
+\end{array}
+\end{split}\]</div>
+<p>and the interpolation polynomial becomes</p>
+<div class="math notranslate nohighlight">
+\[
+p_2(x) = 1 - \frac{3}{4}(x-0)-\frac{3}{4}(x-0)(x-\frac23) =  1 - \frac{1}{4}x -
+\frac{3}{4} x^2.
+\]</div>
+</section>
+<section id="implementation">
+<h2><span class="section-number">73.2. </span>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
+<p>The method above is implemented as two functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">divdiff(xdata,</span> <span class="pre">ydata)</span></code>: Create the table of divided differences</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">newtonInterpolation(F,</span> <span class="pre">xdata,</span> <span class="pre">x)</span></code>: Evaluate the interpolation polynomial.</p></li>
+</ul>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">xdata</span></code> and <code class="docutils literal notranslate"><span class="pre">ydata</span></code> are arrays with the interpolation points, and <code class="docutils literal notranslate"><span class="pre">x</span></code> is an
+array of values in which the polynomial is evaluated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">divdiff</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">):</span>
+    <span class="c1"># Create the table of divided differences based</span>
+    <span class="c1"># on the data in the arrays x_data and y_data.</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">F</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ydata</span>  <span class="c1"># Array for the divided differences</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xdata</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">F</span>  <span class="c1"># Return all of F for inspection.</span>
+    <span class="c1"># Only the first row is necessary for the</span>
+    <span class="c1"># polynomial.</span>
+
+
+<span class="k">def</span> <span class="nf">newton_interpolation</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># The Newton interpolation polynomial evaluated in x.</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+    <span class="n">xpoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># (x-x[0])(x-x[1])...</span>
+    <span class="n">newton_poly</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># The Newton polynomial</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">xpoly</span> <span class="o">=</span> <span class="n">xpoly</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">xdata</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">newton_poly</span> <span class="o">=</span> <span class="n">newton_poly</span> <span class="o">+</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">xpoly</span>
+    <span class="k">return</span> <span class="n">newton_poly</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run the code on the example above:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example: Use of divided differences and the Newton interpolation</span>
+<span class="c1"># formula.</span>
+<span class="n">xdata</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">divdiff</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>  <span class="c1"># The table of divided differences</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The table of divided differences:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>  <span class="c1"># The x-values in which the polynomial is evaluated</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">newton_interpolation</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>  <span class="c1"># Plot the polynomial</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">)</span>  <span class="c1"># Plot the interpolation points</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The interpolation polynomial p(x)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The table of divided differences:
+ [[ 1.   -0.75 -0.75]
+ [ 0.5  -1.5   0.  ]
+ [ 0.    0.    0.  ]]
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/62cda7c0bb6cc5983f915583ce364ffe7e14a8cd4083073ba2a643086b151be4.png"><img alt="../_images/62cda7c0bb6cc5983f915583ce364ffe7e14a8cd4083073ba2a643086b151be4.png" src="../_images/62cda7c0bb6cc5983f915583ce364ffe7e14a8cd4083073ba2a643086b151be4.png" style="width: 525px; height: 561px;" /></a>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Introduction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">70. </span>Introduction to TMA4125</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="SimpleQuadrature.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">74. </span>Numerical integration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-interpolation">73.1. Newton interpolation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">73.2. Implementation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

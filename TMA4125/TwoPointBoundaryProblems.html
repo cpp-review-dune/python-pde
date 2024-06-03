@@ -1,0 +1,1761 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>53. Finite difference methods for two-point value problems &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/TwoPointBoundaryProblems';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="57. Numerical integration: Part II" href="CompositeQuadrature.html" />
+    <link rel="prev" title="51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods" href="RungeKuttaNuMeODE.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/TwoPointBoundaryProblems.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/TwoPointBoundaryProblems.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/TwoPointBoundaryProblems.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Finite difference methods for two-point value problems</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">53. Finite difference methods for two-point value problems</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">53.1. Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-differentiation">53.2. Numerical differentiation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-analysis">53.3. Error analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-method-for-the-1d-poisson-problem">53.4. Finite difference method for the 1d Poisson problem</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-partial-partial-u-i">54. \begin{align}
+-\partial^+\partial^- U_i</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-end-bmatrix-widetilde-a-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-end-bmatrix-widetilde-u">55. \begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\end{bmatrix}
+}<em>{\widetilde{A}}
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N}
+\end{bmatrix}
+}_{\widetilde{U}}</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-h-2-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-h-2-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-a-is-undefined-myst-substitution-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-1-u-n-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-u-is-undefined-myst-substitution">56. \begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+h^2
+\
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\
+&amp;      &amp;    &amp;        &amp;  &amp;  &amp; h^2
+\end{bmatrix}
+}<em><aside class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<span class="docutils literal">/work/pde-book/TMA4125/TwoPointBoundaryProblems.ipynb</span>, line 320004)</p>
+<p>Substitution error:UndefinedError: ‘A’ is undefined [myst.substitution]</p>
+</aside>
+
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N-1}
+\
+U_{N}
+\end{bmatrix}
+}_<aside class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<span class="docutils literal">/work/pde-book/TMA4125/TwoPointBoundaryProblems.ipynb</span>, line 320004)</p>
+<p>Substitution error:UndefinedError: ‘U’ is undefined [myst.substitution]</p>
+</aside>
+</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">56.1. Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-two-point-boundary-problems-bvp">56.2. General two point boundary problems (BVP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">56.3. Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-conditions">56.4. Boundary conditions</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><span class="math notranslate nohighlight">\(\newcommand{mb}[1]{\mathbf{#1}}\)</span></p>
+<!-- dom:TITLE: Partial differential equations and finite difference methods. -->
+<section class="tex2jax_ignore mathjax_ignore" id="finite-difference-methods-for-two-point-value-problems">
+<h1><span class="section-number">53. </span>Finite difference methods for two-point value problems<a class="headerlink" href="#finite-difference-methods-for-two-point-value-problems" title="Link to this heading">#</a></h1>
+<!-- dom:AUTHOR: Anne Kværnø -->
+<!-- Author: -->  
+<p><strong>Anne Kværnø, André Massing</strong></p>
+<p>Date: <strong>April 19, 2021</strong></p>
+<section id="introduction">
+<h2><span class="section-number">53.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>In this note the finite difference method for solving partial differential equations
+(PDEs) will be presented.</p>
+<p>Roughly speaking, a finite difference method consists of the following steps:</p>
+<ol class="arabic simple">
+<li><p>Discretize the domain on which the equation is defined.</p></li>
+<li><p>On each grid point, replace the derivatives with an approximation, using the values in neighbouring grid points.</p></li>
+<li><p>Replace the exact solutions by their approximations.</p></li>
+<li><p>Solve the resulting system of equations.</p></li>
+</ol>
+<p>We will first see how to find approximations to the
+derivative of a function, and then how these can be used to solve boundary value
+problems like</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + p(x) u' + q(x) u = r(x), \qquad a \leq x \leq b, \qquad u(a)=u_a, \quad
+u(b)=u_b,
+\]</div>
+<p>and time dependent partial differential equations like the heat equation</p>
+<div class="math notranslate nohighlight">
+\[
+u_t = u_{xx}.
+\]</div>
+<p>The technique described here is, however, applicable to several other PDEs,
+and it is therefore important to try to understand the underlying idea.</p>
+</section>
+<section id="numerical-differentiation">
+<h2><span class="section-number">53.2. </span>Numerical differentiation<a class="headerlink" href="#numerical-differentiation" title="Link to this heading">#</a></h2>
+<p>This is the main tool for finite difference methods.</p>
+<p>Given a sufficiently smooth function <span class="math notranslate nohighlight">\(u\)</span>. How can we find an approximation to
+<span class="math notranslate nohighlight">\(u'(x)\)</span> or <span class="math notranslate nohighlight">\(u''(x)\)</span> in some given point <span class="math notranslate nohighlight">\(x\)</span>, just by using evaluation of the
+function itself?</p>
+<p><a class="reference external" href="https://wiki.math.ntnu.no/tma4100/tema/differentiation?&amp;amp;#definisjonen_av_den_deriverte_gitt_som_en_grenseverd">The derivative of
+<span class="math notranslate nohighlight">\(u\)</span></a>
+is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+u'(x) = \lim_{h\rightarrow 0} \frac{u(x+h)-u(x)}{h}.
+\]</div>
+<p>Given a sufficiently small value of <span class="math notranslate nohighlight">\(h\)</span>, the right hand side can be used an
+approximation to the <em>first derivative</em> <span class="math notranslate nohighlight">\(u'(x)\)</span>. A small collection of the most used approximations to the first order derivative
+<span class="math notranslate nohighlight">\(u'(x)\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u'(x) \approx \left\{
+   \begin{array}{ll}
+     \displaystyle \frac{u(x+h)-u(x)}{h} =: \partial^+ u(x), \qquad &amp; \text{Forward difference,} \\ 
+     \displaystyle \frac{u(x)-u(x-h)}{h} =: \partial^- u(x), &amp; \text{Backward difference,} \\ 
+     \displaystyle \frac{u(x+h)-u(x-h)}{2h} =: \partial^{\circ} u(x), &amp; \text{Central difference.}
+   \end{array} \right.
+\end{split}\]</div>
+<p>The first one is taken directly from the definition, and so is the second, and the
+third is just the mean of the first two.</p>
+<p>A common approximation to the <em>second
+derivative</em> is</p>
+<div class="math notranslate nohighlight">
+\[
+u''(x) \approx \partial^+ \partial^- u(x) =  \frac{u(x+h)-2u(x)+u(x-h)}{h^2}.
+\]</div>
+<p><strong>Numerical example 1:</strong>
+Test the method on the function <span class="math notranslate nohighlight">\(u(x)=\sin(x)\)</span> at the point <span class="math notranslate nohighlight">\(x=\frac{\pi}{4}\)</span>.
+Compare with the exact derivative. Try different step sizes, e.g.  <span class="math notranslate nohighlight">\(h=0.1, h=0.01, h=0.001\)</span>.
+Notice how the error in each case changes with <span class="math notranslate nohighlight">\(h\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Import linear algebra module</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span> <span class="k">as</span> <span class="nn">la</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>  <span class="c1"># For 3-d plot</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>  <span class="c1"># Solve linear systems</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>  <span class="c1"># Greate diagonal matrices</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span>
+    <span class="s2">&quot;axes.grid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Numerical differentiation</span>
+
+<span class="c1"># Forward difference</span>
+
+
+<span class="k">def</span> <span class="nf">diff_forward</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+
+
+<span class="c1"># Backward difference</span>
+
+
+<span class="k">def</span> <span class="nf">diff_backward</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">u</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span>
+
+
+<span class="c1"># Central difference for f&#39;(x):</span>
+
+
+<span class="k">def</span> <span class="nf">diff_central</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+
+
+<span class="c1"># end of diff_central</span>
+
+<span class="c1"># Central difference for f&#39;&#39;(x):</span>
+
+
+<span class="k">def</span> <span class="nf">diff2_central</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span>
+
+
+<span class="c1"># end of diff2_central</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Numerical example 1</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="n">du_exact</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ddu_exact</span> <span class="o">=</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]:</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">sin</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="n">diff_forward</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Approximations to the first derivative for h = </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward difference:  du  = </span><span class="si">{</span><span class="n">du</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2">,  Error = </span><span class="si">{</span><span class="n">du_exact</span><span class="o">-</span><span class="n">du</span><span class="si">:</span><span class="s2">10.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="n">diff_backward</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backward difference: du  = </span><span class="si">{</span><span class="n">du</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2">,  Error = </span><span class="si">{</span><span class="n">du_exact</span><span class="o">-</span><span class="n">du</span><span class="si">:</span><span class="s2">10.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="n">diff_central</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Central difference:  du  = </span><span class="si">{</span><span class="n">du</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2">,  Error = </span><span class="si">{</span><span class="n">du_exact</span><span class="o">-</span><span class="n">du</span><span class="si">:</span><span class="s2">10.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Approximation to the second derivative&quot;</span><span class="p">)</span>
+    <span class="n">ddu</span> <span class="o">=</span> <span class="n">diff2_central</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Central difference:  ddu = </span><span class="si">{</span><span class="n">ddu</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2">, Error = </span><span class="si">{</span><span class="n">ddu_exact</span><span class="o">-</span><span class="n">ddu</span><span class="si">:</span><span class="s2">10.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Approximations to the first derivative for h = 0.1
+Forward difference:  du  =   0.67060297,  Error =  3.650e-02
+Backward difference: du  =   0.74125475,  Error = -3.415e-02
+Central difference:  du  =   0.70592886,  Error =  1.178e-03
+Approximation to the second derivative
+Central difference:  ddu =  -0.70651772, Error = -5.891e-04
+Approximations to the first derivative for h = 0.01
+Forward difference:  du  =   0.70355949,  Error =  3.547e-03
+Backward difference: du  =   0.71063050,  Error = -3.524e-03
+Central difference:  du  =   0.70709500,  Error =  1.179e-05
+Approximation to the second derivative
+Central difference:  ddu =  -0.70710089, Error = -5.893e-06
+Approximations to the first derivative for h = 0.001
+Forward difference:  du  =   0.70675311,  Error =  3.537e-04
+Backward difference: du  =   0.70746022,  Error = -3.534e-04
+Central difference:  du  =   0.70710666,  Error =  1.179e-07
+Approximation to the second derivative
+Central difference:  ddu =  -0.70710672, Error = -5.901e-08
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="error-analysis">
+<h2><span class="section-number">53.3. </span>Error analysis<a class="headerlink" href="#error-analysis" title="Link to this heading">#</a></h2>
+<p>In this case the error analysis is quite simple: Perform a Taylor expansion of the
+error around <span class="math notranslate nohighlight">\(x\)</span>. The Taylor expansion becomes a power series in <span class="math notranslate nohighlight">\(h\)</span>.</p>
+<p>The expansion for the error of the forward difference is:</p>
+<p>\begin{align*}
+e(x;h) &amp;= u’(x) - \frac{u(x+h)-u(x)}{h}
+\
+&amp;= u’(x) - \frac{(u(x)+u’(x)h + \frac{1}{2}u’’(\xi)h^2) - u(x)}{h}
+\
+&amp;= -\frac{1}{2}u’’(\xi)h
+\end{align*}</p>
+<p>for some <span class="math notranslate nohighlight">\(\xi\in (x,x+h)\)</span>.</p>
+<p>The expansion for the error of the central difference is slightly more complicated:</p>
+<p>\begin{align*}
+e(x; h) &amp;= u’(x) - \frac{u(x+h)-u(x-h)}{2h} \
+&amp;= u’(x) \ &amp;- \frac{\big(u(x)+u’(x)h + \frac{1}{2} u’’(x)h^2 + \frac{1}{6} u’’’(\xi_1)h^3 \big) - \big(u(x)-u’(x)h + \frac{1}{2} u’’(x)h^2 - \frac{1}{6} u’’’(\xi_2)h^3\big)}{2h} \
+&amp;= -\frac{1}{12}\big(u’’’(\xi_1) + u’’’(\xi_2)\big)h^2  \
+&amp;= -\frac{1}{6}u’’’(\eta)h^2, \qquad \qquad \text{ for some } \eta \in (x-h, x+h).
+\end{align*}</p>
+<p>In the last step, the two remainder terms have been combined by the intermediate value theorem. The error for the approximation of the
+second order derivative can be found in a similar manner.</p>
+<p><strong>Problem 1</strong>: Use Taylor expansion to show that
+for
+<span class="math notranslate nohighlight">\(u \in C^4([a,b])\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+ | \partial^+ \partial^-u(x) - u''(x) |
+=
+\mathcal{O}(h^2).
+\]</div>
+<p><strong>Reminder.</strong> The order of an approximation is <span class="math notranslate nohighlight">\(p\)</span> if there exist a constant <span class="math notranslate nohighlight">\(C\)</span> independent on <span class="math notranslate nohighlight">\(h\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\lvert e(h;x)\rvert \leq C h^p
+\]</div>
+<p>for all sufficiently small <span class="math notranslate nohighlight">\(h &gt; 0\)</span>.</p>
+<p>In practice, it is sufficient to show that the power expansion of the error satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+e(x,h)=C_ph^{p}+ C_{p+1}h^{p+1} + \dotsm, \qquad \text{ with } C_p \not=0
+\]</div>
+<p>The forward and backward approximations
+are of order 1, the central differences of order 2.</p>
+<p>We are going to use these formulas a lot in the sequel, so let us just summarize
+the results, including the error terms:</p>
+<p><strong>Difference formulas for derivatives:</strong></p>
+<p>\begin{align*}
+u’(x) &amp;= \left{
+\begin{array}{ll} \displaystyle
+\underbrace{\frac{u(x+h)-u(x)}{h}}<em>{\partial^+u(x)} - \frac{h}{2}u’’(\xi), \ &amp; \text{Forward difference} \ \mbox{} \
+\displaystyle
+\underbrace{\frac{u(x)-u(x-h)}{h}}</em>{\partial^-u(x)} + \frac{h}{2}u’’(\xi), &amp; \text{Backward difference} \ \mbox{} \
+\displaystyle
+\underbrace{\frac{u(x+h)-u(x-h)}{2h}}<em>{\partial^{\circ}u(x)} - \frac{h^2}{6}u’’’(\xi).\qquad  &amp; \text{Central difference}
+\end{array}  \right. \ \mbox{} \
+u’’(x) &amp; =
+\underbrace{\frac{u(x+h)-2u(x)+u(x-h)}{h^2}}</em>{\partial^+\partial^-u(x)} - \frac{h^2}{12}u^{(4)}(\xi), \qquad<br />
+\text{Central difference}
+\end{align*}</p>
+</section>
+<section id="finite-difference-method-for-the-1d-poisson-problem">
+<h2><span class="section-number">53.4. </span>Finite difference method for the 1d Poisson problem<a class="headerlink" href="#finite-difference-method-for-the-1d-poisson-problem" title="Link to this heading">#</a></h2>
+<p>We start our journey with the the following problem.
+Let <span class="math notranslate nohighlight">\([a,b] \subset \mathbb{R}\)</span> be a finite interval, together
+with a function <span class="math notranslate nohighlight">\(f: [a, b] \to \mathbb{R}\)</span>. Then the <em>two-point
+boundary value problem</em> is to find a <span class="math notranslate nohighlight">\(u: [a, b] \to \mathbb{R}\)</span>
+such that</p>
+<p>\begin{gather}</p>
+<ul class="simple">
+<li><p>u’’(x) = f(x) \quad \forall x \in (a,b),
+\tag{1a}
+\
+u(a) = u_a, \quad  u(b) = u_b
+\tag{1b}
+\end{gather}
+where <span class="math notranslate nohighlight">\(u_a\)</span> and <span class="math notranslate nohighlight">\(u_b\)</span> are given values.</p></li>
+</ul>
+<p><strong>For the rest of the this section we will
+assume that <span class="math notranslate nohighlight">\(a = 0, b = 1\)</span></strong></p>
+<p>Note that so this is <strong>second order</strong> ordinary differential equations and thus requires two addition values to determine a solution completely, one on each boundary point.</p>
+<p>This is contrast of the second order initial value problem
+\begin{align*}
+u’’ &amp;= f(t,u(t), u’(t)) \quad \forall; t \in (0,1)
+\
+u(0) &amp;= u_0,
+\
+u’(0) &amp;= u_1
+\end{align*}
+where we have two conditions on the left end point.
+The main reason is that in the former case, <span class="math notranslate nohighlight">\(x\)</span> is a space variable,
+while in the latter case, <span class="math notranslate nohighlight">\(t\)</span> is a time variable.</p>
+<p>Instead of trying to compute <span class="math notranslate nohighlight">\(u(x)\)</span> exactly,
+we will now try to compute a numerical approximation
+<span class="math notranslate nohighlight">\(u_{\Delta}\)</span> of <span class="math notranslate nohighlight">\(u(x)\)</span>. As many times before we start by
+defininig <span class="math notranslate nohighlight">\(n+1\)</span> equally spaced points <span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span>
+with a grid size <span class="math notranslate nohighlight">\(h = \tfrac{b-a}{n}\)</span> so that
+$<span class="math notranslate nohighlight">\(
+x_i := a + i h \quad
+\text{for } i = 0, 1, \ldots, n.
+\)</span>$</p>
+<p>Then the second order derivative <span class="math notranslate nohighlight">\(u''\)</span> can be approximated by the
+<strong>central difference operator</strong> defined by</p>
+<p>\begin{align}
+\partial^+ \partial^- u(x_i)
+:=  \dfrac{u(x_i+h) - 2 u(x_i) + u(x_i-h)}
+{h^2}
+\approx u’’(x_i) = -f(x_i)
+\end{align}</p>
+<p>Now the idea is to numerically solve for the two-point boundary
+value problem by associating an unknown variable <span class="math notranslate nohighlight">\(U_i := u_{\Delta}(x_i)\)</span> to every
+grid point <span class="math notranslate nohighlight">\(x_i\)</span> for <span class="math notranslate nohighlight">\(i=0,\ldots N\)</span>. Of course, the goal
+is to find an <span class="math notranslate nohighlight">\(U_i \approx u(x_i)\)</span>. Keeping in mind that <span class="math notranslate nohighlight">\(-u'' = f\)</span>,
+we demand that at the <strong>internal</strong> grid points <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^{N}\)</span>
+the unknows satisfy</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="begin-align-partial-partial-u-i">
+<h1><span class="section-number">54. </span>\begin{align}
+-\partial^+\partial^- U_i<a class="headerlink" href="#begin-align-partial-partial-u-i" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>\dfrac{U_{i+1} - 2 U_i + U_{i-1}}
+{h^2}
+= f(x_i) \quad \text{for } i = 1,\ldots N-1.
+\end{align}</p></li>
+</ul>
+<p>Note that at <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_N\)</span>, <span class="math notranslate nohighlight">\(\partial^+\partial^- U_i\)</span> is not well-defined
+since we don’t have a point left (respective right) of <span class="math notranslate nohighlight">\(x_0\)</span> (respective <span class="math notranslate nohighlight">\(x_N\)</span>). This leads to the <em>non-quadratic</em> <span class="math notranslate nohighlight">\(N-1 \times N+1\)</span> linear system of the form</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-end-bmatrix-widetilde-a-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-end-bmatrix-widetilde-u">
+<h1><span class="section-number">55. </span>\begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\end{bmatrix}
+}<em>{\widetilde{A}}
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N}
+\end{bmatrix}
+}_{\widetilde{U}}<a class="headerlink" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-end-bmatrix-widetilde-a-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-end-bmatrix-widetilde-u" title="Link to this heading">#</a></h1>
+<p>\underbrace{
+\begin{bmatrix}
+f(x_1)
+\
+f(x_2)
+\
+f(x_3)
+\
+\vdots
+\
+f(x_{N-1})
+\end{bmatrix}
+}_{\widetilde{F}}
+\end{align}</p>
+<p>Out of reflex we immediately ask whether this system
+is <em>always solvable</em> and has a <em>unique solution</em>.
+Unfortunately the matrix <span class="math notranslate nohighlight">\(\widetilde{A}\)</span> above is non-quadratic with more columns than rows and thus has a nontrivial kernel.
+An example is <span class="math notranslate nohighlight">\(U_0 = U_1 = U_2 = \ldots U_{N-1} = U_N = c\)</span> for any constant <span class="math notranslate nohighlight">\(c\)</span>. That’s where the boundary conditions come into play!!</p>
+<p>So to close the system, let’s incorporate the boundary condition by setting
+$<span class="math notranslate nohighlight">\(
+U_0 = u_a, \quad U_{N} = u_b.
+\)</span>$
+These trivial equations can be added to the system above,
+leading to final problem:</p>
+<p>Find <span class="math notranslate nohighlight">\(U = [U_0, \ldots, U_N] \in \mathbb{R}^{N+1}\)</span> such that</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-h-2-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-h-2-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-a-is-undefined-myst-substitution-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-1-u-n-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-u-is-undefined-myst-substitution">
+<h1><span class="section-number">56. </span>\begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+h^2
+\
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\
+&amp;      &amp;    &amp;        &amp;  &amp;  &amp; h^2
+\end{bmatrix}
+}<em>
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N-1}
+\
+U_{N}
+\end{bmatrix}
+}_<a class="headerlink" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-h-2-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-h-2-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-a-is-undefined-myst-substitution-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-1-u-n-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-u-is-undefined-myst-substitution" title="Link to this heading">#</a></h1>
+<p>\underbrace{
+\begin{bmatrix}
+u_0
+\
+f(x_1)
+\
+f(x_2)
+\
+f(x_3)
+\
+\vdots
+\
+f(x_{N-1})
+\
+u_b
+\end{bmatrix}
+}_
+\end{align}</p>
+<section id="implementation">
+<h2><span class="section-number">56.1. </span>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fdm_poisson1d_matrix</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the finite difference matrix for the Poisson problem in 1D</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    N (int): Number of grid points :math:`\{x_i}_{i=0}^N` counting from 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    A (ndarray): Finite difference matrix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Gridsize</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">N</span>
+
+    <span class="c1"># Define zero matrix A of right size and insert</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Define tridiagonal part of A</span>
+    <span class="n">hh</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">h</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">hh</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">hh</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">hh</span>
+
+    <span class="c1"># Set a_00 = a_NN to 1 to incorporate boundary condition</span>
+    <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">A</span>
+
+
+<span class="k">def</span> <span class="nf">apply_bcs</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bcs</span><span class="p">):</span>
+    <span class="s2">&quot;Incorporate boundary condition into rhs vector&quot;</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bcs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bcs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Analytical reference solution</span>
+<span class="n">u</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Define grid points</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">xfine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">N</span><span class="p">)</span>
+
+<span class="c1"># Compute A and F</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">fdm_poisson1d_matrix</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># print(A)</span>
+<span class="c1"># print(F)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Incorporate bcs</span>
+<span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">u</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">apply_bcs</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bcs</span><span class="p">)</span>
+
+<span class="c1"># Solve AU = F</span>
+<span class="c1"># (We will introduce a sparse solver when we look at 2D problems)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot discrete solution on chosen discretization grid</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;U_i&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xfine</span><span class="p">,</span> <span class="n">u</span><span class="p">(</span><span class="n">xfine</span><span class="p">),</span> <span class="s2">&quot;--b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_{\mathrm</span><span class="si">{ex}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="c1"># Show figure (for non inline plotting)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/0e9f77f0c6856275c8e1093ce53d049fced0cec1ab67db635d14b9d4f9081716.png"><img alt="../_images/0e9f77f0c6856275c8e1093ce53d049fced0cec1ab67db635d14b9d4f9081716.png" src="../_images/0e9f77f0c6856275c8e1093ce53d049fced0cec1ab67db635d14b9d4f9081716.png" style="width: 696px; height: 356px;" /></a>
+</div>
+</div>
+<p><strong>Problem 2</strong></p>
+<p>Apply the method of <strong>manufactured solutions</strong>: Take a known function <span class="math notranslate nohighlight">\(u(x)\)</span> and
+compute corresponding data <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(u_a\)</span>, <span class="math notranslate nohighlight">\(u_b\)</span> such that <span class="math notranslate nohighlight">\(u\)</span> is the solution to
+the two-point two-point boundary problem (1a)–(1b).</p>
+<p>For example you can pick <span class="math notranslate nohighlight">\(u(x) = \cos(2\pi x)\)</span>. What is then <span class="math notranslate nohighlight">\(f = - u''\)</span>,
+<span class="math notranslate nohighlight">\(u_a = u(0)\)</span>, <span class="math notranslate nohighlight">\(u_b = u(1)\)</span>?</p>
+<p>After having picked your favorite (smooth) manufactured solution,
+you can compute the error
+$<span class="math notranslate nohighlight">\(
+\mathrm{err(h)} = \mathrm{err(N)} = \max_{i \in \{0,\ldots N\}}|U_i - u(x_i)|
+\)</span><span class="math notranslate nohighlight">\(
+as a function of \)</span>h = 1/N$.</p>
+<p>For <span class="math notranslate nohighlight">\(N_1 = 5, N_2= 10, N_3 = 20, N_4 = 40, N_5 =80\)</span></p>
+<ul class="simple">
+<li><p>compute and plot the numerical solution and the analytical solution</p></li>
+<li><p>record the resulting <span class="math notranslate nohighlight">\(\mathrm{err(N)}\)</span></p></li>
+</ul>
+<p>At the end of your experiment, compute the <strong>experimental order of convergence</strong>
+for each refinement level <span class="math notranslate nohighlight">\(N_2, \ldots, N_5\)</span> defined
+$<span class="math notranslate nohighlight">\(
+EOC(N_i) = \dfrac{\log(\mathrm{err}(N_i)) - \log(\mathrm{err}(N_{i-1}))}
+{\log(N_{i-1}) - \log(N_i)}
+\)</span>$</p>
+<p>What order of convergence do you expect and what do you get?</p>
+</section>
+<section id="general-two-point-boundary-problems-bvp">
+<h2><span class="section-number">56.2. </span>General two point boundary problems (BVP)<a class="headerlink" href="#general-two-point-boundary-problems-bvp" title="Link to this heading">#</a></h2>
+<p>In the following, we will discuss the numerical solution
+of a two-point boundary value problem of the form</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + p(x) u' + q(x) u = r(x), \qquad a \leq x \leq b, \qquad u(a)=u_a, \quad u(b)=u_b,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p\)</span>, <span class="math notranslate nohighlight">\(q\)</span> are given functions of <span class="math notranslate nohighlight">\(x\)</span> and the boundary values <span class="math notranslate nohighlight">\(u_a\)</span> and <span class="math notranslate nohighlight">\(u_a\)</span> are given constants.</p>
+<p>As before, a finite difference method for this problem is constructed with the following steps:</p>
+<p><strong>Step 1:</strong>
+Given the interval <span class="math notranslate nohighlight">\([a,b]\)</span>. Choose some <span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span>, define the step size <span class="math notranslate nohighlight">\(h=(b-a)/N\)</span>, and
+the grid points <span class="math notranslate nohighlight">\(x_i=a+ih\)</span>, <span class="math notranslate nohighlight">\(i=0,1,\dotsc,N\)</span>.</p>
+<p><strong>Step 2:</strong>
+For each interior grid point <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(i=1,\dotsc,N-1\)</span>, replace the derivatives by their approximations in the BVP. The result is:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{u(x_i+h)-2u(x_i)+u(x_i-h)}{h^2} + p(x_i) \frac{u(x_i+h)-u(x_i-h)}{2h} + q(x_i) u(x_i) + \mathcal{O}(h^2) = r(x_i)
+\]</div>
+<p>for each <span class="math notranslate nohighlight">\(i=1,2\dotsc,N-1\)</span>, and the term <span class="math notranslate nohighlight">\(\mathcal{O}(h^2)\)</span> represents the errors in the difference formulas.</p>
+<p><strong>Step 3:</strong> Ignore the error term, and replace the exact solution <span class="math notranslate nohighlight">\(u(x_i)\)</span> by its numerical (and still unknown) approximation <span class="math notranslate nohighlight">\(U_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{U_{i+1}-2U_i+U_{i-1}}{h^2} + p(x_i)\frac{U_{i+1}-U_{i-1}}{2h} + q(x_i) U_i =  r(x_i), \qquad i=1,\dotsc,N-1.
+\]</div>
+<p>This is the <em>discretization</em> of the BVP.</p>
+<p>If we now include the two boundary values as equations</p>
+<div class="math notranslate nohighlight">
+\[
+U_0 = u_a
+\qquad\text{ and }\qquad
+U_N = u_b,
+\]</div>
+<p>the discretization is a linear system of equations</p>
+<div class="math notranslate nohighlight">
+\[
+A \mb{U} = \mb{b},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(A\)</span> is an <span class="math notranslate nohighlight">\((N+1)\times (N+1)\)</span> matrix and  <span class="math notranslate nohighlight">\(\mb{U} = [U_0,\dotsc,U_{N}]^T\)</span>. Or more specific, by multiplying the equations by <span class="math notranslate nohighlight">\(h^2\)</span> we end up with:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A =  \left[ \begin{array}{ccccccc}
+      1 &amp; 0 &amp; &amp;  \\ 
+      v_1 &amp; d_1 &amp; w_1 &amp; &amp; &amp;  \\ 
+        &amp; v_2 &amp; d_2 &amp; w_2 &amp;  \\ 
+        &amp; &amp; v_3 &amp; \ddots &amp; \ddots &amp; \\ 
+        &amp; &amp; &amp; \ddots &amp; \ddots &amp; w_{N-2} \\ 
+        &amp; &amp; &amp; &amp; v_{N-1} &amp; d_{N-1} &amp; w_{N-1}  \\ 
+        &amp; &amp; &amp; &amp; &amp;  0 &amp; 1
+    \end{array} \right]
+    \qquad \text{with} \qquad
+    \begin{array}{l}
+    \displaystyle v_i =1-\frac{h}{2}p(x_i) \\ 
+    \displaystyle d_i = -2 + h^2q(x_i) \\ 
+    \displaystyle w_i = 1+\frac{h}{2}p(x_i)
+    \end{array}.
+\end{split}\]</div>
+<p>The right hand side <span class="math notranslate nohighlight">\(\mb{b}\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[
+\mb{b} = [u_a, h^2r(x_1), \dotsc, h^2r(x_{N-1}), u_b]^T.
+\]</div>
+<p>Obviously, the first and last equations are trivial to solve, and are therefore often included in the right hand side.</p>
+<p><strong>Step 4:</strong> Solve  <span class="math notranslate nohighlight">\(A \mb{U} = \mb{b}\)</span> with respect to <span class="math notranslate nohighlight">\(\mb{U}\)</span>.</p>
+<p><strong>Example 1:</strong>
+We consider the equation</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + 2u' - 3u = 9x, \qquad u(0)=u_a = 1, \quad u(1)=u_b = e^{-3}+2e-5\approx 0.486351,
+\]</div>
+<p>with exact solution <span class="math notranslate nohighlight">\(u(x)= e^{-3x}+2e^{x}-3x-2\)</span>.</p>
+<p>Choose <span class="math notranslate nohighlight">\(N\)</span>, let <span class="math notranslate nohighlight">\(h=1/N\)</span>. Use the central differences for <span class="math notranslate nohighlight">\(u'\)</span> and <span class="math notranslate nohighlight">\(u''\)</span>, such that</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{u(x_i+h)-2u(x_i)+u(x_i-h)}{h^2} + 2 \frac{u(x_i+h)-u(x_i-h)}{2h} -3
+u(x_i) + \mathcal{O}(h^2) =  9 x_i, \qquad i=1,\dotsc, N.
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(U_i \approx u(x_i)\)</span>. Multiply by <span class="math notranslate nohighlight">\(h^2\)</span> on both sides, include <span class="math notranslate nohighlight">\(U_0=u_a\)</span> og <span class="math notranslate nohighlight">\(U_N=u_b\)</span> and clean the mess:</p>
+<p>\begin{align*}
+U_0 &amp;= 1, \
+(1-h)U_{i-1} + (-2-3h^2)U_i + (1+h)U_{i+1} &amp;= 9x_ih^2, &amp;&amp; i=1, \ldots, N-1, \
+U_N &amp;= 0.486351.
+\end{align*}</p>
+<p>To be even more concrete, for <span class="math notranslate nohighlight">\(N=4\)</span>, we get <span class="math notranslate nohighlight">\(h=0.25\)</span>. The linear system of equations becomes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left( \begin{array}{ccccc}
+  1 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\ 
+  0.75 &amp; -2.1875 &amp; 1.25 &amp; 0 &amp; 0\\ 
+  0 &amp; 0.75 &amp; -2.1875 &amp; 1.25 &amp; 0\\ 
+  0 &amp; 0 &amp; 0.75 &amp; -2.1875 &amp; 1.25 \\ 
+  0 &amp; 0 &amp; 0 &amp; 0 &amp; 1
+\end{array} \right) 
+\left(\begin{array}{c} U_0 \\ U_1 \\ U_2 \\ U_3 \\ U_4
+\end{array} \right)
+=
+\left( \begin{array}{c} 1. \\ 0.140625 \\ 0.28125  \\  0.421875 \\  0.48635073
+\end{array} \right).
+\end{split}\]</div>
+<p>The first and the last equation is trivial to solve, so in practice you have a system of 3 equations in 3 unknowns,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left(\begin{array}{ccc}
+   -2.1875 &amp; 1.25 &amp; 0 \\ 
+  0.75 &amp; -2.1875 &amp; 1.25 \\ 
+   0 &amp; 0.75 &amp; -2.1875
+\end{array} \right)
+\left( \begin{array}{c} U_1 \\ U_2 \\ U_3  \end{array} \right) =
+\left( \begin{array}{c} 0.140625-0.75\cdot 1 \\ 0.28125  \\  0.421875-1.25 \cdot
+0.48635073  \end{array} \right),
+\end{split}\]</div>
+<p>with the solution</p>
+<div class="math notranslate nohighlight">
+\[
+U_1 \approx 0.293176, \qquad U_2 \approx 0.025557, \qquad  U_3 \approx 0.093820.
+\]</div>
+<p>For comparison, the analytic solution in these points is</p>
+<div class="math notranslate nohighlight">
+\[
+u(0.25) \approx 0.290417, \qquad u(0.5) \approx 0.020573, \qquad u(0.75) \approx
+0.089400.
+\]</div>
+</section>
+<section id="id1">
+<h2><span class="section-number">56.3. </span>Implementation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>For simplicity, the implementation below is only done for BVPs with constant
+coefficients, that is <span class="math notranslate nohighlight">\(p(x)=p\)</span> and <span class="math notranslate nohighlight">\(q(x)=q\)</span>. This makes the diagonal, sub- and
+super-diagonals constant, except at the first and the last row.<br />
+An extra function is included to construct <em>tridiagonal</em> matrices,
+that is, matrices where all entries outside the diagonal, sub-diagonal,
+and super-diagonal are equal to zero.</p>
+<p>The implementation consist of:</p>
+<ol class="arabic simple">
+<li><p>Choose <span class="math notranslate nohighlight">\(N\)</span>, let <span class="math notranslate nohighlight">\(h=(b-a)/N\)</span> and <span class="math notranslate nohighlight">\(x_i=a+ih\)</span>, <span class="math notranslate nohighlight">\(i=0,\dotsc,N\)</span>.</p></li>
+<li><p>Construct the matrix <span class="math notranslate nohighlight">\(A\in \mathbb{R}^{(N+1)\times (N+1)}\)</span> and the vector <span class="math notranslate nohighlight">\(b\in\mathbb{R}^{N+1}\)</span>. The matrix <span class="math notranslate nohighlight">\(A\)</span> is tridiagonal, and except from the first and last row, has the elements  <span class="math notranslate nohighlight">\(v=1-\frac{h}{2}p\)</span> below the diagonal, <span class="math notranslate nohighlight">\(d = -2 + h^2 q\)</span> as diagonal elements and  <span class="math notranslate nohighlight">\(w = 1+\frac{h}{2}p\)</span> above the diagonal.</p></li>
+<li><p>Construct the vector <span class="math notranslate nohighlight">\(\mb{b} = [b_0,\dotsc,b_N]^T\)</span> with elements <span class="math notranslate nohighlight">\(b_i=h^2r(x_i)\)</span> for <span class="math notranslate nohighlight">\(i=1,\dotsc,N-1\)</span>.</p></li>
+<li><p>Modify the first and the last row of the matrix <span class="math notranslate nohighlight">\(A\)</span> and the first and last element of the vector <span class="math notranslate nohighlight">\(\mb{b}\)</span>, depending on the boundary conditions.</p></li>
+<li><p>Solve the system <span class="math notranslate nohighlight">\(A\mb{U} = \mb{b}\)</span>.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tridiag</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Help function</span>
+<span class="sd">    Returns a tridiagonal matrix A=tridiag(v, d, w) of dimension N x N.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">e</span> <span class="o">=</span> <span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>  <span class="c1"># array [1,1,...,1] of length N</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">diag</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">diag</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">diag</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">A</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>diag<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1, BVP</span>
+
+<span class="c1"># Define the equation</span>
+<span class="c1"># u&#39;&#39; + p*u&#39; + q*u = r(x) on the interval [a,b]</span>
+<span class="c1"># Boundary condition: u(a)=ua and u(b)=ub</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+
+
+<span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">x</span>
+
+
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">ua</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span>
+
+<span class="c1"># The exact solution (if known)</span>
+
+
+<span class="k">def</span> <span class="nf">u_eksakt</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">2</span>
+
+
+<span class="c1"># Set up the discrete system</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># Number of intervals</span>
+
+<span class="c1"># Start the discretization</span>
+<span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>  <span class="c1"># Stepsize</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># The gridpoints x_0=a, x_1=a+h, .... , x_N=b</span>
+
+<span class="c1"># Make a draft of the A-matrix (first and last row have to be adjusted)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">p</span>  <span class="c1"># Subdiagonal</span>
+<span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">q</span>  <span class="c1"># Diagonal</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">p</span>  <span class="c1"># Superdiagonal</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">tridiag</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Make a draft of the b-vector</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Modify the first equation (left boundary)</span>
+<span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ua</span>
+
+<span class="c1"># Modify the last equation (right boundary)</span>
+<span class="n">A</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">A</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="n">ub</span>
+
+
+<span class="n">U</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>  <span class="c1">#  Solve the equation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To verify the calculations done above, print the matrix <span class="math notranslate nohighlight">\(A\)</span>, the vector <span class="math notranslate nohighlight">\(\mb{b}\)</span> and the numerical solution <span class="math notranslate nohighlight">\(\mb{U}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the matrix A, the right hand side b the numerical and exact solution</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A =</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">b =</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">U =</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">u(x)=</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">u_eksakt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A =
+ [[ 1.      0.      0.      0.      0.    ]
+ [ 0.75   -2.1875  1.25    0.      0.    ]
+ [ 0.      0.75   -2.1875  1.25    0.    ]
+ [ 0.      0.      0.75   -2.1875  1.25  ]
+ [ 0.      0.      0.      0.      1.    ]]
+
+b =
+  [1.         0.140625   0.28125    0.421875   0.48635073]
+
+U =
+  [1.         0.29317568 0.02555744 0.09382011 0.48635073]
+
+u(x)=
+ [1.         0.29041739 0.0205727  0.08939926 0.48635073]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the solution of the BVP</span>
+<span class="n">xe</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="s2">&quot;.-&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">xe</span><span class="p">,</span> <span class="n">u_eksakt</span><span class="p">(</span><span class="n">xe</span><span class="p">),</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+<span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Numerical&quot;</span><span class="p">,</span> <span class="s2">&quot;Exact&quot;</span><span class="p">])</span>
+<span class="n">title</span><span class="p">(</span><span class="s2">&quot;Solution of a two-point BVP&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/d90f92ba0ce83d0e0716af1118413d11b7835c685c2dcf98a7d844295d2db8b7.png"><img alt="../_images/d90f92ba0ce83d0e0716af1118413d11b7835c685c2dcf98a7d844295d2db8b7.png" src="../_images/d90f92ba0ce83d0e0716af1118413d11b7835c685c2dcf98a7d844295d2db8b7.png" style="width: 705px; height: 407px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the error |u(x)-U| in the gridpoints</span>
+<span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u_eksakt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">U</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="s2">&quot;.-&quot;</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="s2">&quot;Error: u(x)-U&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max error = </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">error</span><span class="p">))</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Max error = 4.985e-03
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/c52430322271649da31a606710bc393cb41e6b55cafbed35543e283c07ee35ac.png"><img alt="../_images/c52430322271649da31a606710bc393cb41e6b55cafbed35543e283c07ee35ac.png" src="../_images/c52430322271649da31a606710bc393cb41e6b55cafbed35543e283c07ee35ac.png" style="width: 729px; height: 407px;" /></a>
+</div>
+</div>
+</section>
+<section id="boundary-conditions">
+<h2><span class="section-number">56.4. </span>Boundary conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading">#</a></h2>
+<p>To get a unique solution of a BVP (or a PDE), some information about the
+solution, usually given on the boundaries has to be known. The most common boundary conditions are:</p>
+<ol class="arabic simple">
+<li><p>Dirichlet condition: The solution is known at the boundary.</p></li>
+<li><p>Neumann condition: The derivative is known at the boundary.</p></li>
+<li><p>Robin (or mixed) condition: A combination of those.</p></li>
+</ol>
+<p>In the example above, Dirichlet conditions were used. We will now see
+how to handle Neumann conditions. Robin conditions can be treated similarly.</p>
+<p>Given the BVP with a Neumann condition at the left boundary:</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + p(x) u' + q(x) u = r(x), \qquad a \leq x \leq b, \qquad u'(a)=u'_a,
+\quad u(b)=u_b.
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(u'_a\)</span> is some given value. In this case, the solution <span class="math notranslate nohighlight">\(u(a)\)</span> and its
+corresponding approximation <span class="math notranslate nohighlight">\(U_0\)</span> are unknown, and we need some difference
+formula also for the point <span class="math notranslate nohighlight">\(a=x_0\)</span>. The simplest option is to use a forward
+difference</p>
+<div class="math notranslate nohighlight">
+\[
+u'_a = \frac{u(x_1)-u(x_0)}{h} + \mathcal{O}(h) \qquad \text{ resulting in }\qquad
+   \frac{U_1-U_0}{h} = u'_a
+\]</div>
+<p>But this is only a first order approximation, and thus lower accuracy is to be
+expected. We could also use a second order approximation using the values in the
+grid points <span class="math notranslate nohighlight">\(x_0\)</span>, <span class="math notranslate nohighlight">\(x_1\)</span> and <span class="math notranslate nohighlight">\(x_2\)</span>, but this will ruin the nice tridiagonal
+structure of the coefficient matrix.</p>
+<p>Instead, use the idea of a <em>false
+boundary</em>:</p>
+<p>Assume that the solution can be stretched outside the boundary <span class="math notranslate nohighlight">\(x=a\)</span>, all the
+way to a fictitious grid point <span class="math notranslate nohighlight">\(x_{-1}=a-h\)</span>, where we also assume there is an
+approximate and equally fictitious approximation <span class="math notranslate nohighlight">\(U_{-1}\)</span> to <span class="math notranslate nohighlight">\(u(x_{-1})\)</span>. Then
+we have two difference formulas in the point <span class="math notranslate nohighlight">\(a\)</span>, one for the BVP itself
+and a central difference for the boundary conditions:</p>
+<p>\begin{align*}
+\frac{U_{1}-2U_0+U_{-1}}{h^2} + p(x_0)\frac{U_{1}-U_{-1}}{2h} +    q(x_0) U_0 &amp; =  r(x_0), \
+\frac{U_1 - U_{-1}}{2h} &amp;= u’_a.
+\end{align*}</p>
+<p>We can now solve the second equation with respect to <span class="math notranslate nohighlight">\(U_{-1}\)</span>, and insert the
+solution into the first equation. This yields the new equation</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{2U_1-2U_0-2hu'_a}{h^2} + p(x_0)u'_a + q(x_0)U_0 = r(x_0).
+\]</div>
+<p>So the only thing that has changed is the first equation. And since central differences have been used both for the BVP and the boundary condition, the overall order of this approximation can be proved to be 2.</p>
+<p><strong>Example 2:</strong></p>
+<p>We consider the same example as before, but now with a Neumann condition at the left
+boundary:</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + 2u' - 3u = 9x, \qquad u'(0)=u'_a =-4, \quad u(1)=u_b = -2e^{-3}+e-5 \approx
+0.48635073,
+\]</div>
+<p>which has the analytic solution <span class="math notranslate nohighlight">\(u(x)= e^{-3x}-2e^{x}-3x-2\)</span>.</p>
+<p>The modified difference equation at the boundary <span class="math notranslate nohighlight">\(x_0=0\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{2U_1-2U_0-2u'_a h}{h^2} +2u'_a - 3U_0 = 0.
+\]</div>
+<p>We multiply this equation by <span class="math notranslate nohighlight">\(h^2\)</span>, and include the equation as the
+discretization for the grid point <span class="math notranslate nohighlight">\(x_0\)</span>.
+With this, we obtain the system</p>
+<p>\begin{align*}
+(-2-3h^2)U_0 - 2U_1 &amp;= (2h-2h^2)u’<em>a, \
+(1-h)U</em>{i-1} + (-2-3h^2)U_i + (1+h)U_{i+1} &amp;= 9 h^2 x_i, &amp;&amp; i=1, \ldots N-1, \
+U_N &amp;= u_b,
+\end{align*}</p>
+<p>which, for <span class="math notranslate nohighlight">\(N=4\)</span> and <span class="math notranslate nohighlight">\(h=0.25\)</span> becomes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left( \begin{array}{ccccc}
+  -2.1875 &amp; 2 &amp; 0 &amp; 0 &amp; 0  \\ 
+  0.75 &amp; -2.1875 &amp; 1.25 &amp; 0 &amp; 0 \\ 
+ 0 &amp; 0.75 &amp; -2.1875 &amp; 1.25 &amp; 0 \\ 
+ 0 &amp; 0 &amp; 0.75 &amp; -2.1875 &amp; 1.25 \\ 
+ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 
+\end{array}\right)\left(\begin{array}{c} U_{0} \\ U_1 \\ U_2 \\ U_3 \\ U_4
+\end{array}\right) = \left(\begin{array}{c} -1.5  \\ 0.140625  \\  0.28125  \\ 
+0.421875  \\  0.48635073 \end{array} \right).
+\end{split}\]</div>
+<p>The solution of this is</p>
+<div class="math notranslate nohighlight">
+\[
+U_0 \approx 0.92103219, \quad U_1 \approx 0.25737896, \quad  U_2 \approx 0.01029386, \qquad U_3 \approx 0.08858688.
+\]</div>
+<p><strong>Problem 3:</strong></p>
+<p>Now consider the two-point boundary problem from Example 2; that is,</p>
+<div class="math notranslate nohighlight">
+\[
+u'' + 2u' - 3u = 9x, \qquad u'(0)=u'_a =-4, \quad u(1)=u_b = -2e^{-3}+e-5
+\]</div>
+<p>which has the analytic solution <span class="math notranslate nohighlight">\(u(x)= e^{-3x}-2e^{x}-3x-2\)</span>.</p>
+<p>Here we want you to test the two possible implementations of the Neumann boundary
+conditions discussed above.</p>
+<p><strong>a)</strong> Modify the matrix <span class="math notranslate nohighlight">\(A\)</span> and right-hand <span class="math notranslate nohighlight">\(b\)</span> so that you implement the Neumann boundary condition <span class="math notranslate nohighlight">\(u'(0)=u'_a =-4\)</span> via the approximation <span class="math notranslate nohighlight">\(u'(a) \approx \frac{U_1-U_0}{h} = u'_a\)</span>. Now using the analytical solution, run a convergence study a là Problem 2.
+Plot/write out the resulting EOC table. What convergence order do you get?</p>
+<p><strong>b)</strong> Now modify the matrix <span class="math notranslate nohighlight">\(A\)</span> and right-hand <span class="math notranslate nohighlight">\(b\)</span> so that you implement the Neumann boundary condition using the idea of a false boundary as described above. Redo the convergence study, plot/write out the resulting EOC table. What convergence order do you get this time?</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="RungeKuttaNuMeODE.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">51. </span>Numerical solution of ordinary differential equations: High order Runge-Kutta methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="CompositeQuadrature.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">57. </span>Numerical integration: Part II</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">53. Finite difference methods for two-point value problems</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">53.1. Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-differentiation">53.2. Numerical differentiation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-analysis">53.3. Error analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-method-for-the-1d-poisson-problem">53.4. Finite difference method for the 1d Poisson problem</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-partial-partial-u-i">54. \begin{align}
+-\partial^+\partial^- U_i</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-end-bmatrix-widetilde-a-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-end-bmatrix-widetilde-u">55. \begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\end{bmatrix}
+}<em>{\widetilde{A}}
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N}
+\end{bmatrix}
+}_{\widetilde{U}}</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#begin-align-dfrac-1-h-2-underbrace-begin-bmatrix-h-2-1-2-1-1-2-1-1-2-1-ddots-ddots-ddots-1-2-1-h-2-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-a-is-undefined-myst-substitution-underbrace-begin-bmatrix-u-0-u-1-u-2-u-3-vdots-u-n-1-u-n-end-bmatrix-work-pde-book-tma4125-twopointboundaryproblems-ipynb-320004-warning-2-substitution-error-undefinederror-u-is-undefined-myst-substitution">56. \begin{align}
+\dfrac{1}{h^2}
+\underbrace{
+\begin{bmatrix}
+h^2
+\
+-1 &amp; 2  &amp; -1 &amp; &amp; &amp;
+\
+&amp; -1 &amp; 2  &amp; -1 &amp; &amp;
+\
+&amp;    &amp; -1 &amp; 2 &amp; -1 &amp; &amp;
+\
+&amp;     &amp;    &amp; \ddots &amp;\ddots &amp; \ddots &amp;
+\
+&amp;      &amp;    &amp;        &amp;  -1 &amp; 2 &amp; -1
+\
+&amp;      &amp;    &amp;        &amp;  &amp;  &amp; h^2
+\end{bmatrix}
+}<em><aside class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<span class="docutils literal">/work/pde-book/TMA4125/TwoPointBoundaryProblems.ipynb</span>, line 320004)</p>
+<p>Substitution error:UndefinedError: ‘A’ is undefined [myst.substitution]</p>
+</aside>
+
+\underbrace{
+\begin{bmatrix}
+U_0
+\
+U_1
+\
+U_2
+\
+U_3
+\
+\vdots
+\
+U</em>{N-1}
+\
+U_{N}
+\end{bmatrix}
+}_<aside class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<span class="docutils literal">/work/pde-book/TMA4125/TwoPointBoundaryProblems.ipynb</span>, line 320004)</p>
+<p>Substitution error:UndefinedError: ‘U’ is undefined [myst.substitution]</p>
+</aside>
+</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">56.1. Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-two-point-boundary-problems-bvp">56.2. General two point boundary problems (BVP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">56.3. Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-conditions">56.4. Boundary conditions</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

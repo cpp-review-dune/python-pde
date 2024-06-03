@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>87. Lecture 3 &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hplgit/vibration';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bibliography" href="../bibliography.html" />
+    <link rel="prev" title="86. Numerical methods for the heat equation" href="../TMA4125/NumericalMethodsHeatEquation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/hplgit/vibration.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fhplgit/vibration.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/hplgit/vibration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lecture 3</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vibration-equation">87.1. Vibration equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#method-of-manufactured-solution">87.2. Method of manufactured solution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusted-solver">87.3. Adjusted solver</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="lecture-3">
+<h1><span class="section-number">87. </span>Lecture 3<a class="headerlink" href="#lecture-3" title="Link to this heading">#</a></h1>
+<section id="vibration-equation">
+<h2><span class="section-number">87.1. </span>Vibration equation<a class="headerlink" href="#vibration-equation" title="Link to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://link.springer.com/chapter/10.1007/978-3-319-55456-3_1">vibration equation</a> can be written as</p>
+<div class="math notranslate nohighlight" id="equation-helmholtz">
+<span class="eqno">(87.1)<a class="headerlink" href="#equation-helmholtz" title="Link to this equation">#</a></span>\[ 
+\begin{equation}
+u^{''} + \omega^2 u = 0, u(0)=I, u'(0) = 0,
+\end{equation}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega\)</span> and <span class="math notranslate nohighlight">\(I\)</span> are given constants. This equation is often also referred to as the Helmholtz equation.
+A simple, recursive, finite difference method for solving the vibration equation is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+  u^0 &amp;= I\\
+  u^{1} &amp;= u^0 - \frac{1}{2}\Delta t^2 \omega^2 u^0 \\
+  u^{n+1} &amp;= 2u^n - u^{n-1} - \Delta t^2 \omega^2 u^{n}, n \in (1, 2, \ldots, N_t-1)
+\end{align*}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(u^n = u(t_n)\)</span> and <span class="math notranslate nohighlight">\(t_n = n \Delta t\)</span>.</p>
+<p>A recursive solver can easily be created using <a class="reference external" href="https://numpy.org">Numpy</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">plotslopes</span> <span class="kn">import</span> <span class="n">slope_marker</span>
+
+
+<span class="k">def</span> <span class="nf">solver</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve Eq. (1)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Time step</span>
+<span class="sd">    T : float</span>
+<span class="sd">        End time</span>
+<span class="sd">    I, w : float, optional</span>
+<span class="sd">        Model parameters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t : array_like</span>
+<span class="sd">        Discrete times (0, dt, 2*dt, ..., T)</span>
+<span class="sd">    u : array_like</span>
+<span class="sd">        The solution at discrete times t</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">Nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">I</span>
+    <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nt</span><span class="p">):</span>
+        <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">u</span>
+
+
+<span class="k">def</span> <span class="nf">u_exact</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exact solution of Eq. (1)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : array_like</span>
+<span class="sd">        Array of times to compute the solution</span>
+<span class="sd">    I, w : float, optional</span>
+<span class="sd">        Model parameters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ue : array_like</span>
+<span class="sd">        The solution at times t</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">I</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now want to compute convergence rates. We will use the <span class="math notranslate nohighlight">\(\ell^2\)</span>-norm computed as</p>
+<div class="math notranslate nohighlight">
+\[E_i = \sqrt{\Delta t_i\sum_{n=0}^{N^{i}_t}(u^n-u_e(t_n))^2}\]</div>
+<p>for a given uniform mesh level <span class="math notranslate nohighlight">\(i\)</span>. For example, we can use <span class="math notranslate nohighlight">\(N^0_t=8, N_t^{1}=16, N^2_t = 32\)</span>, etc., such that <span class="math notranslate nohighlight">\(\Delta t_{1} / \Delta t_2 = 2\)</span> and <span class="math notranslate nohighlight">\(\Delta t_{n-1} / \Delta t_{n} = 2\)</span> for all <span class="math notranslate nohighlight">\(n\)</span>. Note that there are <span class="math notranslate nohighlight">\(N_t^{i}\)</span> intervals on level <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(N_t^{i}+1\)</span> points.</p>
+<p>We assume that the error on the mesh with level <span class="math notranslate nohighlight">\(i\)</span> can be written as</p>
+<div class="math notranslate nohighlight">
+\[E_i = C (\Delta t_i)^r, \]</div>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> is a constant. This way, if we have the error on two levels, then we can compute</p>
+<div class="math notranslate nohighlight">
+\[ \frac{E_{i-1}}{E_i} = \frac{ (\Delta t_{i-1})^r}{(\Delta t_{i})^r} = \left( \frac{\Delta t_{i-1}}{ \Delta t_i} \right)^r  \]</div>
+<p>and isolate <span class="math notranslate nohighlight">\(r\)</span> by computing</p>
+<div class="math notranslate nohighlight">
+\[ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}} \]</div>
+<p>So by computing the error on two different levels we can find the order of the convergence!</p>
+<p>Let’s first write a function that computes the <span class="math notranslate nohighlight">\(\ell^2\)</span> error of the solver defined above</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">l2_error</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">sol</span><span class="o">=</span><span class="n">solver</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the l2 error norm of result from `solver`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Time step</span>
+<span class="sd">    T : float</span>
+<span class="sd">        End time</span>
+<span class="sd">    I, w : float, optional</span>
+<span class="sd">        Model parameters</span>
+<span class="sd">    sol : callable</span>
+<span class="sd">        The function that solves Eq. (1)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The l2 error norm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">sol</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span>
+    <span class="n">ue</span> <span class="o">=</span> <span class="n">u_exact</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">ue</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>and then compute the convergence rates</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convergence_rates</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">dt0</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">num_periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">sol</span><span class="o">=</span><span class="n">solver</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return m-1 empirical estimates of the convergence rate</span>
+<span class="sd">    based on m simulations, where the time step is halved</span>
+<span class="sd">    for each simulation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : int</span>
+<span class="sd">        The number of mesh levels</span>
+<span class="sd">    dt0 : int, optional</span>
+<span class="sd">        Time steps per period on coarsest level</span>
+<span class="sd">    num_periods : int, optional</span>
+<span class="sd">        Size of domain is num_periods * 2pi / w</span>
+<span class="sd">    w, I : float, optional</span>
+<span class="sd">        Model parameters</span>
+<span class="sd">    sol : callable</span>
+<span class="sd">        The function that solves Eq. (1)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array_like</span>
+<span class="sd">        The m-1 convergence rates</span>
+<span class="sd">    array_like</span>
+<span class="sd">        The m errors of the m meshes</span>
+<span class="sd">    array_like</span>
+<span class="sd">        The m time steps of the m meshes</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">w</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">P</span> <span class="o">/</span> <span class="n">dt0</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">P</span> <span class="o">*</span> <span class="n">num_periods</span>
+    <span class="n">dt_values</span><span class="p">,</span> <span class="n">E_values</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">l2_error</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">sol</span><span class="o">=</span><span class="n">sol</span><span class="p">)</span>
+        <span class="n">dt_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">E_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="c1"># Compute m-1 orders that should all be the same</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">E_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">E_values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">dt_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">dt_values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">E_values</span><span class="p">,</span> <span class="n">dt_values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Test it</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">convergence_rates</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([2.0036366687367093, 2.0009497328195964, 2.000240106059535],
+ [0.13526035155205304,
+  0.03372995596052594,
+  0.008426939670390834,
+  0.0021063843253281145],
+ [0.5983986006837702,
+  0.2991993003418851,
+  0.14959965017094254,
+  0.07479982508547127])
+</pre></div>
+</div>
+</div>
+</div>
+<p>These last two lists are the errors and timesteps af all the <span class="math notranslate nohighlight">\(m\)</span> levels. We can plot the error as a function of timestep and show that the discretization scheme is second order.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">convergence_rates</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Convergence of finite difference method&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\mathcal</span><span class="si">{O}</span><span class="s2">(\Delta t)$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\mathcal</span><span class="si">{O}</span><span class="s2">(\Delta t^2)$&quot;</span><span class="p">])</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">E</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/88a561da4155e3e11820590be735e7ba68a76529e57be8c01329f6cc975a0fd0.png"><img alt="../_images/88a561da4155e3e11820590be735e7ba68a76529e57be8c01329f6cc975a0fd0.png" src="../_images/88a561da4155e3e11820590be735e7ba68a76529e57be8c01329f6cc975a0fd0.png" style="width: 1661px; height: 1294px;" /></a>
+</div>
+</div>
+<p>We see that the error has the same slope as <span class="math notranslate nohighlight">\(\Delta t^2\)</span>.</p>
+<p>We can write a test for the order of accuracy:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_order</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">convergence_rates</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_order</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="method-of-manufactured-solution">
+<h2><span class="section-number">87.2. </span>Method of manufactured solution<a class="headerlink" href="#method-of-manufactured-solution" title="Link to this heading">#</a></h2>
+<p>We will now use the method of manufactured solutions (MMS) to verify that the solver works. This is a method that will be used a lot throughout the course.</p>
+<p>With the MMS we first need to assume that we know the solution. For example, we assume that the solution is</p>
+<div class="math notranslate nohighlight">
+\[ u(t) = t^2. \]</div>
+<p>It is important that the solution satisfies the boundary conditions: <span class="math notranslate nohighlight">\(u(0)=0\)</span> and <span class="math notranslate nohighlight">\(u'(0)=0\)</span>. However, if we plug the solution into the Helmholtz equation, we do not get a zero right hand side</p>
+<div class="math notranslate nohighlight">
+\[ u'' + \omega^2 u = 2 + \omega^2 t^2 \ne 0. \]</div>
+<p>So we need to use a nonzero right hand side of Eq. <a class="reference internal" href="#equation-helmholtz">(87.1)</a>. Since in this case <span class="math notranslate nohighlight">\(u=t^2\)</span> we get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+u'' + {\omega^2 u} &amp;= 2 + \omega^2 u \\
+u'' &amp;= 2 \\
+\end{align*}
+\end{split}\]</div>
+<p>We also know that a second order accurate finite difference solution should be exact for a second order polynomial. Check:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">Nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">uc</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">uc</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The numerical solution is exact!</p>
+<p>Assume now that the solution is</p>
+<div class="math notranslate nohighlight">
+\[ u(t) = t^4 \]</div>
+<p>Initial conditions still ok. Now the equation becomes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split} 
+\begin{align*}
+u'' + \omega^2 u &amp;= 12 t^2 + \omega^2 t^4 \\
+u'' &amp;= 12 t^2
+\end{align*}
+\end{split}\]</div>
+<p>Since the solution is a fourth order polynomial, the second order numerical solution will not be exact, but it will converge</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">Nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">t</span><span class="o">**</span><span class="mi">4</span>
+<span class="n">uc</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">uc</span> <span class="o">-</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02
+ 0.02]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s take a closer look at the numerical accuracy. The finite differece expression for <span class="math notranslate nohighlight">\(u''\)</span> comes from two Taylor expansions around <span class="math notranslate nohighlight">\(t_n\)</span></p>
+<div class="math notranslate nohighlight" id="equation-t0">
+<span class="eqno">(87.2)<a class="headerlink" href="#equation-t0" title="Link to this equation">#</a></span>\[
+u^{n+1} = u^n + \Delta t u' + \frac{\Delta t^2}{2}u'' + \frac{\Delta t^3}{6}u''' + \frac{\Delta t^4}{24}u'''' + \cdots 
+\]</div>
+<div class="math notranslate nohighlight" id="equation-t1">
+<span class="eqno">(87.3)<a class="headerlink" href="#equation-t1" title="Link to this equation">#</a></span>\[
+u^{n-1} = u^n - \Delta t u' + \frac{\Delta t^2}{2}u'' - \frac{\Delta t^3}{6}u''' + \frac{\Delta t^4}{24}u'''' + \cdots
+\]</div>
+<p>Adding now <a class="reference internal" href="#equation-t0">(87.2)</a> and <a class="reference internal" href="#equation-t1">(87.3)</a> and we get</p>
+<div class="math notranslate nohighlight">
+\[
+u^{n+1} - 2u^n + u^{n-1} = \Delta t^2 u'' + \frac{\Delta t^4}{12}u'''' + \cdots
+\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[
+u'' = \frac{u^{n+1} - 2u^n + u^{n-1}}{\Delta t^2} - \frac{\Delta t^2}{12}u'''' + \cdots
+\]</div>
+<p>There is a second order error proportional to <span class="math notranslate nohighlight">\(u''''\)</span>. For <span class="math notranslate nohighlight">\(u=t^2\)</span> we have that <span class="math notranslate nohighlight">\(u''''=0\)</span>, and as such no numerical error for our scheme. For <span class="math notranslate nohighlight">\(u=t^4\)</span> the numerical error is <span class="math notranslate nohighlight">\(2 \Delta t^2\)</span></p>
+<p>We can put the numerical expression into our equation and get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ u'' + \omega^2 u &amp;= 0 \\
+ \frac{u^{n+1} - 2u^n + u^{n-1}}{\Delta t^2} - \frac{\Delta t^2}{12}u'''' + \omega^2 u &amp;= 0 \\
+ \frac{u^{n+1} - 2u^n + u^{n-1}}{\Delta t^2} + \omega^2 u &amp;= \frac{\Delta t^2}{12}u'''' 
+\end{align}
+\end{split}\]</div>
+<p>The residual is <span class="math notranslate nohighlight">\(\Delta t^2 u'''' / 12\)</span>.</p>
+<p>Go back and check that the solution for <span class="math notranslate nohighlight">\(u=t^4\)</span> correspond exactly to this residual:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">uc</span> <span class="o">-</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It is exact because the next error term will be proportional to the sixth derivative of <span class="math notranslate nohighlight">\(u\)</span>, which is zero for <span class="math notranslate nohighlight">\(u=t^4\)</span>.</p>
+</section>
+<section id="adjusted-solver">
+<h2><span class="section-number">87.3. </span>Adjusted solver<a class="headerlink" href="#adjusted-solver" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">adj_solver</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve Eq. (1)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Time step</span>
+<span class="sd">    T : float</span>
+<span class="sd">        End time</span>
+<span class="sd">    I, w : float, optional</span>
+<span class="sd">        Model parameters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t : array_like</span>
+<span class="sd">        Discrete times (0, dt, 2*dt, ..., T)</span>
+<span class="sd">    u : array_like</span>
+<span class="sd">        The solution at discrete times t</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">Nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="n">Nt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">I</span>
+    <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">24</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nt</span><span class="p">):</span>
+        <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">24</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">u</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">convergence_rates</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">sol</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
+<span class="n">r2</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">dt2</span> <span class="o">=</span> <span class="n">convergence_rates</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">sol</span><span class="o">=</span><span class="n">adj_solver</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt2</span><span class="p">,</span> <span class="n">E2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Convergence of finite difference method&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Error modified&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;$\mathcal</span><span class="si">{O}</span><span class="s2">(\Delta t)$&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;$\mathcal</span><span class="si">{O}</span><span class="s2">(\Delta t^2)$&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">E</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">E2</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">slope_marker</span><span class="p">((</span><span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/dd0c443623e1c292e18ce3b493a508cb793478d456d5bb40d0b9a15089c727d2.png"><img alt="../_images/dd0c443623e1c292e18ce3b493a508cb793478d456d5bb40d0b9a15089c727d2.png" src="../_images/dd0c443623e1c292e18ce3b493a508cb793478d456d5bb40d0b9a15089c727d2.png" style="width: 1661px; height: 1294px;" /></a>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./hplgit"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../TMA4125/NumericalMethodsHeatEquation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">86. </span>Numerical methods for the heat equation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vibration-equation">87.1. Vibration equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#method-of-manufactured-solution">87.2. Method of manufactured solution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusted-solver">87.3. Adjusted solver</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

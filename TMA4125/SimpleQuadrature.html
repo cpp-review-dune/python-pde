@@ -1,0 +1,1317 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>74. Numerical integration &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/SimpleQuadrature';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="78. Polynomial interpolation: Error theory" href="ErrorTheoryInterpolation.html" />
+    <link rel="prev" title="73. Polynomial interpolation: Newton interpolation" href="NewtonInterpolation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/SimpleQuadrature.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/SimpleQuadrature.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/SimpleQuadrature.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Numerical integration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">74. Numerical integration</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">75. Introduction</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-quadrature-rules-from-previous-math-courses">75.1. Example 1: Quadrature rules from previous math courses</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#quadrature-based-on-polynomial-interpolation">76. Quadrature based on polynomial interpolation.</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-the-trapezoidal-rule-revisited">76.1. Example 2: The trapezoidal rule revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-gausz-legendre-quadrature-for-n-2">76.2. Example 3: Gauß-Legendre quadrature for <span class="math notranslate nohighlight">\(n=2\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-simpson-s-rule-revisited">76.3. Example 4: Simpson’s rule revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-accuracy-of-some-quadrature-rules">76.4. Exercise 1: Accuracy of some quadrature rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remarks">76.4.1. Remarks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-of-exactness-and-an-estimate-of-the-quadrature-error">77. Degree of exactness and an estimate of the quadrature error</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-1-the-degree-of-exactness">77.1. Definition 1: The degree of exactness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-degree-of-exactness-for-some-quadrature-rules">77.2. Exercise 2: Degree of exactness for some quadrature rules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-estimates">77.3. Error estimates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-error-estimate-for-quadrature-rule-with-degree-of-exactness-n">77.4. Theorem 1: Error estimate for quadrature rule with degree of exactness <span class="math notranslate nohighlight">\(n\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-2-error-estimate-for-the-trapezoidal-rule">77.5. Theorem 2: Error estimate for the trapezoidal rule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-3-error-estimate-for-simpson-s-rule">77.6. Theorem 3: Error estimate for Simpson’s rule</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- KODE = "ja", "nei", default "ja" -->
+<!-- dom:TITLE: Numerical integration  -->
+<section class="tex2jax_ignore mathjax_ignore" id="numerical-integration">
+<h1><span class="section-number">74. </span>Numerical integration<a class="headerlink" href="#numerical-integration" title="Link to this heading">#</a></h1>
+<!-- dom:AUTHOR: Anne Kværnø, André Massing -->
+<!-- Author: -->  
+<p><strong>Anne Kværnø, André Massing</strong></p>
+<p>Date: <strong>Jan 25, 2021</strong></p>
+<p>If you want to have a nicer theme for your jupyter notebook,
+download the <a class="reference external" href="https://www.math.ntnu.no/emner/TMA4125/2020v/part_II/notebooks/tma4125.css">cascade stylesheet file tma4125.css</a>
+and execute the next cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">factorial</span>
+
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="k">def</span> <span class="nf">css_styling</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tma4125.css&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">styles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Do nothing</span>
+
+
+<span class="c1"># Comment out next line and execute this cell to restore the default notebook style</span>
+<span class="n">css_styling</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:100,300,400,500,700,800,900,100italic,300italic,400italic,500italic,700italic,800italic,900italic' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=News+Cycle" rel="stylesheet"> <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> <style> @font-face {
+    /*font-family: "Computer Modern";*/
+    /*src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');*/
+    font-family: 'News Cycle', sans-serif;
+}
+
+
+/* main background */
+
+
+/*#notebook_panel { 
+        background: #C9D4E2;
+    }*/
+
+div.cell {
+    /*max-width:600px;*/
+    /*margin-left:16% !important;*/
+    /*margin-right:auto;*/
+}
+
+div.text_cell {
+    max-width: 120ex;
+    /* instead of 100%, */
+}
+
+div.text_cell_render {
+    font-family: 'Alegreya Sans', Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva,   sans-serif;
+    line-height: 135%;
+    /*font-size:    45pt;*/
+    font-size: 130%;
+    /*width:600px;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+}
+
+.CodeMirror {
+    /*font-family: 'Source Code Pro', monospace;*/
+    /*font-style: italic;*/
+    /*font-weight: bold;*/
+    /*font-size: 120%;*/
+}
+
+
+/*.prompt{
+        display: None;
+    }*/
+
+.text_cell_render h1 {
+    font-family: 'Nixie One', serifV;
+    font-style: regular;
+    font-weight: 400;
+    font-size: 45pt;
+    line-height: 100%;
+        color: #497BB9;    
+    /*color: #5889C5;*/
+    /*color: rgb(0, 51, 102);*/
+    /*font-weight: 200;*/
+    /*font-size: 50pt;*/
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    display: block;
+}
+
+.text_cell_render h2 {
+    font-family: 'Nixie One', serif;
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 100%;
+    /*color: rgb(0,51,102);*/
+    color: #497BB9;    
+    margin-bottom: 0.1em;
+    margin-top: 0.3em;
+    display: block;
+}	
+
+.text_cell_render h3 {
+    font-family: 'Nixie One', serif;
+    margin-top:16px;
+    font-size: 22pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-style: regular;
+    color: rgb(102,102,0);
+}
+
+.text_cell_render h4 {    /*Use this for captions*/
+    font-family: 'Nixie One', serif;
+    font-size: 14pt;
+/*    text-align: center;*/
+    margin-top: 0em;
+    margin-bottom: 2em;
+    font-style: regular;
+}
+
+.text_cell_render h5 {  /*Use this for small titles*/
+    font-family: 'Nixie One', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: rgb(163,0,0);
+    /*color: #5889C5;*/
+    /*margin-bottom: .5em;
+    margin-top: 0.5em;*/
+    font-style: italic;
+    margin-bottom: .1em;
+    margin-top: 0.8em;
+    display: block;
+}
+
+.warning {
+    color: rgb( 240, 20, 20)
+}
+
+</style> 
+<script>
+ MathJax.Hub.Config( {
+    TeX: {
+        Macros: {
+            NN: "{\\bf N}",
+            RR: "{\\mathbb{R}}",
+            mcO: "{\\mathcal{O}}"
+        },
+        equationNumbers: { autoNumber: "AMS" },
+        extensions: ["AMSmath.js", "begingroup.js"] 
+    },
+    tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"]], displayMath: [ ['$$', '$$'], ["\\[", "\\]"]]
+    },
+    displayAlign: 'center', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {
+            '.MathJax_Display': {
+                "margin": 4
+            }
+        }
+    }
+}
+);
+</script>
+</div></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<h1><span class="section-number">75. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
+<p>Imagine you want to compute the finite integral</p>
+<div class="math notranslate nohighlight">
+\[
+I[f](a,b) = \int_a^b f(x) {\,\mathrm{d}x}.
+\]</div>
+<p>The “usual” way is to find a primitive function <span class="math notranslate nohighlight">\(F\)</span>
+(also known as the indefinite integral of <span class="math notranslate nohighlight">\(f\)</span>)
+satisfying <span class="math notranslate nohighlight">\(F'(x) = f(x)\)</span> and then to compute</p>
+<div class="math notranslate nohighlight">
+\[
+\int_a^b f(x) {\,\mathrm{d}x} = F(b) - F(a).
+\]</div>
+<p>While there are many analytical integration techniques and extensive
+tables to determine definite integral for many integrands,
+more often than not it may not feasible or possible to compute the
+integral. For instance, what about</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = \dfrac{\log(2 + \sin(1/2 - \sqrt(x))^6)}{\log(\pi + \arctan(\sqrt{1-\exp(-2x-\sin(x)))}}?
+\]</div>
+<p>Finding the corresponding primitive is highly likely a hopeless
+endeavor. And sometimes there even innocent looking functions
+like <span class="math notranslate nohighlight">\(e^{-x^2}\)</span> for which there is not primitive functions which
+can expressed as a composition of standard functions such
+as <span class="math notranslate nohighlight">\(\sin, \cos.\)</span> etc.</p>
+<p>A <strong>numerical quadrature</strong> or a <strong>quadrature rule</strong> is a formula for
+approximating such definite integrals <span class="math notranslate nohighlight">\(I[f](a,b)\)</span>.  Quadrature rules
+are usually of the form</p>
+<div class="math notranslate nohighlight">
+\[
+Q[f](a,b) = \sum_{i=0}^n w_i f(x_i),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(w_i\)</span> for <span class="math notranslate nohighlight">\(i=0,1,\dotsc,n\)</span> are respectively the <em>nodes/points</em>
+and the <em>weights</em> of the quadrature rule. To emphasize that
+a quadrature rule is defined by some given quadrature points
+<span class="math notranslate nohighlight">\(\{x_i\}_{i=0}^n\)</span>
+and weights <span class="math notranslate nohighlight">\(\{w_i\}_{i=0}^n\)</span>.</p>
+<p>We sometimes might write</p>
+<div class="math notranslate nohighlight">
+\[
+Q[f](
+\{x_i\}_{i=0}^n,\{w_i\}_{i=0}^n
+) = \sum_{i=0}^n w_i f(x_i).
+\]</div>
+<p>If the function <span class="math notranslate nohighlight">\(f\)</span> is given from the context, we will for simplicity
+denote the integral and the quadrature simply as <span class="math notranslate nohighlight">\(I(a,b)\)</span> and
+<span class="math notranslate nohighlight">\(Q(a,b)\)</span>.</p>
+<section id="example-1-quadrature-rules-from-previous-math-courses">
+<h2><span class="section-number">75.1. </span>Example 1: Quadrature rules from previous math courses<a class="headerlink" href="#example-1-quadrature-rules-from-previous-math-courses" title="Link to this heading">#</a></h2>
+<p>The
+<a class="reference external" href="https://wiki.math.ntnu.no/tma4100/tema/numerics?&amp;amp;#numerisk_integrasjon">trapezoidal rule, the midpoint rule and Simpson’s rule</a>
+known from previous courses are all examples of numerical quadratures,
+and we quickly review them here:</p>
+<ul class="simple">
+<li><p><strong>Midpoint rule</strong> is the simplest possible quadrature rule defined by</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+Q[f](a,b) := (b-a) f\left(\frac{a+b}{2}\right).
+\]</div>
+<p>The node is given by the midpoint, <span class="math notranslate nohighlight">\(x_0 = \tfrac{a+b}{2}\)</span> with the corresponding
+weight <span class="math notranslate nohighlight">\(w_0 = b-a\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+Q[f](a,b) = w_0 f(x_0)
+\]</div>
+<ul class="simple">
+<li><p><strong>Trapezoidal rule</strong> is given by</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+Q[f](a,b) := (b-a)\left(\frac{f(a)+f(b)}{2}\right)
+\]</div>
+<p>and thus the nodes are defined by <span class="math notranslate nohighlight">\(x_0 = a\)</span>, <span class="math notranslate nohighlight">\(x_1 = b\)</span> with corresponding
+weights <span class="math notranslate nohighlight">\(w_0 = w_1 = \tfrac{b-a}{2}\)</span>.</p>
+<ul class="simple">
+<li><p>Finally, <strong>Simpson’s rule</strong> which you know from M1, is defined as follows:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+Q[f](a,b)=\frac{b-a}{6}\left( f(a)+4f\left( \frac{a+b}{2}\right) + f(b)\right),
+\]</div>
+<p>which we identify as quadrature rule with 3 points <span class="math notranslate nohighlight">\(x_0 = a, x_1 = \tfrac{a+b}{2},
+x_2 = b\)</span> and corresponding weights <span class="math notranslate nohighlight">\(w_0 = w_2 = \tfrac{b-a}{6}\)</span> and <span class="math notranslate nohighlight">\(w_1 = \tfrac{4(b-a)}{6}\)</span>.</p>
+<p>In this note we will see how quadrature rules can be constructed from
+integration of interpolation polynomials.  We will demonstrate how to
+do error analysis and how to find error estimates. In the sequel, we
+will use material from <em>Preliminaries</em>, section 3.2, 4 and 5.</p>
+<p>As usual, we import the necessary modules before we start computing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span>
+    <span class="s2">&quot;axes.grid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="quadrature-based-on-polynomial-interpolation">
+<h1><span class="section-number">76. </span>Quadrature based on polynomial interpolation.<a class="headerlink" href="#quadrature-based-on-polynomial-interpolation" title="Link to this heading">#</a></h1>
+<p>This section relies on the content of the note on polynomial
+interpolation, in particular the section on Lagrange polynomials.</p>
+<p>Choose <span class="math notranslate nohighlight">\(n+1\)</span> distinct nodes <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(i=0,\dotsc,n\)</span> in the interval <span class="math notranslate nohighlight">\([a,b]\)</span>, and let <span class="math notranslate nohighlight">\(p_n(x)\)</span> be the interpolation polynomial satisfying
+the interpolation condition</p>
+<div class="math notranslate nohighlight">
+\[
+p_n(x_i) = f(x_i), \qquad i=0,1,\ldots n.
+\]</div>
+<p>We will then use <span class="math notranslate nohighlight">\(\int_a^b p_n(x){\,\mathrm{d}x}\)</span> as an approximation to <span class="math notranslate nohighlight">\(\int_a^b
+f(x){\,\mathrm{d}x}\)</span>. By using the Lagrange form of the polynomial</p>
+<div class="math notranslate nohighlight">
+\[
+p_n(x) = \sum_{i=0}^n f(x_i) \ell_i(x)
+\]</div>
+<p>with the cardinal functions <span class="math notranslate nohighlight">\(\ell_i(x)\)</span> given by</p>
+<div class="math notranslate nohighlight">
+\[
+\ell_i(x) = \prod_{j=0,j\not=i}^n \frac{x-x_j}{x_i-x_j},
+\]</div>
+<p>the following quadrature formula is obtained</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+I[f](a, b)
+\approx
+Q[f](a,b) &amp;= \int_a^b p_n(x){\,\mathrm{d}x}
+  \\
+  &amp;= \sum_{i=0}^n f(x_i) \int_a^b \ell_i(x) {\,\mathrm{d}x} 
+  = \sum_{i=0}^n w_i f(x_i) = Q(a,b),
+\end{align*}
+\end{split}\]</div>
+<p>where the weights in the quadrature are simply the integral of the
+cardinal functions over the interval</p>
+<div class="math notranslate nohighlight">
+\[
+w_i =\int_a^b \ell_i(x) {\,\mathrm{d}x} \quad \text{for } i = 0, \ldots, n.
+\]</div>
+<p>Let us derive three schemes for integration over the interval <span class="math notranslate nohighlight">\([0,1]\)</span>,
+which we will finally apply to the integral</p>
+<div class="math notranslate nohighlight">
+\[
+I(0,1) = \int_0^1 \cos\left(\frac{\pi}{2}x\right) = \frac{2}{\pi} = 0.636619\dotsc.
+\]</div>
+<section id="example-2-the-trapezoidal-rule-revisited">
+<h2><span class="section-number">76.1. </span>Example 2: The trapezoidal rule revisited<a class="headerlink" href="#example-2-the-trapezoidal-rule-revisited" title="Link to this heading">#</a></h2>
+<div id="ex:trapezoidalrule"></div>
+<p>Let <span class="math notranslate nohighlight">\(x_0=0\)</span> and <span class="math notranslate nohighlight">\(x_1=1\)</span>. The cardinal functions and thus the weights are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\ell_0(x) &amp;= 1-x, &amp; w_0 &amp;= \int_0^1(1-x){\,\mathrm{d}x} = 1/2  \\ 
+\ell_1(x) &amp;= x,   &amp; w_1 &amp;= \int_0^1 x{\,\mathrm{d}x} = 1/2
+\end{align*}
+\end{split}\]</div>
+<p>and the corresponding quadrature rule is the trapezoidal rule (usually
+denoted by <span class="math notranslate nohighlight">\(T\)</span>) recalled in Example <a class="reference internal" href="#ex:qr-from-m1"><span class="xref myst">Example 1: Quadrature rules from previous math courses</span></a> with <span class="math notranslate nohighlight">\([a,b] = [0,1]\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+T(0,1) = \frac{1}{2} \left[ f(0) + f(1) \right].
+\]</div>
+</section>
+<section id="example-3-gausz-legendre-quadrature-for-n-2">
+<h2><span class="section-number">76.2. </span>Example 3: Gauß-Legendre quadrature for <span class="math notranslate nohighlight">\(n=2\)</span><a class="headerlink" href="#example-3-gausz-legendre-quadrature-for-n-2" title="Link to this heading">#</a></h2>
+<div id="ex:gauss-legend-quad"></div>
+Let $x_0=1/2 + \sqrt{3}/6$ and $x_1 = 1/2 - \sqrt{3}/6$. Then
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\ell_0(x) &amp;= -\sqrt{3}x + \frac{1+\sqrt{3}}{2}, &amp; w_0 &amp;= \int_0^1 \ell_0(x){\,\mathrm{d}x}=  1/2,  \\ 
+\ell_1(x) &amp;=  \sqrt{3}x + \frac{1-\sqrt{3}}{2}, &amp; w_1 &amp;= \int_0^1 \ell_1(x){\,\mathrm{d}x} = 1/2.
+\end{align*}
+\end{split}\]</div>
+<p>The quadrature rule is</p>
+<div class="math notranslate nohighlight">
+\[
+Q(0,1) = \frac{1}{2}\left[f\left(\frac{1}{2}-\frac{\sqrt{3}}{6}\right) + 
+f\left(\frac{1}{2}+\frac{\sqrt{3}}{6}\right) \right].
+\]</div>
+</section>
+<section id="example-4-simpson-s-rule-revisited">
+<h2><span class="section-number">76.3. </span>Example 4: Simpson’s rule revisited<a class="headerlink" href="#example-4-simpson-s-rule-revisited" title="Link to this heading">#</a></h2>
+<div id="ex:simpson"></div>
+We construct Simpson's rule on the interval $[0,1]$ by choosing
+the nodes $x_0=0$, $x_1=0.5$ and $x_2=1$. 
+The corresponding cardinal
+functions are
+<div class="math notranslate nohighlight">
+\[
+\ell_0 = 2(x - 0.5)(x-1)
+\qquad
+\ell_1(x) = 4x(1-x)
+\qquad
+\ell_2(x) = 2x(x-0.5)
+\]</div>
+<p>which gives the weights</p>
+<div class="math notranslate nohighlight">
+\[
+w_0 = \int_{0}^1 \ell_0(x){\,\mathrm{d}x} = \frac{1}{6}, \qquad
+w_1 = \int_{0}^1 \ell_1(x){\,\mathrm{d}x} = \frac{4}{6}, \qquad
+w_2 = \int_{0}^1 \ell_2(x){\,\mathrm{d}x} = \frac{1}{6}
+\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{0}^1 f(x) {\,\mathrm{d}x} \approx \int_{0}^1 p_2(x) {\,\mathrm{d}x}
+= \sum_{i=0}^2 w_i f(x_i) = \frac{1}{6} \left[\; f(0) + 4 f(0.5) + f(1) \; \right].
+\]</div>
+<!-- --- begin exercise --- -->
+</section>
+<section id="exercise-1-accuracy-of-some-quadrature-rules">
+<h2><span class="section-number">76.4. </span>Exercise 1: Accuracy of some quadrature rules<a class="headerlink" href="#exercise-1-accuracy-of-some-quadrature-rules" title="Link to this heading">#</a></h2>
+<div id="quad:ex:accuracy_qr"></div>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">QR</span></code> function</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">QR</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xq</span><span class="p">,</span> <span class="n">wq</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes an approximation of the integral f</span>
+<span class="sd">    for a given quadrature rule.</span>
+
+<span class="sd">    Input:</span>
+<span class="sd">        f:  integrand</span>
+<span class="sd">        xq: quadrature nodes</span>
+<span class="sd">        wq: quadrature weights</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xq</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wq</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error: Need same number of quadrature nodes and weights!&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wq</span><span class="p">)</span> <span class="o">@</span> <span class="n">f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xq</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>to compute an approximate value of integral</p>
+<div class="math notranslate nohighlight">
+\[
+I(0,1) = \int_0^1 \cos\left(\frac{\pi}{2}x\right) = \frac{2}{\pi} = 0.636619\dotsc.
+\]</div>
+<p>using the quadrature rules from Example <a class="reference internal" href="#ex:trapezoidalrule"><span class="xref myst">Example 2: The trapezoidal rule revisited</span></a>-<a class="reference internal" href="#ex:simpson"><span class="xref myst">Example 4: Simpson’s rule revisited</span></a>.
+Tabulate the corresponding quadrature errors <span class="math notranslate nohighlight">\(I(0,1) - Q(0,1)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- begin hint in exercise --- -->
+<p><strong>Hint.</strong>
+You can start with (fill in values for any <span class="math notranslate nohighlight">\(\ldots\)</span>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define function</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">...</span>
+
+
+<span class="c1"># Exact integral</span>
+<span class="n">int_f</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1"># Trapezoidal rule</span>
+<span class="n">xq</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">wq</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+<span class="n">qr_f</span> <span class="o">=</span> <span class="n">QR</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xq</span><span class="p">,</span> <span class="n">wq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q[f] = </span><span class="si">{</span><span class="n">qr_f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I[f] - Q[f] = </span><span class="si">{</span><span class="n">int_f</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">qr_f</span><span class="si">:</span><span class="s2">.10e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">15</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="n">xq</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="n">wq</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="ne">---&gt; </span><span class="mi">15</span> <span class="n">qr_f</span> <span class="o">=</span> <span class="n">QR</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xq</span><span class="p">,</span> <span class="n">wq</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q[f] = </span><span class="si">{</span><span class="n">qr_f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I[f] - Q[f] = </span><span class="si">{</span><span class="n">int_f</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">qr_f</span><span class="si">:</span><span class="s2">.10e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nn">Cell In[3], line 12,</span> in <span class="ni">QR</span><span class="nt">(f, xq, wq)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xq</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wq</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">12</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error: Need same number of quadrature nodes and weights!&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wq</span><span class="p">)</span> <span class="o">@</span> <span class="n">f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xq</span><span class="p">))</span>
+
+<span class="ne">RuntimeError</span>: Error: Need same number of quadrature nodes and weights!
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- end solution of exercise --- -->
+<!-- Closing remarks for this Exercise -->
+<section id="remarks">
+<h3><span class="section-number">76.4.1. </span>Remarks<a class="headerlink" href="#remarks" title="Link to this heading">#</a></h3>
+<p>We observe that with the same number of quadrature points,
+the Gauß-Legendre quadrature gives a much more accurate answer
+then the trapezoidal rule. So the choice of nodes clearly matters.
+Simpon’s rule gives very similar results
+to Gauß-Legendre quadrature, but it uses 3 instead of 2 quadrature nodes.</p>
+<!-- --- end exercise --- --></section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="degree-of-exactness-and-an-estimate-of-the-quadrature-error">
+<h1><span class="section-number">77. </span>Degree of exactness and an estimate of the quadrature error<a class="headerlink" href="#degree-of-exactness-and-an-estimate-of-the-quadrature-error" title="Link to this heading">#</a></h1>
+<p>Motivated by the previous examples, we know take a closer look at how
+assess the quality of a method. We start with the following definition.</p>
+<section id="definition-1-the-degree-of-exactness">
+<h2><span class="section-number">77.1. </span>Definition 1: The degree of exactness<a class="headerlink" href="#definition-1-the-degree-of-exactness" title="Link to this heading">#</a></h2>
+<p>A numerical quadrature has degree of exactness <span class="math notranslate nohighlight">\(d\)</span> if <span class="math notranslate nohighlight">\(Q[p](a,b) =
+I[p](a,b)\)</span> for all <span class="math notranslate nohighlight">\(p \in \mathbb{P}_d\)</span> and there is at least one
+<span class="math notranslate nohighlight">\(p\in \mathbb{P}_{d+1}\)</span> such that <span class="math notranslate nohighlight">\(Q[p](a,b) \not= I[p](a,b)\)</span>.</p>
+<p>Since both integrals and quadratures are linear in the integrand <span class="math notranslate nohighlight">\(f\)</span>,
+the degree of exactness is <span class="math notranslate nohighlight">\(d\)</span> if</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+I[x^j](a,b) &amp;= Q[x^j](a,b), \qquad j=0,1,\dotsc, d, \\ 
+I[x^{d+1}](a,b) &amp;\not= Q[x^{d+1}](a,b).
+\end{align*}
+\end{split}\]</div>
+<p><strong>Observation:</strong>
+All quadratures constructed from Lagrange interpolation polynomials in
+<span class="math notranslate nohighlight">\(n+1\)</span> distinct nodes will automatically have a degree of exactness of least <span class="math notranslate nohighlight">\(n\)</span>.
+This follows immediately from the fact the interpolation polynomial
+<span class="math notranslate nohighlight">\(p_n \in \mathbb{P}_n\)</span> of any polynomial <span class="math notranslate nohighlight">\(q \in \mathbb{P}_n\)</span> is just the original
+polynomial <span class="math notranslate nohighlight">\(q\)</span> itself.</p>
+<!-- --- begin exercise --- -->
+</section>
+<section id="exercise-2-degree-of-exactness-for-some-quadrature-rules">
+<h2><span class="section-number">77.2. </span>Exercise 2: Degree of exactness for some quadrature rules<a class="headerlink" href="#exercise-2-degree-of-exactness-for-some-quadrature-rules" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Show that the trapezoidal and midpoint rule from Example <a class="reference internal" href="#ex:qr-from-m1"><span class="xref myst">Example 1: Quadrature rules from previous math courses</span></a> is of precision 1</p></li>
+<li><p>Show that the Gauß-Legendre quadrature for 2 points from Example
+<a class="reference internal" href="#ex:gauss-legend-quad"><span class="xref myst">Example 3: Gauß-Legendre quadrature for <span class="math notranslate nohighlight">\(n=2\)</span></span></a> is of precision 3.</p></li>
+<li><p>Show that Simpson’s rule from Example <a class="reference internal" href="#ex:simpson"><span class="xref myst">Example 4: Simpson’s rule revisited</span></a> is also of precision 3.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Insert your code here.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<!-- --- begin hint in exercise --- -->
+<p><strong>Hint.</strong>
+You can do this either using pen and paper (boring!) or numerically (more fun!),
+using the code from Example <a class="reference internal" href="#quad:ex:accuracy_qr"><span class="xref myst">Exercise 1: Accuracy of some quadrature rules</span></a></p>
+<!-- --- end hint in exercise --- -->
+<!-- --- begin solution of exercise --- -->
+<p><strong>Solution.</strong></p>
+<!-- --- end solution of exercise --- -->
+<!-- --- end exercise --- -->
+</section>
+<section id="error-estimates">
+<h2><span class="section-number">77.3. </span>Error estimates<a class="headerlink" href="#error-estimates" title="Link to this heading">#</a></h2>
+</section>
+<section id="theorem-1-error-estimate-for-quadrature-rule-with-degree-of-exactness-n">
+<h2><span class="section-number">77.4. </span>Theorem 1: Error estimate for quadrature rule with degree of exactness <span class="math notranslate nohighlight">\(n\)</span><a class="headerlink" href="#theorem-1-error-estimate-for-quadrature-rule-with-degree-of-exactness-n" title="Link to this heading">#</a></h2>
+<p>Assume that <span class="math notranslate nohighlight">\(f \in C^{n+1}(a,b)\)</span> and
+let <span class="math notranslate nohighlight">\(Q[\cdot](\{x_i\}_{i=0}^n, \{w_i\}_{i=0}^n)\)</span>
+be a quadrature rule which has degree of exactness
+<span class="math notranslate nohighlight">\(n\)</span>.
+Then the quadrature error  <span class="math notranslate nohighlight">\(|I[f]-Q[f]|\)</span> can be estimated by</p>
+<div class="math notranslate nohighlight">
+\[
+|I[f]-Q[f]| \leqslant \frac{M}{(n+1)!}\int_a^b \prod_{i=0}^n |x-x_i|{\,\mathrm{d}x}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(M=\max_{\xi \in [a,b]} |f^{n+1}(\xi)|\)</span>.</p>
+<p><strong>Proof.</strong>
+Let <span class="math notranslate nohighlight">\(p_n \in \mathbb{P}_n\)</span> be the interpolation polynomial satisfying
+<span class="math notranslate nohighlight">\(p_n(x_i) = f(x_i)\)</span> for <span class="math notranslate nohighlight">\(i=0,\ldots,n\)</span>.
+Thanks to the error estimate for the interpolation error, we know that</p>
+<div class="math notranslate nohighlight">
+\[
+f(x)-p_n(x)=\frac{f^{n+1}(\xi(x))}{(n+1)!}\prod_{k=0}^{n}(x-x_{k}).
+\]</div>
+<p>for some <span class="math notranslate nohighlight">\(\xi(x) \in (a,b)\)</span>.
+Since <span class="math notranslate nohighlight">\(Q(a,b)\)</span> has degree of exactness <span class="math notranslate nohighlight">\(n\)</span> we have <span class="math notranslate nohighlight">\(I[p_n] = Q[p_n] = Q[f]\)</span>
+and thus</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+|I[f]-Q[f]|
+=
+|I[f]-I[p_n]|
+&amp;\leqslant
+\int_a^b
+|f(x)-p_n(x)| {\,\mathrm{d}x}
+\\ 
+&amp;=
+\int_a^b
+\Biggl|
+\frac{f^{n+1}(\xi(x))}{(n+1)!}\prod_{k=0}^{n}(x-x_{k})
+\Biggr| {\,\mathrm{d}x}
+\leqslant
+\frac{M}{(n+1)!}
+\int_a^b
+\prod_{k=0}^{n}|(x-x_{k})|
+{\,\mathrm{d}x},
+\end{align*}
+\end{split}\]</div>
+<p>which concludes the proof.</p>
+<p>The previous theorem often
+The advantage of the previous theorem is
+that it is easy to prove.
+On downside is that the provided estimate can be rather
+crude, and often sharper estimates can be established.
+We give two examples here of some sharper estimates
+(but without proof).</p>
+</section>
+<section id="theorem-2-error-estimate-for-the-trapezoidal-rule">
+<h2><span class="section-number">77.5. </span>Theorem 2: Error estimate for the trapezoidal rule<a class="headerlink" href="#theorem-2-error-estimate-for-the-trapezoidal-rule" title="Link to this heading">#</a></h2>
+<p>For the trapezoidal rule, there is a <span class="math notranslate nohighlight">\(\xi \in (a,b)\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+I[f]-Q[f]=\frac{(b-a)^3}{12}f''(\xi).
+\]</div>
+</section>
+<section id="theorem-3-error-estimate-for-simpson-s-rule">
+<h2><span class="section-number">77.6. </span>Theorem 3: Error estimate for Simpson’s rule<a class="headerlink" href="#theorem-3-error-estimate-for-simpson-s-rule" title="Link to this heading">#</a></h2>
+<p>For Simpson’s rule, there is a <span class="math notranslate nohighlight">\(\xi \in (a,b)\)</span> such that
+$<span class="math notranslate nohighlight">\(
+I[f]-Q[f]=-\frac{(b-a)^5}{2880} f^4(\xi).
+\)</span>$</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="NewtonInterpolation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">73. </span>Polynomial interpolation: Newton interpolation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ErrorTheoryInterpolation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">78. </span>Polynomial interpolation: Error theory</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">74. Numerical integration</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">75. Introduction</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-quadrature-rules-from-previous-math-courses">75.1. Example 1: Quadrature rules from previous math courses</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#quadrature-based-on-polynomial-interpolation">76. Quadrature based on polynomial interpolation.</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-the-trapezoidal-rule-revisited">76.1. Example 2: The trapezoidal rule revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-gausz-legendre-quadrature-for-n-2">76.2. Example 3: Gauß-Legendre quadrature for <span class="math notranslate nohighlight">\(n=2\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-simpson-s-rule-revisited">76.3. Example 4: Simpson’s rule revisited</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-accuracy-of-some-quadrature-rules">76.4. Exercise 1: Accuracy of some quadrature rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remarks">76.4.1. Remarks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-of-exactness-and-an-estimate-of-the-quadrature-error">77. Degree of exactness and an estimate of the quadrature error</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-1-the-degree-of-exactness">77.1. Definition 1: The degree of exactness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-degree-of-exactness-for-some-quadrature-rules">77.2. Exercise 2: Degree of exactness for some quadrature rules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-estimates">77.3. Error estimates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-1-error-estimate-for-quadrature-rule-with-degree-of-exactness-n">77.4. Theorem 1: Error estimate for quadrature rule with degree of exactness <span class="math notranslate nohighlight">\(n\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-2-error-estimate-for-the-trapezoidal-rule">77.5. Theorem 2: Error estimate for the trapezoidal rule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#theorem-3-error-estimate-for-simpson-s-rule">77.6. Theorem 3: Error estimate for Simpson’s rule</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

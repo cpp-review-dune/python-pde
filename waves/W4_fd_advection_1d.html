@@ -1,0 +1,1158 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>35. Advection equation 1D &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'waves/W4_fd_advection_1d';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="36. Grid-Staggering Elastic 1D" href="W4_fd_elastic1d_staggered_solution.html" />
+    <link rel="prev" title="34. Acoustic Waves 2D - Homogeneous case" href="W4_fd_ac2d_homogeneous.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/lecture_01_introduction.html">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../TMA4125/NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/waves/W4_fd_advection_1d.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2Fwaves/W4_fd_advection_1d.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/waves/W4_fd_advection_1d.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Advection equation 1D</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-equation">35.1. Advection Equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-solution-using-the-finite-differences-method">35.2. Numerical Solution using the Finite Differences Method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#euler-method">35.2.1. Euler method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centred-finite-difference-scheme">35.2.2. Centred finite-difference scheme</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#predictor-corrector-method">35.2.2.1. Predictor-Corrector Method</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mccormack-scheme">35.2.2.2. McCormack Scheme</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lax-wendroff-scheme">35.2.2.3. Lax Wendroff Scheme</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div style='background-image: url("./title01.png") ; padding: 0px ; background-size: cover ; border-radius: 5px ; height: 200px'>
+<div style="float: right ; margin: 50px ; padding: 20px ; background: rgba(255 , 255 , 255 , 0.7) ; width: 50% ; height: 150px">
+<div style="position: relative ; top: 50% ; transform: translatey(-50%)">
+            <div style="font-size: xx-large ; font-weight: 900 ; color: rgba(0 , 0 , 0 , 0.8) ; line-height: 100%">Computers, Waves, Simulations</div>
+            <div style="font-size: large ; padding-top: 20px ; color: rgba(0 , 0 , 0 , 0.5)">Finite-Difference Method - Advection equation 1D</div>
+        </div>
+    </div>
+</div><section class="tex2jax_ignore mathjax_ignore" id="advection-equation-1d">
+<h1><span class="section-number">35. </span>Advection equation 1D<a class="headerlink" href="#advection-equation-1d" title="Link to this heading">#</a></h1>
+<p>This notebook covers the following aspects:</p>
+<ul class="simple">
+<li><p>implementation of the 1D advection equation</p></li>
+<li><p>solved using the upwind or the centred finite difference scheme</p></li>
+<li><p>study the stability of the two methods when solving the one-dimensional advection equation</p></li>
+<li><p>implementation of the Predictor-corrector method, McCormack scheme and Lax Wendroff Scheme</p></li>
+</ul>
+<p>Programming exercise:</p>
+<ul class="simple">
+<li><p>Add an analytical solution to the numerical solution and plot them both at the same time. The analytical solution is simply the shift of the initial waveform by <span class="math notranslate nohighlight">\(v*t\)</span> where <span class="math notranslate nohighlight">\(v\)</span> is the advection velocity and <span class="math notranslate nohighlight">\(t\)</span> is the simulation time.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="advection-equation">
+<h2><span class="section-number">35.1. </span>Advection Equation<a class="headerlink" href="#advection-equation" title="Link to this heading">#</a></h2>
+<p>The source-free advection equation is given by</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t u(x, t) + v \partial_x u(x, t) = 0
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(u(x,t = 0)\)</span> is a displacement waveform at <span class="math notranslate nohighlight">\(t = 0\)</span> (an initial condition) that is advected with velocity <span class="math notranslate nohighlight">\(v\)</span>.</p>
+</section>
+<section id="numerical-solution-using-the-finite-differences-method">
+<h2><span class="section-number">35.2. </span>Numerical Solution using the Finite Differences Method<a class="headerlink" href="#numerical-solution-using-the-finite-differences-method" title="Link to this heading">#</a></h2>
+<p>The Finite Difference Method allow us to solve this equation numerically. In this notebook it is used four schemes, first the Euler method, which is highly diffusive, second the predictor-corrector method or Heun’s method and finally the McCormak scheme and the Lax Wendroff scheme.</p>
+<section id="euler-method">
+<h3><span class="section-number">35.2.1. </span>Euler method<a class="headerlink" href="#euler-method" title="Link to this heading">#</a></h3>
+<p>The Euler’s method is the most basic method for numerical integration to solve first order degree differential equations with an initial condition. The general formula is the following,
+$<span class="math notranslate nohighlight">\(
+u_{n+1} = u_n + \Delta t f(u_n, t_n)
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>u<span class="math notranslate nohighlight">\( is the velocity field, \)</span>t<span class="math notranslate nohighlight">\( is the time, \)</span>h<span class="math notranslate nohighlight">\( is the step and \)</span>f<span class="math notranslate nohighlight">\( is the linear operator on the right hand side of the advection equation, in this case is \)</span>f(u_n, t_n) =  - v \partial_x u(x, t)<span class="math notranslate nohighlight">\(. 
+The linear operator is a partial derivative in the space domain \)</span>x$, which is calculated using the centred or the backward finite difference scheme.</p>
+</section>
+<section id="centred-finite-difference-scheme">
+<h3><span class="section-number">35.2.2. </span>Centred finite-difference scheme<a class="headerlink" href="#centred-finite-difference-scheme" title="Link to this heading">#</a></h3>
+<p>This scheme is used to solve parabolic partial differential equations, although the advection equation is an hyperbolic equation, this method is applied in this notebook in order to see how the output behaves. It gives an unstable solution, and it can be fixed adding an additional viscosity term (see bellow the Lax Wendrof approximation).
+Discretizing the advection, equation using the centred scheme we obtain,</p>
+<div class="math notranslate nohighlight">
+\[
+\dfrac{u_i^{n+1}-u_i^n}{\Delta t}+
+v\frac{u_{i+1}^{n}-u_{i-1}^n}{2\Delta x}=
+0
+\]</div>
+<p>leading to the equation,</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}
+u_{i}^{n+1}=
+u_{i}^{n}-
+v\frac{\Delta t}{2\Delta x}
+\left(u_{i+1}^{n}+u_{i-1}^{n}\right)
+$$.\\### Upwind finite difference scheme\\The Upwind finite difference scheme is a numerical approach for hyperbolic partial differential equations, like the advection equation. It discretizes the equations using the difference with the previous step and the direction of propagation is determined by the sign of the velocity. In this case the advection equation looks like \end{aligned}\end{align} \]</div>
+<p>\dfrac{u_{i}^{n+1}-u_{i}^{n}}{\Delta t}+
+v\dfrac{u_{i}^{n}-u_{i-1}^{n}}{\Delta x}=
+0
+$$</p>
+<p>which provides the equation,</p>
+<p>$<span class="math notranslate nohighlight">\(
+u_{i}^{n+1}=u_{i}^{n}-
+v\dfrac{\Delta t}{\Delta x}
+\left(u_{i}^{n}+u_{i-1}^{n}\right)
+\)</span>$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show Plot in The Notebook</span>
+<span class="c1"># plt.switch_backend(&quot;nbagg&quot;)</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PARAMATER CONFIGURATION</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">1250</span>  <span class="c1"># Number of grid points.</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">5500.0</span>  <span class="c1"># Acoustic velocity in m/s.</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># Length of the domain in m.</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># CFL</span>
+<span class="n">tmax</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Simulation time in s</span>
+<span class="n">isnap</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Plot the solution each `isnap` timesteps.</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Sigma for the gaussian source time function</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># Center point of the source time function</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># INITIALIZE COORDINATES AND SET UP THE MODEL</span>
+
+<span class="c1"># Choose between the finite difference scheme: &quot;upwind&quot; or a &quot;centered&quot;</span>
+<span class="c1"># -------------------------</span>
+<span class="n">fd_type</span> <span class="o">=</span> <span class="s2">&quot;upwind&quot;</span>
+<span class="c1"># fd_type = &quot;centered&quot;</span>
+
+
+<span class="c1"># Spatial setup</span>
+<span class="c1"># -------------------------</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Use wave based CFL criterion, time step will be calculated from stability criterion</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">v</span>
+
+<span class="c1"># Simulation time</span>
+<span class="c1"># -------------------------</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tmax</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
+
+<span class="c1"># Initial condition in space</span>
+<span class="c1"># -------------------------</span>
+<span class="n">sx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">sig</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mf">2.0</span><span class="p">)</span>
+
+<span class="c1"># Initialize fields</span>
+<span class="c1"># -------------------------</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">sx</span>
+<span class="n">unew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the initial conditions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Initial Conditions&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6e455e527f93ff32c0024b07e60113a8894f8f0f169d339e1ba2fc6a324faf3d.png"><img alt="../_images/6e455e527f93ff32c0024b07e60113a8894f8f0f169d339e1ba2fc6a324faf3d.png" src="../_images/6e455e527f93ff32c0024b07e60113a8894f8f0f169d339e1ba2fc6a324faf3d.png" style="width: 567px; height: 454px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Advection Equation - Euler Scheme</span>
+
+<span class="c1"># Plot the initial condition for comparison</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Current State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initial State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">fd_type</span> <span class="o">==</span> <span class="s2">&quot;upwind&quot;</span><span class="p">:</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Upwind finite-difference - Euler scheme&quot;</span>
+<span class="k">elif</span> <span class="n">fd_type</span> <span class="o">==</span> <span class="s2">&quot;centered&quot;</span><span class="p">:</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Centered finite-difference- Euler scheme&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;fd_type must be &#39;forward&#39; or &#39;centered&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">u</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Here we start the actual time extrapolation</span>
+<span class="c1"># Calculate the space derivative of u(x) and write it into du(x)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="n">du</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fd_type</span> <span class="o">==</span> <span class="s2">&quot;upwind&quot;</span><span class="p">:</span>
+            <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+        <span class="k">elif</span> <span class="n">fd_type</span> <span class="o">==</span> <span class="s2">&quot;centered&quot;</span><span class="p">:</span>
+            <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+
+    <span class="c1"># time extrapolation scheme (Euler)</span>
+    <span class="n">unew</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span>
+
+    <span class="c1"># The new presence is the current future!</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">unew</span>
+
+    <span class="c1"># Update plot.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">%</span> <span class="n">isnap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unew</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;, time step: </span><span class="si">%i</span><span class="s2">, time: </span><span class="si">%.2g</span><span class="s2"> s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dt</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png"><img alt="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" src="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" style="width: 846px; height: 525px;" /></a>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f3dd83e2b70&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/cc962df15557ab34405046a2197f99bc5312eb9118bbc80df31efb3312fec0d3.png"><img alt="../_images/cc962df15557ab34405046a2197f99bc5312eb9118bbc80df31efb3312fec0d3.png" src="../_images/cc962df15557ab34405046a2197f99bc5312eb9118bbc80df31efb3312fec0d3.png" style="width: 572px; height: 434px;" /></a>
+</div>
+</div>
+<section id="predictor-corrector-method">
+<h4><span class="section-number">35.2.2.1. </span>Predictor-Corrector Method<a class="headerlink" href="#predictor-corrector-method" title="Link to this heading">#</a></h4>
+<p>The predictor-corrector method or Heun’s method is obtained from the Euler method and the trapezoidal rule. Let’s  rewrite the advection equation as
+$<span class="math notranslate nohighlight">\(
+\partial_t u(x,t) = f(u,t) = - v\partial_x u(x,t) 
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>u<span class="math notranslate nohighlight">\( is the solution velocity field, \)</span>v<span class="math notranslate nohighlight">\( is the speed and \)</span>f$ is a linear operator.</p>
+<p>The first-order Euler scheme corresponds to
+$<span class="math notranslate nohighlight">\(
+\tilde{u} = u(x, t+\Delta t) = u(x,t) + \Delta t f(u, t)
+\)</span>$</p>
+<p>Once we get the partial derivative of velocity field <span class="math notranslate nohighlight">\(\partial_x u(x,t)\)</span> form the operator <span class="math notranslate nohighlight">\(f\)</span>, calculated using the upwind finite difference scheme, the Heun’s method is applied as follows:</p>
+<ul class="simple">
+<li><p>First the predictor is evaluated: it calculates the linear operator <span class="math notranslate nohighlight">\(f\)</span> in the previous time step.
+$<span class="math notranslate nohighlight">\(
+k1 = f(u,t) = f(u^n, t^n) 
+\)</span>$</p></li>
+<li><p>Second the corrector: calculates the linear operator in the current time step, which is unknown and therefore is calculated using the expression obtained form the first-order Euler scheme.
+$<span class="math notranslate nohighlight">\(
+k2 = f(\tilde{u}, t+ \Delta t) = f(\tilde{u}^{n+1}, t^{n+1})  
+\)</span>$</p></li>
+<li><p>Finally: improve the initial guess using trapezoidal rule and get a solution for the velocity field
+$<span class="math notranslate nohighlight">\(
+u^{n+1} = u^n + \frac{\Delta t}{2}(k1 + k2)
+\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Advection Equation - Predictor Corrector Scheme</span>
+
+<span class="c1"># Initial conditions</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">sx</span>
+<span class="n">unew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+
+
+<span class="c1"># Plot the initial condition for comparison</span>
+<span class="c1"># Initialize figures</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Current State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initial State&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Upwind finite-difference scheme - Predictor corrector method&quot;</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">u</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># # Here we start the actual time extrapolation, the task for you is to calculate</span>
+<span class="c1"># the space derivative of u(x) and write it into du(x)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="n">du</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="c1"># Calculate the spatial derivative using the upwind approach</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+    <span class="c1"># time extrapolation</span>
+    <span class="c1"># predictor</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span>
+
+    <span class="n">unew</span> <span class="o">=</span> <span class="n">q</span>
+
+    <span class="c1"># corrector</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span>
+
+    <span class="c1"># predictor corrector extrapolation</span>
+    <span class="n">unew</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span>
+
+    <span class="c1"># The new presence is the current future!</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">unew</span>
+
+    <span class="c1"># Update plot if desired.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">%</span> <span class="n">isnap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unew</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;, time step: </span><span class="si">%i</span><span class="s2">, time: </span><span class="si">%.2g</span><span class="s2"> s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dt</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png"><img alt="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" src="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" style="width: 846px; height: 525px;" /></a>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f3dd831a660&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/716e85571ea7de2c3751fc6f2a4ecb9e981c8af4baa5191647d8c4294e590c70.png"><img alt="../_images/716e85571ea7de2c3751fc6f2a4ecb9e981c8af4baa5191647d8c4294e590c70.png" src="../_images/716e85571ea7de2c3751fc6f2a4ecb9e981c8af4baa5191647d8c4294e590c70.png" style="width: 747px; height: 434px;" /></a>
+</div>
+</div>
+</section>
+<section id="mccormack-scheme">
+<h4><span class="section-number">35.2.2.2. </span>McCormack Scheme<a class="headerlink" href="#mccormack-scheme" title="Link to this heading">#</a></h4>
+<p>The McCormack scheme is also used to solve first order hyperbolic partial differential equations and is considered a second order finite difference method. Its algorithm is the following:</p>
+<ul class="simple">
+<li><p>First using the Euler method with an upwind approximation to calculate the solution <span class="math notranslate nohighlight">\(u_i^{\overline{n+1}}\)</span>
+$<span class="math notranslate nohighlight">\(
+u_i^{\overline{n+1}} = u_i^n - v \frac{\Delta t}{\Delta x} (u_i^n - u_{i-1}^n)
+\)</span>$</p></li>
+<li><p>And second compute the corrector and update the solution.
+$<span class="math notranslate nohighlight">\(
+u_i^{n+1} = \frac{u_i^n + u_i^\overline{n+1}}{2} - v \frac{\Delta t}{2 \Delta x}(u_{i+1}^\overline{n+1} - u_{i}^\overline{n+1}) 
+\)</span>$</p></li>
+</ul>
+<p>The first term in the above equation is an average of the solution calculated from the Euler method <span class="math notranslate nohighlight">\(u_i^{\overline{n+1}}\)</span> with the current one <span class="math notranslate nohighlight">\(u_i^n\)</span>. And the second term is the forward finite differences approximation with the <span class="math notranslate nohighlight">\(u_i^{\overline{n+1}}\)</span> solution from the Euler approximation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Advection Equation - McCormack Scheme</span>
+
+<span class="c1"># Initial conditions</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">sx</span>
+<span class="n">unew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+
+
+<span class="c1"># Plot the initial condition for comparison</span>
+<span class="c1"># Initialize figures</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Current State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initial State&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;McCormack scheme&quot;</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">u</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># # Here we start the actual time extrapolation, the task for you is to calculate</span>
+<span class="c1"># the space derivative of u(x) and write it into du(x)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+    <span class="n">du</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="c1"># Calculate the spatial derivative using the upwind approach</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+    <span class="c1"># time extrapolation</span>
+    <span class="c1"># 1st step</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span>
+
+    <span class="c1"># 2nd step</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+    <span class="c1"># update</span>
+    <span class="n">unew</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="n">v</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">du</span>
+    <span class="c1"># The new presence is the current future!</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">unew</span>
+
+    <span class="c1"># Update plot if desired.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">%</span> <span class="n">isnap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unew</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;, time step: </span><span class="si">%i</span><span class="s2">, time: </span><span class="si">%.2g</span><span class="s2"> s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dt</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png"><img alt="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" src="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" style="width: 846px; height: 525px;" /></a>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f3dd801e240&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/962aebf466819290da14cb7289f7a8f504911022195f7e902adab7c927f1233a.png"><img alt="../_images/962aebf466819290da14cb7289f7a8f504911022195f7e902adab7c927f1233a.png" src="../_images/962aebf466819290da14cb7289f7a8f504911022195f7e902adab7c927f1233a.png" style="width: 547px; height: 434px;" /></a>
+</div>
+</div>
+</section>
+<section id="lax-wendroff-scheme">
+<h4><span class="section-number">35.2.2.3. </span>Lax Wendroff Scheme<a class="headerlink" href="#lax-wendroff-scheme" title="Link to this heading">#</a></h4>
+<p>Finally the Lax Wendroff scheme is also used to solve hyperbolic partial differential equations and is considered a second order method in the space and time domain. It is found using a Taylor approximation of <span class="math notranslate nohighlight">\(u_i^{n+1}\)</span>,
+$<span class="math notranslate nohighlight">\(
+u_i^{n+1} \approx u_i^{n} - \Delta t v \frac{\partial u}{\partial x}\Biggr\vert_i^n + \Delta t^2 v^2 \frac{\partial^2 u}{\partial^2 x} \Biggr\vert_i^n + ... 
+\)</span>$</p>
+<p>Then the solution for each time step of the velocity field is
+$<span class="math notranslate nohighlight">\(
+u_i^{n+1} = u_i^n - \frac{\Delta t}{2 \Delta x} v (u^n_{i+1}- u^n_{i-1}) + \frac{\Delta t^2}{2 \Delta x^2} v^2 (u_{i+1}^n - 2 u_i^n + u_{i-1}^n)
+\)</span>$</p>
+<p>which uses a centred finite differences scheme.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Advection Equation - Lax Wendroff Scheme</span>
+
+<span class="c1"># Initial conditions</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">sx</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+<span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+
+<span class="c1"># plot the initial condition for comparison</span>
+<span class="c1"># Initialize figures</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Current State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initial State&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x (m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Lax Wendroff scheme&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">u</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># Lax Wendroff  scheme</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nt</span><span class="p">):</span>
+    <span class="c1"># (central diff)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># q =  a*(v[j+1]-2.*v[j]+v[j-1])</span>
+        <span class="c1"># vnew[j]=v[j] + q</span>
+        <span class="n">du</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># time extrapolation scheme (Euler)</span>
+    <span class="n">unew</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du</span> <span class="o">+</span> <span class="n">q</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">unew</span>
+    <span class="c1"># time extrapolation</span>
+
+    <span class="c1"># Plotting</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">%</span> <span class="n">isnap</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">l</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">unew</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;, time step: </span><span class="si">%i</span><span class="s2">, time: </span><span class="si">%.2g</span><span class="s2"> s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dt</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png"><img alt="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" src="../_images/f77bf2a61817f223f133c1c5dd0a0c26e49a522aa50d52d9a68dae9ef1c06773.png" style="width: 846px; height: 525px;" /></a>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f3dd804da90&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/bf0691d0c5979daa648264442edaa6779c419ca247f14804ade804a7547b7efd.png"><img alt="../_images/bf0691d0c5979daa648264442edaa6779c419ca247f14804ade804a7547b7efd.png" src="../_images/bf0691d0c5979daa648264442edaa6779c419ca247f14804ade804a7547b7efd.png" style="width: 547px; height: 434px;" /></a>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./waves"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="W4_fd_ac2d_homogeneous.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">34. </span>Acoustic Waves 2D - Homogeneous case</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="W4_fd_elastic1d_staggered_solution.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">36. </span>Grid-Staggering Elastic 1D</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-equation">35.1. Advection Equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-solution-using-the-finite-differences-method">35.2. Numerical Solution using the Finite Differences Method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#euler-method">35.2.1. Euler method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#centred-finite-difference-scheme">35.2.2. Centred finite-difference scheme</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#predictor-corrector-method">35.2.2.1. Predictor-Corrector Method</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mccormack-scheme">35.2.2.2. McCormack Scheme</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lax-wendroff-scheme">35.2.2.3. Lax Wendroff Scheme</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

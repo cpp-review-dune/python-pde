@@ -1,0 +1,1336 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>64. Introduction to TMA4125 &#8212; PDE tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TMA4125/lecture_01_introduction';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="67. A simple epidemic model for Covid 19 and its numerical solution" href="SimpleCovidModel.html" />
+    <link rel="prev" title="61. Numerical integration: Part IV" href="GaussQuadrature.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Jun 03, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.jpg" class="logo__image only-light" alt="PDE tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.jpg" class="logo__image only-dark" alt="PDE tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    PDE Tutorial
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes/pde.html">1. Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/fda.html">2. Finite-Difference Approximations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/elliptic.html">3. Elliptic Partial Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/octave.html">4. octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pystencils.html">5. pystencils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/jax.html">6. Introduction to JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/finitediffx.html">7. finitediffx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jax/kernex.html">8. kernex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-pde.html">9. <code class="docutils literal notranslate"><span class="pre">py-pde</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findiff.html">10. <code class="docutils literal notranslate"><span class="pre">findiff</span></code> tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolic-findiff.html">11. Symbolic <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solve-findiff.html">12. Solve with <code class="docutils literal notranslate"><span class="pre">findiff</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advectionper.html">13. <code class="docutils literal notranslate"><span class="pre">AdvectionPer.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diffusioncrancknic.html">14. <code class="docutils literal notranslate"><span class="pre">DiffusionCrankNic.m</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advection-pystencils.html">15. Advection pystencils example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../petsc.html">16. 1D heat diffusion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Finite Volume Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../clawpack.html">1D advection equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The Mimetic Finite Difference Method</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mimetic/mole.html">mole</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Simulating Fluid Flows Using Python</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture1.html">17. Introduction to Computational Fluid Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture2.html">18. Finite Differences - First Derivative</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture3.html">20. Finite differences in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture4.html">21. Second derivative - 1D heat conduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture5.html">22. Introduction to Finite Volume Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture6.html">23. CFD Relevant Python Statements | While | For</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture7.html">24. Conduction Visualization Python Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture8.html">25. Generalized FVM Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fluids/lecture10.html">26. 0</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computers, Waves, Simulations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P1.html">27. First Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P2.html">28. Second Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W2_P3.html">29. High-Order Taylor Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P1_Gaussian.html">30. Acoustic Waves 1D I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W3_P2_Gaussian_analytical.html">31. Acoustic Waves 1D II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_ac1d_optimal_operators.html">32. Acoustic Waves 1D - Optimal Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_heterogeneous_solutions.html">33. Acoustic Waves 2D - Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_ac2d_homogeneous.html">34. Acoustic Waves 2D - Homogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_advection_1d.html">35. Advection equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W4_fd_elastic1d_staggered_solution.html">36. Grid-Staggering Elastic 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_derivative_solution.html">37. The Pseudo-Spectral Method - Numerical Derivatives based on a Derivative Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_cheby_elastic_1d_solution.html">38. The Pseudo-Spectral Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_1d.html">39. The Pseudo-Spectral Method - Acoustic Waves in 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W5_ps_fourier_acoustic_2d.html">40. The Pseudo-Spectral Method - Acoustic Waves in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W6_fe_static_elasticity.html">41. The Finite Element Method - Static Elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W7_fe_elastic_1d_solution.html">42. The Finite Element Method - Elastic Wave Equation 1D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_Lagrange_interpolation_simple.html">43. The Spectral Element Method - Interpolation with Lagrange Polynomials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W8_se_numerical_integration_GLL.html">44. The Spectral Element Method - Numerical Integration - The Gauss-Lobatto-Legendre approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_hetero_1d_solution.html">45. Spectral Element Method - Elastic Wave Equation 1D, Heterogeneous case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../waves/W9_se_homo_1d_solution.html">46. Spectral Element Method - Elastic Wave Equation 1D - Homogeneous Case</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential equations and Fourier analysis</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fourier_series_supplemental_material.html">47. Fourier series: supplemental material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LagrangeInterpolation.html">48. Polynomial interpolation: Lagrange interpolation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="RungeKuttaNuMeODE.html">51. Numerical solution of ordinary differential equations: High order Runge-Kutta methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="TwoPointBoundaryProblems.html">53. Finite difference methods for two-point value problems</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="CompositeQuadrature.html">57. Numerical integration: Part II</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="GaussQuadrature.html">61. Numerical integration: Part IV</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">64. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="SimpleCovidModel.html">67. A simple epidemic model for Covid 19 and its numerical solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ErrorAnalysisNuMeODE.html">68. Numerical solution of ordinary differential equations: One step methods</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">70. Introduction to TMA4125</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="NewtonInterpolation.html">73. Polynomial interpolation: Newton interpolation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpleQuadrature.html">74. Numerical integration</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="ErrorTheoryInterpolation.html">78. Polynomial interpolation: Error theory</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="IntroductionNuMeODE.html">80. Numerical solution of ordinary differential equations: Euler’s and Heun’s method</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="NumericalMethodsHeatEquation.html">86. Numerical methods for the heat equation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Finite Difference Computing with PDEs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hplgit/vibration.html">87. Lecture 3</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/edit/main/pde-book/TMA4125/lecture_01_introduction.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/cpp-review-dune/python-pde/issues/new?title=Issue%20on%20page%20%2FTMA4125/lecture_01_introduction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/TMA4125/lecture_01_introduction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction to TMA4125</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">64. Introduction to TMA4125</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-over-the-course">64.1. Overview over the course</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">64.2. Preliminaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-spaces-and-norms">64.3. Vector spaces and norms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">64.3.1. Examples:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#norms">64.3.2. Norms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-products">64.3.3. Scalar products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cauchy-schwarz-inequality">64.3.4. Cauchy-Schwarz inequality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gram-schmidt-orthogonalization">64.3.5. Gram-Schmidt Orthogonalization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#orthogonal-projection">64.3.6. Orthogonal projection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#taylor-expansions">65. Taylor-expansions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#some-other-useful-results">66. Some other useful results</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-tma4125">
+<h1><span class="section-number">64. </span>Introduction to TMA4125<a class="headerlink" href="#introduction-to-tma4125" title="Link to this heading">#</a></h1>
+<p>Executing the following cell loads a non-default css style for the notebook.
+Make sure that you download the corresponding css file  <code class="docutils literal notranslate"><span class="pre">tma4125.css</span></code> from the course web page.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
+
+
+<span class="k">def</span> <span class="nf">css_styling</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tma4125.css&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">styles</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Do nothing</span>
+
+
+<span class="c1"># Comment out next line and execute this cell to restore the default notebook style</span>
+<span class="n">css_styling</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:100,300,400,500,700,800,900,100italic,300italic,400italic,500italic,700italic,800italic,900italic' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=News+Cycle" rel="stylesheet"> <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'> <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'> <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> <style> @font-face {
+    /*font-family: "Computer Modern";*/
+    /*src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunss.otf');*/
+    font-family: 'News Cycle', sans-serif;
+}
+
+
+/* main background */
+
+
+/*#notebook_panel { 
+        background: #C9D4E2;
+    }*/
+
+div.cell {
+    /*max-width:600px;*/
+    /*margin-left:16% !important;*/
+    /*margin-right:auto;*/
+}
+
+div.text_cell {
+    max-width: 120ex;
+    /* instead of 100%, */
+}
+
+div.text_cell_render {
+    font-family: 'Alegreya Sans', Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva,   sans-serif;
+    line-height: 135%;
+    /*font-size:    45pt;*/
+    font-size: 130%;
+    /*width:600px;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+}
+
+.CodeMirror {
+    /*font-family: 'Source Code Pro', monospace;*/
+    /*font-style: italic;*/
+    /*font-weight: bold;*/
+    /*font-size: 120%;*/
+}
+
+
+/*.prompt{
+        display: None;
+    }*/
+
+.text_cell_render h1 {
+    font-family: 'Nixie One', serifV;
+    font-style: regular;
+    font-weight: 400;
+    font-size: 45pt;
+    line-height: 100%;
+        color: #497BB9;    
+    /*color: #5889C5;*/
+    /*color: rgb(0, 51, 102);*/
+    /*font-weight: 200;*/
+    /*font-size: 50pt;*/
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    display: block;
+}
+
+.text_cell_render h2 {
+    font-family: 'Nixie One', serif;
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 100%;
+    /*color: rgb(0,51,102);*/
+    color: #497BB9;    
+    margin-bottom: 0.1em;
+    margin-top: 0.3em;
+    display: block;
+}	
+
+.text_cell_render h3 {
+    font-family: 'Nixie One', serif;
+    margin-top:16px;
+    font-size: 22pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-style: regular;
+    color: rgb(102,102,0);
+}
+
+.text_cell_render h4 {    /*Use this for captions*/
+    font-family: 'Nixie One', serif;
+    font-size: 14pt;
+/*    text-align: center;*/
+    margin-top: 0em;
+    margin-bottom: 2em;
+    font-style: regular;
+}
+
+.text_cell_render h5 {  /*Use this for small titles*/
+    font-family: 'Nixie One', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: rgb(163,0,0);
+    /*color: #5889C5;*/
+    /*margin-bottom: .5em;
+    margin-top: 0.5em;*/
+    font-style: italic;
+    margin-bottom: .1em;
+    margin-top: 0.8em;
+    display: block;
+}
+
+.warning {
+    color: rgb( 240, 20, 20)
+}
+
+</style> 
+<script>
+ MathJax.Hub.Config( {
+    TeX: {
+        Macros: {
+            NN: "{\\bf N}",
+            RR: "{\\mathbb{R}}",
+            mcO: "{\\mathcal{O}}"
+        },
+        equationNumbers: { autoNumber: "AMS" },
+        extensions: ["AMSmath.js", "begingroup.js"] 
+    },
+    tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"]], displayMath: [ ['$$', '$$'], ["\\[", "\\]"]]
+    },
+    displayAlign: 'center', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {
+            '.MathJax_Display': {
+                "margin": 4
+            }
+        }
+    }
+}
+);
+</script>
+</div></div>
+</div>
+<p>We also load a number of <span class="math notranslate nohighlight">\(\LaTeX\)</span> commands first
+$<span class="math notranslate nohighlight">\(
+\DeclareMathOperator{\Div}{div}
+\DeclareMathOperator{\Grad}{grad}
+\DeclareMathOperator{\Curl}{curl}
+\DeclareMathOperator{\Rot}{rot}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\Kern}{ker}
+\DeclareMathOperator{\Image}{im}
+\DeclareMathOperator{\spann}{span}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\sig}{sig}
+\DeclareMathOperator{\Id}{Id}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\VV}{\mathbb{V}}
+\newcommand{\dGamma}{\,\mathrm{d} \Gamma}
+\newcommand{\dGammah}{\,\mathrm{d} \Gamma_h}
+\newcommand{\dx}{\,\mathrm{d}x}
+\newcommand{\dy}{\,\mathrm{d}y}
+\newcommand{\ds}{\,\mathrm{d}s}
+\newcommand{\dt}{\,\mathrm{d}t}
+\newcommand{\dS}{\,\mathrm{d}S}
+\newcommand{\dV}{\,\mathrm{d}V}
+\newcommand{\dX}{\,\mathrm{d}X}
+\newcommand{\dY}{\,\mathrm{d}Y}
+\newcommand{\dE}{\,\mathrm{d}E}
+\newcommand{\dK}{\,\mathrm{d}K}
+\newcommand{\dM}{\,\mathrm{d}M}
+\newcommand{\cd}{\mathrm{cd}}
+\newcommand{\onehalf}{\frac{1}{2}}
+\newcommand{\bfP}{\boldsymbol P}
+\newcommand{\bfx}{\boldsymbol x}
+\newcommand{\bfy}{\boldsymbol y}
+\newcommand{\bfa}{\boldsymbol a}
+\newcommand{\bfu}{\boldsymbol u}
+\newcommand{\bfv}{\boldsymbol v}
+\newcommand{\bfe}{\boldsymbol e}
+\newcommand{\bfb}{\boldsymbol b}
+\newcommand{\bfc}{\boldsymbol c}
+\newcommand{\bfq}{\boldsymbol q}
+\newcommand{\bfy}{\boldsymbol y}
+\newcommand{\bff}{\boldsymbol f}
+\newcommand{\bfp}{\boldsymbol p}
+\newcommand{\bft}{\boldsymbol t}
+\newcommand{\bfj}{\boldsymbol j}
+\newcommand{\bfB}{\boldsymbol B}
+\newcommand{\bfV}{\boldsymbol V}
+\newcommand{\bfE}{\boldsymbol E}
+\newcommand{\bfB}{\boldsymbol B}
+\newcommand{\bfzero}{\boldsymbol 0}
+\)</span>$</p>
+<section id="overview-over-the-course">
+<h2><span class="section-number">64.1. </span>Overview over the course<a class="headerlink" href="#overview-over-the-course" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Analytical and numerical techniques for solving ordinary differential equations (ODEs) as well as partial differential equations (ODEs)</p></li>
+<li><p>Introduction into numerical methods and concepts in general</p></li>
+</ul>
+<p>All relevant course information can be found at our
+<a class="reference external" href="https://wiki.math.ntnu.no/tma4125/2021v/start">course webpage</a>
+including a detailed description of the <a class="reference external" href="https://wiki.math.ntnu.no/tma4125/2021v/lectures">curriculum</a>.</p>
+</section>
+<section id="preliminaries">
+<h2><span class="section-number">64.2. </span>Preliminaries<a class="headerlink" href="#preliminaries" title="Link to this heading">#</a></h2>
+<p>In this note, we will present some mathematical results that will be
+used frequently, as well as some definitions and concepts. Most of it should be known from
+previous courses, in particular from Mathematics 1 and 3.</p>
+</section>
+<section id="vector-spaces-and-norms">
+<h2><span class="section-number">64.3. </span>Vector spaces and norms<a class="headerlink" href="#vector-spaces-and-norms" title="Link to this heading">#</a></h2>
+<p><strong>Real vector spaces.</strong></p>
+<p>A <em>real vector space</em> is a set <span class="math notranslate nohighlight">\(V\)</span> together with operations <span class="math notranslate nohighlight">\(+\)</span> (addition)
+and <span class="math notranslate nohighlight">\(\cdot\)</span> (multiplication with a scalar) which
+satisfy the following conditions:</p>
+<ol class="arabic simple">
+<li><p> <span class="math notranslate nohighlight">\(x+y \in V\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y \in V\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(x+y = y+x\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y \in V\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(x+(y+z) = (x+y)+z\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, <span class="math notranslate nohighlight">\(z \in V\)</span>.</p></li>
+<li><p> There exists some element <span class="math notranslate nohighlight">\(0 \in V\)</span> such that <span class="math notranslate nohighlight">\(x + 0 = x\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span>.</p></li>
+<li><p> For all <span class="math notranslate nohighlight">\(x \in V\)</span>, there exists some element <span class="math notranslate nohighlight">\((-x) \in V\)</span> such that <span class="math notranslate nohighlight">\(x + (-x) = 0\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\alpha\cdot x \in V\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha \in \mathbb{R}\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\alpha\cdot(\beta\cdot x) = (\alpha\beta)\cdot x\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta \in \mathbb{R}\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(1\cdot x = x\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\alpha\cdot(x+y) = \alpha\cdot x + \alpha\cdot y\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha \in \mathbb{R}\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\((\alpha+\beta)\cdot x = \alpha\cdot x + \beta\cdot x\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta \in \mathbb{R}\)</span>.</p></li>
+</ol>
+<p><strong>Complex vector spaces</strong> are defined in exactly the same way, just replacing <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> with <span class="math notranslate nohighlight">\(\mathbb{C}\)</span>  in the definition above, so
+that the scalars are now allowed to be complex numbers.</p>
+<section id="examples">
+<h3><span class="section-number">64.3.1. </span>Examples:<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<p>The following vector spaces will be used thoughout the course:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbb{R}^m\)</span> is the set of all real vectors with <span class="math notranslate nohighlight">\(m\)</span> components.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{R}^{m\times n}\)</span> is the set of all <span class="math notranslate nohighlight">\(m\times n\)</span> real matrices.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{P}_n\)</span> is the set of all polynomials of degree <span class="math notranslate nohighlight">\(n\)</span> or less.</p></li>
+<li><p><span class="math notranslate nohighlight">\(C^m[a,b]\)</span> is the set of all functions with continuous first <span class="math notranslate nohighlight">\(m\)</span> derivatives on the interval <span class="math notranslate nohighlight">\([a,b]\)</span>. It is common to use <span class="math notranslate nohighlight">\(C[a,b]\)</span> rather than <span class="math notranslate nohighlight">\(C^0[a,b]\)</span> for all continuous functions.</p></li>
+</ul>
+<p>Notice that <span class="math notranslate nohighlight">\(C^n[a,b] \subset C^m[a,b]\)</span> if <span class="math notranslate nohighlight">\(n &gt; m\)</span>.
+Further, <span class="math notranslate nohighlight">\(\mathbb{P}_n \subset C^{\infty}[\mathbb{R}]\)</span>.</p>
+<p><strong>Exercise.</strong> Verify that <span class="math notranslate nohighlight">\(\mathbb{P}_n\)</span> and <span class="math notranslate nohighlight">\(C^m[a,b]\)</span> indeed are vector spaces.
+For that recall that the operations “adding two functions” and “multiplying a function with a scalar” are defined as usual by defining the resulting functions pointwise:
+$<span class="math notranslate nohighlight">\(
+(f + g)(x) := f(x) + g(x) \\
+(\alpha f)(x) :=  \alpha f(x)
+\)</span>$</p>
+<p><strong>Question from audience:</strong> Can we define Function with different variables <span class="math notranslate nohighlight">\( f(x), g(y)\)</span>?</p>
+<p>Addition is not immediately
+defined but you can define “new functions” <span class="math notranslate nohighlight">\(\widetilde{f}(x,y) := f(x)\)</span> and <span class="math notranslate nohighlight">\(\widetilde{g}(x,y) := g(y)\)</span>  to make sense of it and then set
+<span class="math notranslate nohighlight">\((f + g)(x,y) := f(x) + g(x)\)</span></p>
+</section>
+<section id="norms">
+<h3><span class="section-number">64.3.2. </span>Norms<a class="headerlink" href="#norms" title="Link to this heading">#</a></h3>
+<p><strong>Norm <span class="math notranslate nohighlight">\(\lVert\cdot\rVert\)</span>.</strong></p>
+<p>A norm is a function <span class="math notranslate nohighlight">\(\lVert\cdot\rVert \colon V \to \mathbb{R}\)</span> such that the following hold:</p>
+<ol class="arabic simple">
+<li><p> <span class="math notranslate nohighlight">\(\lVert x \lVert \ge 0\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\lVert x \rVert = 0\)</span> if and only if <span class="math notranslate nohighlight">\(x = 0\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\lVert \alpha \cdot x \rVert = \lvert \alpha \rvert \,\lVert x \rVert\)</span> for all <span class="math notranslate nohighlight">\(x \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha \in \mathbb{R}\)</span>.</p></li>
+<li><p> <span class="math notranslate nohighlight">\(\lVert x + y\rVert \le \lVert x \rVert + \lVert y \rVert\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y \in V\)</span>. (<em>triangle inequality</em>)</p></li>
+</ol>
+<p>The norm <span class="math notranslate nohighlight">\(\lVert\cdot\rVert\)</span> of an element <span class="math notranslate nohighlight">\(x\)</span> in a vector space <span class="math notranslate nohighlight">\(V\)</span> is essentially a measure of the size of the element. More importantly, the norm <span class="math notranslate nohighlight">\(\lVert x-y\rVert\)</span> of a difference of two vectors <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y \in V\)</span> is a measure for the distance between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, or, put differently, of how similar <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are.</p>
+<p><strong>Norms for <span class="math notranslate nohighlight">\(\mathbb{R}^m\)</span> and <span class="math notranslate nohighlight">\(C[a,b]\)</span>:</strong></p>
+<p>For any given vector space <span class="math notranslate nohighlight">\(V\)</span>, there are usually different meanigful definitions of norm that encode different notions of similarity of elements of the vector space.</p>
+<p>For <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^m\)</span> (note that we will use bold symbols for vectors <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^m\)</span>):</p>
+<ul class="simple">
+<li><p>The maximum-norm <span class="math notranslate nohighlight">\(\|\mathbf{x}\|_{\infty} = \max_{i=1}^m |x_i|\)</span>.</p></li>
+<li><p>The Euclidean norm <span class="math notranslate nohighlight">\(\|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^m x_i^2}\)</span>.</p></li>
+<li><p>More, generally, we can define the <span class="math notranslate nohighlight">\(l^P\)</span> norm of a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> by
+<span class="math notranslate nohighlight">\(\|\mathbf{x}\|_p = \left(\sum_{i=1}^m x_i^p\right)^{1/p}\)</span>, <span class="math notranslate nohighlight">\(1\leqslant p \leqslant \infty\)</span></p></li>
+</ul>
+<p><strong>Norms for <span class="math notranslate nohighlight">\(\mathbb{R}^m\)</span> and <span class="math notranslate nohighlight">\(C[a,b]\)</span>:</strong></p>
+<p>For any given vector space <span class="math notranslate nohighlight">\(V\)</span>, there are usually different meanigful definitions of norm that encode different notions of similarity of elements of the vector space.</p>
+<p>For <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^m\)</span> (note that we will use bold symbols for vectors <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^m\)</span>):</p>
+<ul class="simple">
+<li><p>The maximum-norm <span class="math notranslate nohighlight">\(\|\mathbf{x}\|_{\infty} = \max_{i=1}^m |x_i|\)</span>.</p></li>
+<li><p>The Euclidean norm <span class="math notranslate nohighlight">\(\|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^m x_i^2}\)</span>.</p></li>
+<li><p>More, generally, we can define the <span class="math notranslate nohighlight">\(l^P\)</span> norm of a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> by
+<span class="math notranslate nohighlight">\(\|\mathbf{x}\|_p = \left(\sum_{i=1}^m |x_i|^p\right)^{1/p}\)</span>.</p></li>
+</ul>
+<p>For <span class="math notranslate nohighlight">\(f\in C[a,b]\)</span>, similar norms can be defined:</p>
+<ul class="simple">
+<li><p>The maximum-norm <span class="math notranslate nohighlight">\(\|f\|_{\infty} = \max_{x\in [a,b]}|f(x)|\)</span>.</p></li>
+<li><p>The <span class="math notranslate nohighlight">\(L^2\)</span>-norm <span class="math notranslate nohighlight">\(\|f\|_2 = \sqrt{\int_a^b f(x)^2 \dx}\)</span>.</p></li>
+<li><p>The <span class="math notranslate nohighlight">\(L^p\)</span>-norm <span class="math notranslate nohighlight">\(\|f\|_p = \left(\int_a^b |f(x)|^p \dx\right)^{1/p}\)</span>.</p></li>
+</ul>
+<p>Thus for two functions <span class="math notranslate nohighlight">\(f,g \in C[a,b]\)</span>, the expression
+<span class="math notranslate nohighlight">\(\|f - g\|_{\infty}\)</span> measures the <em>maximal</em> pointwise difference of <span class="math notranslate nohighlight">\(f(x)\)</span> and <span class="math notranslate nohighlight">\(g(x)\)</span>, while the term <span class="math notranslate nohighlight">\(\|f - g\|_2\)</span>  measures the <em>average</em> (quadratic) difference of| <span class="math notranslate nohighlight">\(f(x)\)</span> ad <span class="math notranslate nohighlight">\(g(x)\)</span>.</p>
+<p>We will always use the absolute value as the norm of a real number, thus
+<span class="math notranslate nohighlight">\(\|x\|=|x|\)</span> whenever <span class="math notranslate nohighlight">\(x\in \mathbb{R}\)</span>.</p>
+<p><strong>Example 1:</strong>
+Let <span class="math notranslate nohighlight">\(\mathbf{x}=[1,-6,3,-1,5]^T\in \mathbb{R}^5\)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \|\mathbf{x}\|_2 &amp;= \sqrt{1+36+9+1+25} \approx 8.4853, \\ 
+  \|\mathbf{x}\|_{\infty} &amp;= \max\{1,6,3,1,5\}= 6.
+\end{aligned}
+\end{split}\]</div>
+<p>Norms of vectors in <span class="math notranslate nohighlight">\(\mathbb{R}^m\)</span>  are implemented in Python.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">newparams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span>
+    <span class="s2">&quot;axes.grid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">newparams</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The norm of a vector in R^n</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">nx_2</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># The 2-norm is the default</span>
+<span class="n">nx_inf</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>  <span class="c1"># The max-norm</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x = </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The 2-norm   of x: </span><span class="si">{</span><span class="n">nx_2</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The max-norm of x: </span><span class="si">{</span><span class="n">nx_inf</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x = 
+ [ 1 -6  3 -1  5]
+The 2-norm   of x:   8.4853
+The max-norm of x:   6.0000
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Example 2:</strong>
+Let <span class="math notranslate nohighlight">\(f(x)=\sin(x)\)</span> on <span class="math notranslate nohighlight">\([0,2\pi]\)</span>, so <span class="math notranslate nohighlight">\(f\in C^{\infty}[0,2\pi]\)</span>. In this case</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \|f\|_2 &amp;= \displaystyle \sqrt{\int_0^{2\pi} \sin^2(x) dx} = \sqrt{\pi} \approx 1.7725 \\ 
+  \|f\|_{\infty} &amp;= \displaystyle \max_{x\in[0,2\pi]}|\sin(x)| = 1.
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="scalar-products">
+<h3><span class="section-number">64.3.3. </span>Scalar products<a class="headerlink" href="#scalar-products" title="Link to this heading">#</a></h3>
+<p>A <strong>scalar product</strong> (also called <strong>inner product</strong>) <span class="math notranslate nohighlight">\(\langle \cdot, \cdot \rangle\)</span> on a <strong>real</strong> vector
+space <span class="math notranslate nohighlight">\(V\)</span> is a <strong>symmetric, positive definite bilinear form</strong> on V; that is, it is
+a mapping <span class="math notranslate nohighlight">\(\langle \cdot, \cdot \rangle: V \times V \to \mathbb{R}\)</span>
+which is a <strong>bilinear</strong></p>
+<ol class="arabic simple">
+<li><p>  <span class="math notranslate nohighlight">\(\langle \alpha x + \beta y, z \rangle  
+       =  \alpha \langle  x , z \rangle +  \beta \langle y, z \rangle \quad\)</span> for all <span class="math notranslate nohighlight">\(x,y,z \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha, \beta \in \mathbb{R}\)</span>,</p></li>
+<li><p>  <span class="math notranslate nohighlight">\(\langle  z, \alpha x + \beta y \rangle  
+       =  \alpha \langle  z, x \rangle +  \beta \langle z, y \rangle \quad\)</span>
+for all <span class="math notranslate nohighlight">\(x,y,z \in V\)</span> and <span class="math notranslate nohighlight">\(\alpha, \beta \in \mathbb{R}\)</span>,</p></li>
+</ol>
+<p><strong>symmetric</strong></p>
+<ol class="arabic simple" start="3">
+<li><p>  <span class="math notranslate nohighlight">\(\langle x,y \rangle = \langle y, x \rangle\)</span></p></li>
+</ol>
+<p>and <strong>positive definite</strong></p>
+<ol class="arabic simple" start="4">
+<li><p>   <span class="math notranslate nohighlight">\(\langle x, x \rangle \geqslant 0 \quad\)</span> and <span class="math notranslate nohighlight">\(\quad \langle x, x \rangle = 0 \Leftrightarrow x = 0\)</span></p></li>
+</ol>
+<p>An inner product on <span class="math notranslate nohighlight">\(V\)</span> automatically induces a Norm on <span class="math notranslate nohighlight">\(V\)</span> via
+\begin{align*}
+V \ni x  \mapsto |x| := \sqrt{\langle x, x\rangle}<br />
+\end{align*}</p>
+<p><strong>Exercise</strong>: Verify this.</p>
+<p><strong>Example 1:</strong> Let <span class="math notranslate nohighlight">\(\bfx, \bfy \in \RR^m\)</span> and define
+$<span class="math notranslate nohighlight">\(
+\langle \bfx, \bfy \rangle := \bfx \cdot \bfy := \sum_{i=1}^m x_i y_i
+\)</span>$</p>
+<p><strong>Example 2:</strong> Let <span class="math notranslate nohighlight">\(f, g \in C[a,b]\)</span> and set
+$<span class="math notranslate nohighlight">\(
+\langle f, g \rangle := \int_a^b f(x) g(x) \dx
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+\langle \alpha_1 f_1 + \alpha_2 f_, g \rangle = \alpha_1 \int_a^b f_1(x) g(x) \dx + \alpha_2 \int_a^b f_2(x) g(x) \dx
+\)</span>$</p>
+<p>Then this define a scalar product. Clearly, this expression defines a symmetric bilinear form on <span class="math notranslate nohighlight">\(C[a,b]\)</span> (verify this), but what about being positive definite?
+Of course <span class="math notranslate nohighlight">\(\langle f, f \rangle = \int_a^b (f(x))^2 \dx \geqslant 0\)</span>
+but why does <span class="math notranslate nohighlight">\(\langle f, f \rangle = 0 \Leftrightarrow  f = 0 \)</span>, that is <span class="math notranslate nohighlight">\(f(x) = 0 \;\forall x \in [a,b]\)</span>  hold?</p>
+<p>Proof by contradiction: Imagine <span class="math notranslate nohighlight">\(f\)</span> attains at <span class="math notranslate nohighlight">\(x_0\)</span> a value <span class="math notranslate nohighlight">\(f(x_0) = c &gt; 0\)</span>. Since <span class="math notranslate nohighlight">\(f\)</span>
+is continuous, there must be an <span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> such that <span class="math notranslate nohighlight">\(f(x) &gt; c/2\)</span>
+for <span class="math notranslate nohighlight">\(x \in [x_0 - \epsilon, x_0 + \epsilon]\)</span>. Consequently,
+$<span class="math notranslate nohighlight">\(
+\langle f, f \rangle = \int_a^b (f(x))^2 \dx \geqslant
+\int_{x_0 -\epsilon}^{x_0+ \epsilon}  (f(x))^2 dx
+\geqslant \int_{x_0 -\epsilon}^{x_0+ \epsilon}  (c/2)^2 \dx &gt; 0.
+\)</span>$</p>
+<p><strong>Orthogonal vectors.</strong> Assume that <span class="math notranslate nohighlight">\(V\)</span> is a vector space with a scalar product
+<span class="math notranslate nohighlight">\(\langle \cdot, \cdot \rangle\)</span>. Then <span class="math notranslate nohighlight">\(x,y \in V\)</span> are said to be orthogonal
+if <span class="math notranslate nohighlight">\(\langle x, y \rangle  = 0\)</span>.</p>
+<p><strong>Example 1</strong> <span class="math notranslate nohighlight">\(V = \RR^3\)</span> with standard inner product, then
+<span class="math notranslate nohighlight">\(\bfx = [1, 2, 3]^T\)</span> and <span class="math notranslate nohighlight">\(\bfy = [3,0,-1]^T\)</span> are orthogonal.</p>
+<p><strong>Example 2:</strong> Let <span class="math notranslate nohighlight">\(V=C[-1,1]\)</span> with the inner produc <span class="math notranslate nohighlight">\(\langle f, g \rangle := \int_{-1}^{1} f(x) g(x) \dx\)</span>. Set
+<span class="math notranslate nohighlight">\(f(x) = x\)</span> and <span class="math notranslate nohighlight">\(g(x) = x^2\)</span>.
+Then <span class="math notranslate nohighlight">\(\langle f, g \rangle = 0\)</span></p>
+<p><strong>Exercise</strong> Verify this.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">f_g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$g$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f_g</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f\cdot g$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f44985f6e40&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/a596f668aac65ca1d8f4ebe6e7c7a08585f87bfda1f76eb38f1c7d652cae33a0.png"><img alt="../_images/a596f668aac65ca1d8f4ebe6e7c7a08585f87bfda1f76eb38f1c7d652cae33a0.png" src="../_images/a596f668aac65ca1d8f4ebe6e7c7a08585f87bfda1f76eb38f1c7d652cae33a0.png" style="width: 696px; height: 356px;" /></a>
+</div>
+</div>
+<p>Note that the specific interval <span class="math notranslate nohighlight">\([a,b]\)</span> in the definition of
+<span class="math notranslate nohighlight">\(\langle f, g \rangle := \int_a^b f(x) g(x) \dx\)</span> is important.
+For instance the two functions <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> defined above are
+orthogonal on <span class="math notranslate nohighlight">\([-1, 1]\)</span> and any other symmetric interval <span class="math notranslate nohighlight">\([-a, a]\)</span> around
+<span class="math notranslate nohighlight">\(0\)</span>, but there are <strong>not</strong> orthogonal on the interval <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$g$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f_g</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f\cdot g$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f44980d7440&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/f05ce49b4c3a2347a818d68cbd68452410e064858b478e9bc21dc9aa7d75af31.png"><img alt="../_images/f05ce49b4c3a2347a818d68cbd68452410e064858b478e9bc21dc9aa7d75af31.png" src="../_images/f05ce49b4c3a2347a818d68cbd68452410e064858b478e9bc21dc9aa7d75af31.png" style="width: 680px; height: 356px;" /></a>
+</div>
+</div>
+</section>
+<section id="cauchy-schwarz-inequality">
+<h3><span class="section-number">64.3.4. </span>Cauchy-Schwarz inequality<a class="headerlink" href="#cauchy-schwarz-inequality" title="Link to this heading">#</a></h3>
+<p>Reminder from Calculus 3.
+Assume we have a vector space <span class="math notranslate nohighlight">\(V\)</span> endowed with an inner product
+<span class="math notranslate nohighlight">\(\langle \cdot, \cdot\rangle\)</span>. Then for <span class="math notranslate nohighlight">\(f, g \in V\)</span> it holds that
+$<span class="math notranslate nohighlight">\(
+|\langle f, g \rangle| \leqslant \|f\| \|g\|.
+\)</span><span class="math notranslate nohighlight">\(
+This is the Cauchy-Schwarz inequality and holds for any abstract inner product.
+More precisely, we have that
+\)</span><span class="math notranslate nohighlight">\(
+|\langle f, g \rangle| &lt; \|f\| \|g\|
+\)</span><span class="math notranslate nohighlight">\( 
+unless \)</span>f = \lambda g<span class="math notranslate nohighlight">\( for some \)</span>\lambda \in \RR$.</p>
+</section>
+<section id="gram-schmidt-orthogonalization">
+<h3><span class="section-number">64.3.5. </span>Gram-Schmidt Orthogonalization<a class="headerlink" href="#gram-schmidt-orthogonalization" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\{\bfa_1,\ldots,\bfa_n\} \subset \RR^m\)</span> <span class="math notranslate nohighlight">\(n\)</span> linear independent
+vectors in <span class="math notranslate nohighlight">\(\RR^m\)</span>. The Gram-Schmidt orthogonalization process
+allows to orthogonalizes that set, that means, we can construct
+a set <span class="math notranslate nohighlight">\(\{\bfq_1, \ldots, \bfq_n \}\)</span> of orthogonal (orthonormal) vectors which have the same span as the original set.</p>
+<p>\begin{alignat*}{3}
+\bfy_1 &amp;:= \bfa_1, \quad &amp; &amp;\bfq_1 := \dfrac{\bfy_1}{|\bfy_1|}
+\
+\bfy_2 &amp;:= \bfa_2 - \langle \bfq_1, \bfa_2 \rangle \bfq_1, \quad &amp; &amp;\bfq_2 := \dfrac{\bfy_2}{|\bfy_2|}
+\
+\ldots
+\
+\bfy_k &amp;:= \bfa_k - \sum_{i=1}^{k-1} \langle \bfq_i, \bfa_k \rangle \bfq_i, \quad &amp; &amp;\bfq_k := \dfrac{\bfy_k}{|\bfy_k|}
+\
+\ldots
+\
+\bfy_n &amp;:= \bfa_n - \sum_{i=1}^{n-1} \langle \bfq_i, \bfa_n \rangle \bfq_i, \quad &amp; &amp;\bfq_n := \dfrac{\bfy_n}{|\bfy_n|}
+\end{alignat*}</p>
+<p>Observe that Gram-Schmidt orthogonalization makes perfect sense
+for any independent finite set of vectors <span class="math notranslate nohighlight">\(\{f_1, \ldots f_n\} \subset V\)</span>
+for some vector space <span class="math notranslate nohighlight">\(V\)</span> endowed with a scalar product <span class="math notranslate nohighlight">\(\langle \cdot,\cdot\rangle\)</span>!</p>
+<p><strong>Exercise 1.</strong> Show that the functions <span class="math notranslate nohighlight">\(\{1, x, x^2\} \subset \mathbb{P}_2\)</span>
+are linearly independent.</p>
+<p><strong>Exercise 2.</strong> Use Gram-Schmidt to orthogonalize/orthonormalize the
+functions <span class="math notranslate nohighlight">\(\{1, x, x^2\}\)</span> on the interval <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+</section>
+<section id="orthogonal-projection">
+<h3><span class="section-number">64.3.6. </span>Orthogonal projection<a class="headerlink" href="#orthogonal-projection" title="Link to this heading">#</a></h3>
+<p>There are several equivalent ways to define an orthogonal projection.
+Assume we have a vector space <span class="math notranslate nohighlight">\(V\)</span> endowed with an inner product
+<span class="math notranslate nohighlight">\(\langle \cdot, \rangle\)</span> and a
+finite dimensional subspace <span class="math notranslate nohighlight">\(V_n \subset V\)</span>. Thanks to Gram-Schmidt,
+we also know that we can construc an orthornomal basis <span class="math notranslate nohighlight">\(\{e_1, \ldots, e_n\}\)</span>
+of <span class="math notranslate nohighlight">\(V_n\)</span>.</p>
+<p>We define the orthogonal projection
+$<span class="math notranslate nohighlight">\(
+\Pi_{V_n} := \Pi_n : V \to V
+\)</span>$</p>
+<p>by requiring that for <span class="math notranslate nohighlight">\(v \in V\)</span>, <span class="math notranslate nohighlight">\(\Pi_n v\)</span> must satisfy
+$<span class="math notranslate nohighlight">\(
+\langle \Pi_n v, w \rangle = \langle v, w \rangle \quad \forall w \in V_n.
+\)</span>$</p>
+<p>Or in other words, the difference vector, (also called <strong>projection error</strong>) <span class="math notranslate nohighlight">\(\Pi_n v - v\)</span> must satisfy a
+<strong>orthorgonality property</strong>
+with respect to the subspace <span class="math notranslate nohighlight">\(V_n\)</span>:
+$<span class="math notranslate nohighlight">\(
+\langle \Pi_n v - v, w \rangle = 0 \quad \forall w \in V_n.
+\)</span>$</p>
+<p>The projection is well defined.
+Assuming that <span class="math notranslate nohighlight">\(\Pi_n v\)</span> exists, we can express in terms of the orthonormal
+basis <span class="math notranslate nohighlight">\(\{e_1, \ldots, e_n\}\)</span>:
+$<span class="math notranslate nohighlight">\(
+\Pi_n v = \sum \tilde{v}_i e_i
+\)</span><span class="math notranslate nohighlight">\(
+Any vector \)</span>w \in V_n<span class="math notranslate nohighlight">\( can be written as
+\)</span><span class="math notranslate nohighlight">\(
+w = \sum_{j=1}^n w_j e_j
+\)</span>$
+Thus
+\begin{align*}
+\langle \Pi_n v, w \rangle
+&amp;= \sum_{j=1} w_j \langle \Pi_n v, e_j \rangle
+\
+&amp;= \sum_{j=1} w_j \sum_{i=1}^{n} \tilde{v}<em>i \langle v_i, e_j \rangle
+\end{align*}
+On the other  hand
+\begin{align*}
+\langle v, w \rangle = \sum</em>{j=1}^n w_j \langle e_i, e_j \rangle
+\end{align*}</p>
+<p>So in order to satisfy the requirement above, we must have that
+for <span class="math notranslate nohighlight">\( j = 1, \ldots, n\)</span>
+$<span class="math notranslate nohighlight">\(
+\sum_{i=1}^{n} \tilde{v}_i \langle e_i, e_j \rangle
+= \sum_{i=1}^{n} \tilde{v}_i \langle e_j, e_i \rangle
+= \underbrace{\langle v, e_j \rangle}_{:= b_j}
+\)</span><span class="math notranslate nohighlight">\(
+Since \)</span>\langle e_i, e_j \rangle = \delta_{ij}<span class="math notranslate nohighlight">\( is the Kronecker delta symbol which is \)</span>=0<span class="math notranslate nohighlight">\( if \)</span>i\neq j<span class="math notranslate nohighlight">\( and \)</span>=1<span class="math notranslate nohighlight">\( if \)</span>i=j<span class="math notranslate nohighlight">\( we see that the last equation can be written as a simple matrix system to 
+\)</span><span class="math notranslate nohighlight">\(
+\Id [\tilde{v_1}, \ldots, \tilde{v_n}^T] = [b_1, \ldots, b_n ]^T
+\)</span>$</p>
+<p><strong>Best approximation theorem</strong></p>
+<p>For any <span class="math notranslate nohighlight">\(v \in V\)</span>, we have that
+$<span class="math notranslate nohighlight">\(
+\|\Pi_n v - v \| = \min_{w \in V_n} \| w - v \|
+\)</span>$</p>
+<p><em>Proof</em></p>
+<p>Take any <span class="math notranslate nohighlight">\(w\in V_n\)</span>. Then
+\begin{align*}
+|\Pi_n v - v |^2
+&amp;=
+\langle \Pi_n v - v, \Pi_n v - v \rangle
+\
+&amp;=
+\langle \Pi_n v - v, \Pi_n v - w + w - v \rangle
+\
+&amp;=
+\underbrace{\langle \Pi_n v - v, \Pi_n v - w \rangle}_{=0}</p>
+<ul class="simple">
+<li><p>\langle \Pi_n v - v, w - v \rangle
+\
+&amp;\leqslant | \Pi_n v - v | | w - v|
+\end{align*}
+where we use the orthogonality property of the projection error and the Cauchy Schwarz inequality.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="taylor-expansions">
+<h1><span class="section-number">65. </span>Taylor-expansions<a class="headerlink" href="#taylor-expansions" title="Link to this heading">#</a></h1>
+<p>Given a function <span class="math notranslate nohighlight">\(f\in C^{\infty}[a,b]\)</span>. Choose a point <span class="math notranslate nohighlight">\(x_0\)</span> and an increment <span class="math notranslate nohighlight">\(h = x - x_0\)</span> such that <span class="math notranslate nohighlight">\(x_0, x_0+h \in [a,b]\)</span>. The Taylor series expansion of <span class="math notranslate nohighlight">\(f\)</span> around <span class="math notranslate nohighlight">\(x_0\)</span> is then given by</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k = \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}h^k
+\]</div>
+<p>The function <span class="math notranslate nohighlight">\(f\)</span> is called analytic in <span class="math notranslate nohighlight">\(x_0\)</span> if the series converges for sufficiently small values of <span class="math notranslate nohighlight">\(|h|\)</span> to <span class="math notranslate nohighlight">\(f\)</span>, that is, if
+$<span class="math notranslate nohighlight">\(
+f(x) =  \sum_{k=0}^{\infty} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k
+\)</span>$</p>
+<p>In numerics, we will usually work with the trunctated series, also called the Taylor polynomial (+ remainder term), which exists for all <span class="math notranslate nohighlight">\(f \in C^{k+1}[a,b]\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = \underbrace{\sum_{k=0}^{m} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k}_{=: g(x)} + R_{m+1}(x_0).
+\]</div>
+<p>Here the remainder term is given by</p>
+<div class="math notranslate nohighlight">
+\[
+R_{m+1}(x_0) = \frac{f^{(m+1)}(\xi)}{(m+1)!} (x-x_0)^{m+1},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\xi\)</span> is some unknown point between <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>Often we write this as
+$<span class="math notranslate nohighlight">\(
+f(x_0 + h) = \sum_{k=0}^{m} \frac{f^{(k)}(x_0)}{k!} h^k + \mathcal{O}(h^{m+1}).
+\)</span>$</p>
+<p>Here we used the the <strong>Big <span class="math notranslate nohighlight">\(\mathcal{O}\)</span>-notation</strong>.
+Let <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> be some real valued function and <span class="math notranslate nohighlight">\(a \in \mathbb{R}\)</span>. We say that
+$<span class="math notranslate nohighlight">\(
+f(x) = \mathcal{O}(g(x))
+\qquad\text{ as } x \rightarrow a,
+\)</span><span class="math notranslate nohighlight">\(
+if there exist \)</span>\delta &gt; 0<span class="math notranslate nohighlight">\( and \)</span>M &gt; 0$ such that</p>
+<div class="math notranslate nohighlight">
+\[
+|f(x)| \leq M|g(x)| \qquad \text{when} \qquad 0 &lt; |x-a|&lt;\delta.
+\]</div>
+<p>That is, locally around the point <span class="math notranslate nohighlight">\(a\)</span>, the function <span class="math notranslate nohighlight">\(f\)</span> can be bounded, up to a constant, by the function <span class="math notranslate nohighlight">\(g\)</span>.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="some-other-useful-results">
+<h1><span class="section-number">66. </span>Some other useful results<a class="headerlink" href="#some-other-useful-results" title="Link to this heading">#</a></h1>
+<p><strong>Result 1:</strong>
+Let <span class="math notranslate nohighlight">\(f\in C[a,b]\)</span> and let <span class="math notranslate nohighlight">\(u\)</span> be some number between <span class="math notranslate nohighlight">\(f(a)\)</span> and <span class="math notranslate nohighlight">\(f(b)\)</span>, then there exist at least one <span class="math notranslate nohighlight">\(\xi \in (a,b)\)</span> such that <span class="math notranslate nohighlight">\(f(\xi)=u\)</span>.</p>
+<p><strong>Result :2</strong>
+(Rolle’s theorem) Let <span class="math notranslate nohighlight">\(f\in C^1[a,b]\)</span> and <span class="math notranslate nohighlight">\(f(a)=f(b)=0\)</span>. Then there exists at least one <span class="math notranslate nohighlight">\(\xi \in (a,b)\)</span> such that <span class="math notranslate nohighlight">\(f'(\xi)=0\)</span>.</p>
+<p><strong>Result 3:</strong>
+Let <span class="math notranslate nohighlight">\(f\in C^1[a,b]\)</span>. Then there exists at least one <span class="math notranslate nohighlight">\(\xi\in (a,b)\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+f'(\xi) = \frac{f(b)-f(a)}{b-a}
+\]</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./TMA4125"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="GaussQuadrature.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">61. </span>Numerical integration: Part IV</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="SimpleCovidModel.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">67. </span>A simple epidemic model for Covid 19 and its numerical solution</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">64. Introduction to TMA4125</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-over-the-course">64.1. Overview over the course</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preliminaries">64.2. Preliminaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-spaces-and-norms">64.3. Vector spaces and norms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">64.3.1. Examples:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#norms">64.3.2. Norms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-products">64.3.3. Scalar products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cauchy-schwarz-inequality">64.3.4. Cauchy-Schwarz inequality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gram-schmidt-orthogonalization">64.3.5. Gram-Schmidt Orthogonalization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#orthogonal-projection">64.3.6. Orthogonal projection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#taylor-expansions">65. Taylor-expansions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#some-other-useful-results">66. Some other useful results</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Carlos Aznarán
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright February 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Jun 03, 2024.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+    This webpage is distributed under the terms of the
+    <a href=http://creativecommons.org/licenses/by/4.0/>Creative Commons Attribution 4.0 International License</a>
+    which permits use, duplication, adaptation, distribution and
+    reproduction in any medium or format, as long as you give appropriate
+    credit to the original author(s) and the source, provide a link to the Creative
+    Commons license and indicate if changes were made.
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
