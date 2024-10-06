@@ -1,0 +1,109 @@
+Traceback (most recent call last):
+  File "/work/pde-book/.venv/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# 2D Wave Propagation (Finite Difference Solution)
+# ------------------------------------------------
+
+
+# Calculate Partial Derivatives
+# -----------------------------
+for it in range(nt):
+    if op == 3:  # use 3 point operator FD scheme
+        for i in range(1, nx - 1):
+            d2px[i, :] = (p[i - 1, :] - 2 * p[i, :] + p[i + 1, :]) / dx**2
+        for j in range(1, nz - 1):
+            d2pz[:, j] = (p[:, j - 1] - 2 * p[:, j] + p[:, j + 1]) / dz**2
+
+    if op == 5:  # use 5 point operator FD scheme
+        # -----------------------------------------------#
+        #     IMPLEMENT 5 POINT OPERATOR CODE HERE!     #
+        # -----------------------------------------------#
+        pass
+
+    # Time Extrapolation
+    # ------------------
+    pnew = 2 * p - pold + (c**2) * (dt**2) * (d2pz + d2px)
+
+    # Add Source Term at isz and isx
+    # ------------------------------
+    # Absolute pressure w.r.t analytical solution
+    pnew[isz, isx] = pnew[isz, isx] + src[it] / (dx * dz) * (dt**2)
+
+    # Remap Time Levels
+    # -----------------
+    pold, p = p, pnew
+
+    # Output Seismogram
+    # -----------------
+    seis[it] = p[irz, irx]
+
+    # Update Data for Wave Propagation Plot
+    # -------------------------------------
+    idisp = 5  # display frequency
+    if (it % idisp) == 0:
+        ax3.set_title("Time Step (nt) = %d" % it)
+        ax3.imshow(p, vmin=-lim, vmax=+lim, interpolation="nearest", cmap=plt.cm.RdBu)
+        up41.set_ydata(seis)
+        up42.set_data(time[it], seis[it])
+        # Uncoment for bigger fontsize - also uncoment the Fontsize in the cell parameters
+        # for item in ([ax3.title, ax3.xaxis.label, ax3.yaxis.label] +
+        #     ax3.get_xticklabels() + ax3.get_yticklabels()):
+        #     item.set_fontsize(fs)
+        # for item in ([ax4.title, ax4.xaxis.label, ax4.yaxis.label] +
+        #     ax4.get_xticklabels() + ax4.get_yticklabels()):
+        #     item.set_fontsize(fs)
+        plt.gcf().canvas.draw()
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mRuntimeError[0m                              Traceback (most recent call last)
+Cell [0;32mIn[7], line 44[0m
+[1;32m     42[0m ax3[38;5;241m.[39mimshow(p, vmin[38;5;241m=[39m[38;5;241m-[39mlim, vmax[38;5;241m=[39m[38;5;241m+[39mlim, interpolation[38;5;241m=[39m[38;5;124m"[39m[38;5;124mnearest[39m[38;5;124m"[39m, cmap[38;5;241m=[39mplt[38;5;241m.[39mcm[38;5;241m.[39mRdBu)
+[1;32m     43[0m up41[38;5;241m.[39mset_ydata(seis)
+[0;32m---> 44[0m [43mup42[49m[38;5;241;43m.[39;49m[43mset_data[49m[43m([49m[43mtime[49m[43m[[49m[43mit[49m[43m][49m[43m,[49m[43m [49m[43mseis[49m[43m[[49m[43mit[49m[43m][49m[43m)[49m
+[1;32m     45[0m [38;5;66;03m# Uncoment for bigger fontsize - also uncoment the Fontsize in the cell parameters[39;00m
+[1;32m     46[0m [38;5;66;03m# for item in ([ax3.title, ax3.xaxis.label, ax3.yaxis.label] +[39;00m
+[1;32m     47[0m [38;5;66;03m#     ax3.get_xticklabels() + ax3.get_yticklabels()):[39;00m
+[0;32m   (...)[0m
+[1;32m     50[0m [38;5;66;03m#     ax4.get_xticklabels() + ax4.get_yticklabels()):[39;00m
+[1;32m     51[0m [38;5;66;03m#     item.set_fontsize(fs)[39;00m
+[1;32m     52[0m plt[38;5;241m.[39mgcf()[38;5;241m.[39mcanvas[38;5;241m.[39mdraw()
+
+File [0;32m/usr/lib/python3.12/site-packages/matplotlib/lines.py:665[0m, in [0;36mLine2D.set_data[0;34m(self, *args)[0m
+[1;32m    662[0m [38;5;28;01melse[39;00m:
+[1;32m    663[0m     x, y [38;5;241m=[39m args
+[0;32m--> 665[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mset_xdata[49m[43m([49m[43mx[49m[43m)[49m
+[1;32m    666[0m [38;5;28mself[39m[38;5;241m.[39mset_ydata(y)
+
+File [0;32m/usr/lib/python3.12/site-packages/matplotlib/lines.py:1289[0m, in [0;36mLine2D.set_xdata[0;34m(self, x)[0m
+[1;32m   1276[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[1;32m   1277[0m [38;5;124;03mSet the data array for x.[39;00m
+[1;32m   1278[0m 
+[0;32m   (...)[0m
+[1;32m   1286[0m [38;5;124;03mset_ydata[39;00m
+[1;32m   1287[0m [38;5;124;03m"""[39;00m
+[1;32m   1288[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m np[38;5;241m.[39miterable(x):
+[0;32m-> 1289[0m     [38;5;28;01mraise[39;00m [38;5;167;01mRuntimeError[39;00m([38;5;124m'[39m[38;5;124mx must be a sequence[39m[38;5;124m'[39m)
+[1;32m   1290[0m [38;5;28mself[39m[38;5;241m.[39m_xorig [38;5;241m=[39m copy[38;5;241m.[39mcopy(x)
+[1;32m   1291[0m [38;5;28mself[39m[38;5;241m.[39m_invalidx [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+
+[0;31mRuntimeError[0m: x must be a sequence
+

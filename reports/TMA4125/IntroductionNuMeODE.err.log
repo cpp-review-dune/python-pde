@@ -1,0 +1,56 @@
+Traceback (most recent call last):
+  File "/work/pde-book/.venv/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/usr/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Insert your code here.
+
+
+def error_study(y0, t0, T, f, Nmax_list, solver, y_ex):
+    max_errs = []
+    for Nmax in Nmax_list:
+        # Compute  list of timestep ts and computed solution ys
+
+        # Compute y_ex on ts
+
+        # Compute error
+
+        print(f"For Nmax = {Nmax:3}, max ||y(t_i) - y_i||= {max_errs[-1]:.3e}")
+    print("The computed error reduction rates are")
+    max_errs = np.array(max_errs)
+    print(max_errs[:-1] / max_errs[1:])
+
+
+# Define list for N_max
+
+# Run error study
+error_study(y0, t0, T, f, Nmax_list, explicit_euler, y_ex)
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[5], line 22[0m
+[1;32m     16[0m     [38;5;28mprint[39m(max_errs[:[38;5;241m-[39m[38;5;241m1[39m] [38;5;241m/[39m max_errs[[38;5;241m1[39m:])
+[1;32m     19[0m [38;5;66;03m# Define list for N_max[39;00m
+[1;32m     20[0m 
+[1;32m     21[0m [38;5;66;03m# Run error study[39;00m
+[0;32m---> 22[0m error_study(y0, t0, T, f, [43mNmax_list[49m, explicit_euler, y_ex)
+
+[0;31mNameError[0m: name 'Nmax_list' is not defined
+
